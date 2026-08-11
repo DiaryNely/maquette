@@ -2,6 +2,27 @@
     <div data-menu="menu.html"></div>
     <h1 class="h3 mb-4">Nouvelle demande</h1>
     <form class="product-request-form">
+        <div class="request-details">
+            <div class="form-group">
+                <label for="request-recipient">Destinataire (personnel)</label>
+                <select class="form-control" id="request-recipient" name="request-recipient" required>
+                    <option value="" selected disabled>Sélectionner un personnel</option>
+                    <option value="administrateur-automat-si">Administrateur - Automat SI</option>
+                    <option value="responsable-magasin">Responsable magasin</option>
+                    <option value="responsable-entrepot">Responsable entrepôt</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="request-recipient-store">Magasin du destinataire</label>
+                <select class="form-control" id="request-recipient-store" name="request-recipient-store" required>
+                    <option value="" selected disabled>Sélectionner un magasin</option>
+                    <option value="siege-administration">Siège - Administration S2M</option>
+                    <option value="magasins">Magasins</option>
+                    <option value="entrepot-s2m">Entrepôt S2M</option>
+                </select>
+            </div>
+        </div>
+
         <div class="table-responsive">
             <table class="table table-bordered product-request-table">
                 <thead>
