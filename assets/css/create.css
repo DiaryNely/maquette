@@ -28,6 +28,14 @@
     margin: 0;
 }
 
+.return-date-input {
+    display: none;
+}
+
+.return-date-input.is-visible {
+    display: block;
+}
+
 .product-request-table .custom-checkbox {
     display: flex;
     align-items: center;

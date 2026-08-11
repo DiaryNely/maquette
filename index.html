@@ -27,80 +27,9 @@
 
     <div id="site-footer"></div>
 
-    <script>
-        async function inclure(selector, fichier) {
-            const reponse = await fetch(fichier);
-            if (!reponse.ok) throw new Error(`Impossible de charger ${fichier}`);
-            document.querySelector(selector).innerHTML = await reponse.text();
-        }
-
-        async function chargerPage() {
-            const page = new URLSearchParams(location.search).get('page') || 'create';
-
-            // Seuls les noms simples sont acceptés pour éviter de charger un fichier hors de pages/.
-            if (!/^[a-z0-9-]+$/i.test(page)) throw new Error('Nom de page invalide');
-
-            await inclure('#contenu', `pages/${page}.html`);
-            await chargerMenus();
-        }
-
-        async function chargerMenus() {
-            const emplacements = document.querySelectorAll('[data-menu]');
-
-            await Promise.all(Array.from(emplacements, async emplacement => {
-                const fichier = emplacement.dataset.menu;
-                const reponse = await fetch(fichier);
-                if (!reponse.ok) throw new Error(`Impossible de charger ${fichier}`);
-                emplacement.outerHTML = await reponse.text();
-            }));
-        }
-
-        Promise.all([
-            inclure('#site-header', 'header.html'),
-            inclure('#site-footer', 'footer.html'),
-            chargerPage()
-        ]).catch(() => {
-            document.querySelector('#contenu').innerHTML = '<h1>Page introuvable</h1><p>Le contenu demandé est indisponible.</p>';
-        });
-
-
-
-        document.addEventListener('click', function (event) {
-            const button = event.target.closest('.floating-menu-button');
-            if (!button) {
-                return;
-            }
-            const menu = button.closest('.floating-menu-wrapper');
-            if (!menu) {
-                return;
-            }
-            menu.classList.toggle('active');
-        });
-
-        document.addEventListener('click', function (event) {
-            const addButton = event.target.closest('[data-add-product-line]');
-            if (!addButton) return;
-
-            const lines = document.querySelector('[data-product-lines]');
-            const template = document.querySelector('#product-line-template');
-            if (!lines || !template) return;
-
-            const lineNumber = lines.querySelectorAll('.product-line').length + 1;
-            const line = template.innerHTML.replace(/__INDEX__/g, lineNumber);
-            lines.insertAdjacentHTML('beforeend', line);
-        });
-
-        document.addEventListener('click', function (event) {
-            const removeButton = event.target.closest('[data-remove-product-line]');
-            if (!removeButton) return;
-
-            const line = removeButton.closest('.product-line');
-            const lines = removeButton.closest('[data-product-lines]');
-            if (!line || !lines || lines.querySelectorAll('.product-line').length <= 1) return;
-
-            line.remove();
-        });
-    </script>
+    <script src="assets/js/app.js" defer></script>
+    <script src="assets/js/menu.js" defer></script>
+    <script src="assets/js/demande.js" defer></script>
 </body>
 
 </html>
