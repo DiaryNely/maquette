@@ -1,0 +1,104 @@
+.create-request,
+.product-request-form,
+.table-responsive {
+    width: 100%;
+}
+
+.product-request-table {
+    width: 100%;
+    margin-bottom: 0;
+    border-collapse: collapse;
+}
+
+.product-request-table th {
+    background: #f1f5f9;
+    font-size: 0.875rem;
+    font-weight: 600;
+    white-space: nowrap;
+    vertical-align: middle;
+}
+
+.product-request-table td {
+    vertical-align: middle;
+    padding: 10px;
+}
+
+.product-request-table .form-control {
+    width: 100%;
+    margin: 0;
+}
+
+.product-request-table .custom-checkbox {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.add-product-line,
+.validate-request {
+    color: #fff;
+    background: linear-gradient(to right, rgb(30, 183, 160), rgb(48, 161, 178));
+    border: 0;
+    cursor: pointer;
+    transition: opacity 0.2s ease;
+}
+
+.add-product-line {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+}
+
+.validate-request {
+    padding: 10px 28px;
+    border-radius: 4px;
+    font-weight: 600;
+}
+
+.add-product-line:hover,
+.validate-request:hover {
+    opacity: 0.85;
+}
+
+.remove-product-line {
+    color: #dc3545;
+    background: transparent;
+    border: 0;
+    cursor: pointer;
+    font-size: 18px;
+    padding: 6px;
+}
+
+.remove-product-line:hover {
+    color: #a71d2a;
+}
+
+.add-product-line {
+    margin-top: 16px;
+}
+
+.form-actions {
+    display: flex;
+    justify-content: center;
+    margin-top: 28px;
+}
+
+@media (max-width: 992px) {
+    .product-request-table {
+        min-width: 900px;
+    }
+
+    .table-responsive {
+        overflow-x: auto;
+    }
+}
+
+@media (max-width: 576px) {
+    .form-actions {
+        justify-content: center;
+    }
+
+    .form-actions .validate-request {
+        width: 100%;
+    }
+}

@@ -1,0 +1,178 @@
+    * {
+        box-sizing: border-box;
+    }
+
+    body {
+        margin: 0;
+        font-family: "Inter", "Segoe UI", system-ui, -apple-system, sans-serif;
+    }
+
+
+    /* ======================================
+           BANDEAU DEGRADE (logo + profil)
+        ======================================= */
+
+    .desktop-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        height: 88px;
+        padding: 0 32px;
+        margin-bottom: 8px;
+        background: linear-gradient(90deg,
+                #2fd4a5 0%,
+                #3fb6e0 40%,
+                #6f7bec 75%,
+                #8b6df0 100%);
+    }
+
+    .header-logo img {
+        height: 46px;
+    }
+
+    .header-right {
+        display: flex;
+        align-items: center;
+        gap: 28px;
+    }
+
+    .header-profile {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        text-decoration: none;
+        color: #fff;
+    }
+
+    .profile-photo {
+        width: 46px;
+        height: 46px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 2px solid rgba(255, 255, 255, 0.6);
+        background: #fff;
+    }
+
+    .profile-name {
+        font-size: 15px;
+        font-weight: 700;
+        color: #fff;
+        line-height: 1.3;
+    }
+
+    .profile-description {
+        font-size: 12.5px;
+        font-weight: 400;
+        color: rgba(255, 255, 255, 0.85);
+        line-height: 1.3;
+    }
+
+    .header-logout {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        color: #fff;
+        font-size: 20px;
+        opacity: 0.9;
+        text-decoration: none;
+        transition: opacity 0.15s ease;
+    }
+
+    .header-logout:hover {
+        opacity: 1;
+        color: #fff;
+    }
+
+
+    /* ======================================
+           NAVBAR (menu des modules)
+           -> structure d'origine : <a class="dropdown-toggle">
+        ======================================= */
+
+    .app-navbar {
+        --nb-text: #2b2b33;
+        --nb-text-muted: #6b6b76;
+        --nb-border: #e4e4e8;
+        --nb-hover: #f0f0f3;
+
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        /* <- centre le menu sur la page */
+        flex-wrap: wrap;
+        gap: 8px;
+        background: #ffffff;
+        border-bottom: 1px solid var(--nb-border);
+        padding: 12px 32px;
+        box-shadow: inset 0 6px 6px -6px rgba(0, 0, 0, 0.08);
+        list-style: none;
+    }
+
+    .app-navbar .dropdown-toggle {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 14px;
+        border-radius: 8px;
+        color: var(--nb-text);
+        font-size: 14px;
+        font-weight: 600;
+        text-decoration: none;
+        white-space: nowrap;
+        transition: background-color 0.15s ease, color 0.15s ease;
+    }
+
+    .app-navbar .dropdown-toggle::after {
+        content: none;
+        /* on retire le caret Bootstrap par défaut, on garde flaticon-down-arrow */
+    }
+
+    .app-navbar .dropdown-toggle:hover,
+    .app-navbar .dropdown-toggle:focus {
+        background: var(--nb-hover);
+        color: var(--nb-text);
+        text-decoration: none;
+    }
+
+    .app-navbar .dropdown-toggle>div {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .app-navbar .dropdown-toggle [class^="flaticon-"] {
+        font-size: 17px;
+        color: var(--nb-text);
+    }
+
+    .app-navbar .dropdown-toggle .flaticon-down-arrow {
+        font-size: 10px;
+        color: var(--nb-text-muted);
+        margin-left: 2px;
+    }
+
+    /* Dernier lien "+" (More) : rendu en bouton rond, sans texte, sans bordure */
+    .app-navbar a[href="#more"] {
+        width: auto;
+        height: auto;
+        padding: 8px 4px;
+        margin-left: 4px;
+        border: 0;
+        border-radius: 0;
+        background: transparent;
+    }
+
+    .app-navbar a[href="#more"]:hover {
+        background: transparent;
+    }
+
+    .app-navbar a[href="#more"] .flaticon-plus {
+        font-size: 16px;
+        color: var(--nb-text-muted);
+    }
+
+    .app-navbar a[href="#more"]>div:last-child {
+        display: none;
+        /* pas de petite flèche sur le bouton "+" */
+    }

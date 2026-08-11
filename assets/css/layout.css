@@ -1,0 +1,25 @@
+/* Gabarit commun à toutes les maquettes d'écran (format bureau). */
+body {
+    background: #e9edf2;
+}
+
+main {
+    flex: 1;
+    padding: 24px 40px 40px;
+    background: #e9edf2;
+}
+
+/*
+ * Seul le contenu de pages/*.html est injecté ici.
+ * Cette zone conserve les mêmes marges dans toute l'application.
+ */
+#contenu {
+    width: min(100%, 1800px);
+    min-height: 380px;
+    margin: 0 auto;
+    padding: 24px 28px 48px;
+    background: #ffffff;
+    border: 1px solid #d6dce5;
+    border-radius: 3px;
+    box-shadow: 0 2px 8px rgba(43, 58, 85, 0.08);
+}
