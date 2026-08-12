@@ -1,0 +1,199 @@
+<section>
+    <div data-menu="menu.html"></div>
+
+    <div class="mock-page-head">
+        <div class="mock-page-head__title">
+            <h1><i class="fa-solid fa-bell text-teal"></i> Notifications <span class="badge-status badge--info">3 non lues</span></h1>
+            <p>Événements clés : création, réception, anomalie, résolution, retard — distribution automatique selon l'événement et le rôle.</p>
+        </div>
+        <div class="mock-page-head__actions">
+            <button class="btn-mock btn-mock--outline"><i class="fa-solid fa-check-double"></i> Tout marquer comme lu</button>
+            <a href="index.html?page=admin" class="btn-mock btn-mock--outline"><i class="fa-solid fa-sliders"></i> Paramétrage</a>
+        </div>
+    </div>
+
+    <div class="d-flex flex-wrap mb-3" style="gap:8px;">
+        <button class="chip chip--active" type="button">Toutes</button>
+        <button class="chip" type="button">Non lues</button>
+        <button class="chip" type="button">Anomalies</button>
+        <button class="chip" type="button">Retards</button>
+        <button class="chip" type="button">Résolutions</button>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="mock-card">
+                <div class="mock-card__head">
+                    <h2 class="mock-card__title"><i class="fa-solid fa-bell"></i> Fil d'actualités</h2>
+                    <span class="chip">Ordre chronologique inverse</span>
+                </div>
+                <ul class="notif-list">
+                    <li class="notif-item unread">
+                        <div class="notif-item__icon notif-item__icon--red"><i class="fa-solid fa-clock"></i></div>
+                        <div class="notif-item__body">
+                            <div class="notif-item__title">Retard de résolution — ANO-2026-019</div>
+                            <div class="notif-item__desc">L'anomalie « Quantité manquante » dépasse sa date limite (16/08).</div>
+                            <div class="notif-item__meta">
+                                <span><i class="fa-solid fa-user"></i> Destinataires : Administrateur, Responsable magasin</span>
+                                <span><i class="fa-solid fa-clock-rotate-left"></i> il y a 2 h</span>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="notif-item unread">
+                        <div class="notif-item__icon notif-item__icon--amber"><i class="fa-solid fa-triangle-exclamation"></i></div>
+                        <div class="notif-item__body">
+                            <div class="notif-item__title">Anomalie déclarée — ANO-2026-019</div>
+                            <div class="notif-item__desc">BS-2026-0143 : contrôle non conforme au Transit 2 (quantité manquante).</div>
+                            <div class="notif-item__meta">
+                                <span><i class="fa-solid fa-user"></i> Destinataires : Responsable magasin, Transit</span>
+                                <span><i class="fa-solid fa-clock-rotate-left"></i> il y a 1 j</span>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="notif-item unread">
+                        <div class="notif-item__icon notif-item__icon--blue"><i class="fa-solid fa-file-lines"></i></div>
+                        <div class="notif-item__body">
+                            <div class="notif-item__title">BS-2026-0142 — en attente de votre validation (Transit)</div>
+                            <div class="notif-item__desc">Le bon de sortie BS-2026-0142 attend votre contrôle au Transit 2.</div>
+                            <div class="notif-item__meta">
+                                <span><i class="fa-solid fa-user"></i> Destinataires : Rabemananjara Solo (Transit)</span>
+                                <span><i class="fa-solid fa-clock-rotate-left"></i> il y a 1 j</span>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="notif-item">
+                        <div class="notif-item__icon notif-item__icon--teal"><i class="fa-solid fa-circle-check"></i></div>
+                        <div class="notif-item__body">
+                            <div class="notif-item__title">Anomalie résolue — ANO-2026-018</div>
+                            <div class="notif-item__desc">BS-2026-0142 : étiquette corrigée, passage Transit 2 autorisé.</div>
+                            <div class="notif-item__meta">
+                                <span><i class="fa-solid fa-user"></i> Destinataires : Initiateur, Sécurité</span>
+                                <span><i class="fa-solid fa-clock-rotate-left"></i> hier</span>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="notif-item">
+                        <div class="notif-item__icon notif-item__icon--blue"><i class="fa-solid fa-box-open"></i></div>
+                        <div class="notif-item__body">
+                            <div class="notif-item__title">Réception enregistrée — BS-2026-0141</div>
+                            <div class="notif-item__desc">Le BS-2026-0141 a été réceptionné au Magasin central (18 articles).</div>
+                            <div class="notif-item__meta">
+                                <span><i class="fa-solid fa-user"></i> Destinataires : Initiateur, Bénéficiaire</span>
+                                <span><i class="fa-solid fa-clock-rotate-left"></i> hier</span>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="notif-item">
+                        <div class="notif-item__icon notif-item__icon--purple"><i class="fa-solid fa-flag-checkered"></i></div>
+                        <div class="notif-item__body">
+                            <div class="notif-item__title">BS clôturé — BS-2026-0140</div>
+                            <div class="notif-item__desc">Tous les retours ont été effectués, le bon est clôturé.</div>
+                            <div class="notif-item__meta">
+                                <span><i class="fa-solid fa-user"></i> Destinataires : Initiateur, Responsable magasin</span>
+                                <span><i class="fa-solid fa-clock-rotate-left"></i> il y a 3 j</span>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="notif-item">
+                        <div class="notif-item__icon notif-item__icon--teal"><i class="fa-solid fa-check"></i></div>
+                        <div class="notif-item__body">
+                            <div class="notif-item__title">Validation Sécurité — BS-2026-0142</div>
+                            <div class="notif-item__desc">Andrianarivo Tovo a validé l'étape Sécurité.</div>
+                            <div class="notif-item__meta">
+                                <span><i class="fa-solid fa-user"></i> Destinataires : Initiateur</span>
+                                <span><i class="fa-solid fa-clock-rotate-left"></i> il y a 4 j</span>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <!-- Distribution automatique -->
+            <div class="mock-card">
+                <div class="mock-card__head">
+                    <h2 class="mock-card__title"><i class="fa-solid fa-diagram-project"></i> Distribution automatique</h2>
+                </div>
+                <div class="mock-card__body">
+                    <p style="font-size:0.83rem; color:var(--m-text);">
+                        Les destinataires sont déterminés selon l'événement, le rôle et l'étape du workflow :
+                    </p>
+                    <table class="table-mock">
+                        <thead>
+                            <tr>
+                                <th>Événement</th>
+                                <th>Destinataires</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>BS créé</td>
+                                <td>Initiateur</td>
+                            </tr>
+                            <tr>
+                                <td>BS soumis</td>
+                                <td>Validateur suivant</td>
+                            </tr>
+                            <tr>
+                                <td>Validation / refus</td>
+                                <td>Initiateur + validateur suivant</td>
+                            </tr>
+                            <tr>
+                                <td>Anomalie déclarée</td>
+                                <td>Responsable magasin + Transit</td>
+                            </tr>
+                            <tr>
+                                <td>Retard d'anomalie</td>
+                                <td>Administrateur + Responsable</td>
+                            </tr>
+                            <tr>
+                                <td>Réception / clôture</td>
+                                <td>Initiateur + Bénéficiaire</td>
+                            </tr>
+                            <tr>
+                                <td>Retour en retard</td>
+                                <td>Initiateur + Responsable</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Paramétrage -->
+            <div class="mock-card">
+                <div class="mock-card__head">
+                    <h2 class="mock-card__title"><i class="fa-solid fa-sliders"></i> Mes préférences</h2>
+                    <a href="index.html?page=admin" class="link-soft">Admin →</a>
+                </div>
+                <div class="mock-card__body">
+                    <div class="d-flex justify-content-between align-items-center py-1">
+                        <span style="font-size:0.84rem;">Anomalies et retards</span>
+                        <label class="switch mb-0">
+                            <input type="checkbox" checked>
+                            <span class="switch__slider"></span>
+                        </label>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center py-1">
+                        <span style="font-size:0.84rem;">Validations et workflow</span>
+                        <label class="switch mb-0">
+                            <input type="checkbox" checked>
+                            <span class="switch__slider"></span>
+                        </label>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center py-1">
+                        <span style="font-size:0.84rem;">Rapports périodiques</span>
+                        <label class="switch mb-0">
+                            <input type="checkbox">
+                            <span class="switch__slider"></span>
+                        </label>
+                    </div>
+                    <hr class="hr-soft">
+                    <p class="mb-0" style="font-size:0.78rem; color:var(--m-faint);">
+                        L'activation / désactivation globale et par type est gérée par l'administrateur.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

@@ -1,0 +1,209 @@
+<section>
+    <div data-menu="menu.html"></div>
+
+    <div class="mock-page-head">
+        <div class="mock-page-head__title">
+            <h1><i class="fa-solid fa-truck text-teal"></i> Gestion du transit</h1>
+            <p>Scan aux points de transit, contrôle du colis et validation de passage — historique de chaque point (transit 1, 2, 3…).</p>
+        </div>
+        <div class="mock-page-head__actions">
+            <a href="index.html?page=scan" class="btn-mock"><i class="fa-solid fa-qrcode"></i> Scanner un BS</a>
+        </div>
+    </div>
+
+    <div class="kpi-grid">
+        <div class="kpi-card">
+            <div class="kpi-card__icon kpi-card__icon--blue"><i class="fa-solid fa-location-dot"></i></div>
+            <div>
+                <div class="kpi-card__value">4</div>
+                <div class="kpi-card__label">Points de transit configurés</div>
+            </div>
+        </div>
+        <div class="kpi-card">
+            <div class="kpi-card__icon kpi-card__icon--teal"><i class="fa-solid fa-clipboard-check"></i></div>
+            <div>
+                <div class="kpi-card__value">37</div>
+                <div class="kpi-card__label">Contrôles conformes (mois)</div>
+            </div>
+        </div>
+        <div class="kpi-card">
+            <div class="kpi-card__icon kpi-card__icon--red"><i class="fa-solid fa-triangle-exclamation"></i></div>
+            <div>
+                <div class="kpi-card__value">3</div>
+                <div class="kpi-card__label">Contrôles non conformes</div>
+            </div>
+        </div>
+        <div class="kpi-card">
+            <div class="kpi-card__icon kpi-card__icon--amber"><i class="fa-solid fa-hourglass-half"></i></div>
+            <div>
+                <div class="kpi-card__value">6</div>
+                <div class="kpi-card__label">Passages en attente</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Contrôle en cours -->
+        <div class="col-lg-5">
+            <div class="mock-card">
+                <div class="mock-card__head">
+                    <h2 class="mock-card__title"><i class="fa-solid fa-clipboard-check"></i> Contrôle en cours</h2>
+                    <span class="chip chip--active">Point : Transit 2 · Plateforme</span>
+                </div>
+                <div class="mock-card__body">
+                    <div class="info-grid mb-3">
+                        <div class="info-grid__item">
+                            <label>BS scanné</label>
+                            <div class="value mono">BS-2026-0142</div>
+                        </div>
+                        <div class="info-grid__item">
+                            <label>Destination</label>
+                            <div class="value">Siège - Administration S2M</div>
+                        </div>
+                        <div class="info-grid__item">
+                            <label>Colis</label>
+                            <div class="value">1 colis · 18 articles</div>
+                        </div>
+                        <div class="info-grid__item">
+                            <label>Arrivé au point</label>
+                            <div class="value value--muted">14/08/2026 à 14:20</div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="transit-controle">Résultat du contrôle</label>
+                        <select class="form-control" id="transit-controle">
+                            <option selected>Conforme — colis identifié, scellé et complet</option>
+                            <option>Non conforme — anomalie détectée</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="transit-note">Note de contrôle (facultatif)</label>
+                        <textarea class="form-control" id="transit-note" rows="2" placeholder="État du colis, observations…"></textarea>
+                    </div>
+
+                    <div class="d-flex flex-wrap" style="gap:10px;">
+                        <button class="btn-mock"><i class="fa-solid fa-circle-check"></i> Valider le passage</button>
+                        <a href="index.html?page=anomalie-create&bs=BS-2026-0142&point=transit-2" class="btn-mock btn-mock--danger"><i class="fa-solid fa-triangle-exclamation"></i> Déclarer une anomalie</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Points de transit -->
+        <div class="col-lg-7">
+            <div class="mock-card">
+                <div class="mock-card__head">
+                    <h2 class="mock-card__title"><i class="fa-solid fa-location-dot"></i> Points de transit — BS-2026-0142</h2>
+                    <span class="chip">2 passages sur 4</span>
+                </div>
+                <div class="mock-card__body mock-card__body--flush">
+                    <table class="table-mock">
+                        <thead>
+                            <tr>
+                                <th>Point</th>
+                                <th>Emplacement</th>
+                                <th>Agent</th>
+                                <th>Date / heure</th>
+                                <th>Résultat</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><span class="chip">Transit 1</span></td>
+                                <td>Barrière de sortie</td>
+                                <td>Rakotobe Hery</td>
+                                <td>14/08 · 13:05</td>
+                                <td><span class="badge-status badge--valide">Conforme</span></td>
+                            </tr>
+                            <tr style="background:var(--m-bg-soft);">
+                                <td><span class="chip chip--active">Transit 2</span></td>
+                                <td>Plateforme logistique</td>
+                                <td>Rabemananjara Solo</td>
+                                <td class="cell-muted">En attente de contrôle…</td>
+                                <td><span class="badge-status badge--encours">À contrôler</span></td>
+                            </tr>
+                            <tr>
+                                <td><span class="chip">Transit 3</span></td>
+                                <td>Poste de contrôle</td>
+                                <td class="cell-muted">—</td>
+                                <td class="cell-muted">—</td>
+                                <td><span class="badge-status badge--brouillon">À venir</span></td>
+                            </tr>
+                            <tr>
+                                <td><span class="chip">Transit 4</span></td>
+                                <td>Arrivée — Siège</td>
+                                <td class="cell-muted">—</td>
+                                <td class="cell-muted">—</td>
+                                <td><span class="badge-status badge--brouillon">À venir</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="mock-card__body" style="border-top:1px solid var(--m-line-soft);">
+                    <p class="mb-0" style="font-size:0.82rem; color:var(--m-muted);">
+                        <i class="fa-solid fa-circle-info text-teal"></i>
+                        Chaque passage est horodaté et rattaché à l'agent ayant scanné. Un contrôle non conforme
+                        bloque automatiquement la progression jusqu'à résolution de l'anomalie.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Historique des passages -->
+    <div class="mock-card">
+        <div class="mock-card__head">
+            <h2 class="mock-card__title"><i class="fa-solid fa-clock-rotate-left"></i> Historique des passages récents</h2>
+            <a href="index.html?page=bs-detail" class="link-soft">Voir le BS associé <i class="fa-solid fa-arrow-right"></i></a>
+        </div>
+        <div class="mock-card__body mock-card__body--flush">
+            <table class="table-mock">
+                <thead>
+                    <tr>
+                        <th>BS</th>
+                        <th>Point</th>
+                        <th>Agent</th>
+                        <th>Date / heure</th>
+                        <th>Conformité</th>
+                        <th>Anomalie</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><a class="cell-link" href="index.html?page=bs-detail">BS-2026-0142</a></td>
+                        <td>Transit 1 · Barrière</td>
+                        <td>Rakotobe Hery</td>
+                        <td>14/08 · 13:05</td>
+                        <td><span class="badge-status badge--valide">Conforme</span></td>
+                        <td class="cell-muted">—</td>
+                    </tr>
+                    <tr>
+                        <td><a class="cell-link" href="index.html?page=bs-detail">BS-2026-0142</a></td>
+                        <td>Transit 1 · Barrière</td>
+                        <td>Rakotobe Hery</td>
+                        <td>14/08 · 12:58</td>
+                        <td><span class="badge-status badge--refuse">Non conforme</span></td>
+                        <td><a class="cell-link" href="index.html?page=anomalie-detail">ANO-2026-018</a> <span class="badge-status badge--valide">Résolue</span></td>
+                    </tr>
+                    <tr>
+                        <td><a class="cell-link" href="index.html?page=bs-detail">BS-2026-0141</a></td>
+                        <td>Transit 3 · Poste contrôle</td>
+                        <td>Rabemananjara Solo</td>
+                        <td>13/08 · 16:40</td>
+                        <td><span class="badge-status badge--valide">Conforme</span></td>
+                        <td class="cell-muted">—</td>
+                    </tr>
+                    <tr>
+                        <td><a class="cell-link" href="index.html?page=bs-detail">BS-2026-0139</a></td>
+                        <td>Transit 2 · Plateforme</td>
+                        <td>Rabemananjara Solo</td>
+                        <td>12/08 · 10:15</td>
+                        <td><span class="badge-status badge--refuse">Non conforme</span></td>
+                        <td><a class="cell-link" href="index.html?page=anomalie-detail">ANO-2026-014</a> <span class="badge-status badge--retard">En retard</span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>

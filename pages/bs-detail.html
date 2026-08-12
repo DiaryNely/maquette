@@ -1,0 +1,348 @@
+<section>
+    <div data-menu="menu.html"></div>
+
+    <div class="mock-page-head">
+        <div class="mock-page-head__title">
+            <h1><i class="fa-solid fa-file-lines text-teal"></i> Bon de sortie <span class="mono">BS-2026-0142</span>
+                <span class="badge-status badge--encours">En cours</span></h1>
+            <p>Détail complet : articles, retours, workflow de validation, QR code et historique.</p>
+        </div>
+        <div class="mock-page-head__actions">
+            <a href="index.html?page=trace" class="btn-mock btn-mock--outline"><i class="fa-solid fa-route"></i> Traçabilité</a>
+            <button class="btn-mock btn-mock--outline"><i class="fa-solid fa-print"></i> PDF</button>
+            <a href="index.html?page=bs-create" class="btn-mock btn-mock--outline"><i class="fa-solid fa-pen"></i> Modifier</a>
+            <button class="btn-mock btn-mock--danger"><i class="fa-solid fa-ban"></i> Annuler le BS</button>
+        </div>
+    </div>
+
+    <div class="alert-mock alert-mock--info">
+        <i class="fa-solid fa-circle-info"></i>
+        <span><strong>Étape courante :</strong> validation <strong>Transit</strong> (Rabemananjara Solo) —
+            passage Transit 1 contrôlé, en attente du passage Transit 2.</span>
+    </div>
+
+    <div class="row">
+        <!-- Colonne principale -->
+        <div class="col-lg-8">
+            <!-- Informations générales -->
+            <div class="mock-card">
+                <div class="mock-card__head">
+                    <h2 class="mock-card__title"><i class="fa-solid fa-user-tie"></i> Informations générales</h2>
+                    <span class="chip">Créé le 12/08/2026 à 09:14</span>
+                </div>
+                <div class="mock-card__body">
+                    <div class="info-grid">
+                        <div class="info-grid__item">
+                            <label>Initiateur</label>
+                            <div class="value">Rakotobe Hery</div>
+                        </div>
+                        <div class="info-grid__item">
+                            <label>Bénéficiaire</label>
+                            <div class="value">Rasoanirina Miora</div>
+                        </div>
+                        <div class="info-grid__item">
+                            <label>Magasin d'origine</label>
+                            <div class="value">Magasin central</div>
+                        </div>
+                        <div class="info-grid__item">
+                            <label>Magasin de destination</label>
+                            <div class="value">Siège - Administration S2M</div>
+                        </div>
+                        <div class="info-grid__item">
+                            <label>Motif</label>
+                            <div class="value">Équipement informatique</div>
+                        </div>
+                        <div class="info-grid__item">
+                            <label>Date de sortie</label>
+                            <div class="value">14/08/2026</div>
+                        </div>
+                        <div class="info-grid__item">
+                            <label>Date limite de retour</label>
+                            <div class="value value--muted">12/09/2026 (2 articles à rendre)</div>
+                        </div>
+                        <div class="info-grid__item">
+                            <label>Modèle de workflow</label>
+                            <div class="value value--muted">Standard — 6 étapes</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Articles et retours -->
+            <div class="mock-card">
+                <div class="mock-card__head">
+                    <h2 class="mock-card__title"><i class="fa-solid fa-boxes-stacked"></i> Articles et suivi des retours</h2>
+                    <span class="chip"><i class="fa-solid fa-rotate-left"></i> 2 articles à rendre</span>
+                </div>
+                <div class="mock-card__body mock-card__body--flush">
+                    <div class="table-responsive">
+                        <table class="table-mock" style="min-width: 980px;">
+                            <thead>
+                                <tr>
+                                    <th>Type</th>
+                                    <th>Code</th>
+                                    <th>Désignation</th>
+                                    <th>Unité</th>
+                                    <th>Qté</th>
+                                    <th>État</th>
+                                    <th>À rendre</th>
+                                    <th>Retour prévu</th>
+                                    <th>Suivi du retour</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><span class="chip">Article</span></td>
+                                    <td class="mono">ART-102</td>
+                                    <td>Rame papier A4 80 g (paquet de 500)</td>
+                                    <td>rme</td>
+                                    <td>10</td>
+                                    <td>Neuf</td>
+                                    <td class="cell-muted">—</td>
+                                    <td class="cell-muted">—</td>
+                                    <td><span class="cell-muted">Non concerné</span></td>
+                                </tr>
+                                <tr>
+                                    <td><span class="chip">Info</span></td>
+                                    <td class="mono">MAT-011</td>
+                                    <td>Écran 24&quot; Dell P2422H</td>
+                                    <td>pce</td>
+                                    <td>2</td>
+                                    <td>Bon état</td>
+                                    <td><span class="badge-status badge--info">À rendre</span></td>
+                                    <td>12/09/2026</td>
+                                    <td><span class="badge-status badge--encours">En attente</span></td>
+                                </tr>
+                                <tr>
+                                    <td><span class="chip">Info</span></td>
+                                    <td class="mono">MAT-008</td>
+                                    <td>Ordinateur portable Dell Latitude 5440</td>
+                                    <td>pce</td>
+                                    <td>1</td>
+                                    <td>Neuf</td>
+                                    <td><span class="badge-status badge--info">À rendre</span></td>
+                                    <td>12/09/2026</td>
+                                    <td><span class="badge-status badge--encours">En attente</span></td>
+                                </tr>
+                                <tr>
+                                    <td><span class="chip">Fourniture</span></td>
+                                    <td class="mono">FOU-031</td>
+                                    <td>Boîte de stylos à bille bleu (12)</td>
+                                    <td>boîte</td>
+                                    <td>5</td>
+                                    <td>Neuf</td>
+                                    <td class="cell-muted">—</td>
+                                    <td class="cell-muted">—</td>
+                                    <td><span class="cell-muted">Non concerné</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="mock-card__body" style="border-top:1px solid var(--m-line-soft);">
+                        <p class="mb-0" style="font-size:0.82rem; color:var(--m-muted);">
+                            <i class="fa-solid fa-rotate-left text-teal"></i>
+                            Les retours partiels ou complets sont enregistrés à la réception : quantité restituée,
+                            état constaté et date effective. Un retour non effectué à la date prévue déclenche une alerte.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Workflow + historique -->
+            <div class="mock-card">
+                <div class="mock-card__head">
+                    <h2 class="mock-card__title"><i class="fa-solid fa-route"></i> Workflow de validation</h2>
+                    <span class="chip chip--active"><i class="fa-solid fa-bolt"></i> Étape 4/6 — Transit</span>
+                </div>
+                <div class="mock-card__body">
+                    <div class="workflow-steps-wrap">
+                        <div class="workflow-steps">
+                            <div class="workflow-step workflow-step--done">
+                                <div class="workflow-step__dot"><i class="fa-solid fa-user"></i></div>
+                                <div class="workflow-step__label">Initiateur</div>
+                                <div class="workflow-step__actor">Rakotobe Hery</div>
+                            </div>
+                            <div class="workflow-step workflow-step--done">
+                                <div class="workflow-step__dot"><i class="fa-solid fa-user-check"></i></div>
+                                <div class="workflow-step__label">Responsable</div>
+                                <div class="workflow-step__actor">Razafindratsima V.</div>
+                            </div>
+                            <div class="workflow-step workflow-step--done">
+                                <div class="workflow-step__dot"><i class="fa-solid fa-shield-halved"></i></div>
+                                <div class="workflow-step__label">Sécurité</div>
+                                <div class="workflow-step__actor">Andrianarivo T.</div>
+                            </div>
+                            <div class="workflow-step workflow-step--current">
+                                <div class="workflow-step__dot"><i class="fa-solid fa-truck"></i></div>
+                                <div class="workflow-step__label">Transit</div>
+                                <div class="workflow-step__actor">Rabemananjara S.</div>
+                            </div>
+                            <div class="workflow-step">
+                                <div class="workflow-step__dot"><i class="fa-solid fa-box-open"></i></div>
+                                <div class="workflow-step__label">Réception</div>
+                                <div class="workflow-step__actor">Randria Jean</div>
+                            </div>
+                            <div class="workflow-step">
+                                <div class="workflow-step__dot"><i class="fa-solid fa-flag-checkered"></i></div>
+                                <div class="workflow-step__label">Destinataire</div>
+                                <div class="workflow-step__actor">Rasoanirina M.</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mock-card__body" style="border-top:1px solid var(--m-line-soft);">
+                    <h3 class="mb-3" style="font-size:0.9rem; font-weight:700; color:var(--m-ink);">
+                        <i class="fa-solid fa-clock-rotate-left text-teal"></i> Historique des validations
+                    </h3>
+                    <ul class="timeline">
+                        <li class="timeline-item timeline-item--warn">
+                            <div class="timeline-item__title">En attente — Passage Transit 2</div>
+                            <div class="timeline-item__meta">Rabemananjara Solo · attendu le 14/08/2026</div>
+                            <div class="timeline-item__desc">Scan du QR au point de transit 2 (plateforme logistique).</div>
+                        </li>
+                        <li class="timeline-item">
+                            <div class="timeline-item__title">Passage Transit 1 <span class="badge-status badge--valide">Conforme</span></div>
+                            <div class="timeline-item__meta">Rabemananjara Solo · 14/08/2026 à 13:05</div>
+                            <div class="timeline-item__desc">Contrôle colis à la barrière — scan QR OK, quantité conforme.</div>
+                        </li>
+                        <li class="timeline-item">
+                            <div class="timeline-item__title">Validation Sécurité <span class="badge-status badge--valide">Validé</span></div>
+                            <div class="timeline-item__meta">Andrianarivo Tovo · 13/08/2026 à 11:22</div>
+                            <div class="timeline-item__desc">Identité et autorisation vérifiées.</div>
+                        </li>
+                        <li class="timeline-item">
+                            <div class="timeline-item__title">Validation Responsable <span class="badge-status badge--valide">Validé</span></div>
+                            <div class="timeline-item__meta">Razafindratsima Vola · 13/08/2026 à 09:47</div>
+                            <div class="timeline-item__desc">Disponibilité du stock confirmée.</div>
+                        </li>
+                        <li class="timeline-item">
+                            <div class="timeline-item__title">Soumission <span class="badge-status badge--soumis">Soumis</span></div>
+                            <div class="timeline-item__meta">Rakotobe Hery · 12/08/2026 à 09:20</div>
+                            <div class="timeline-item__desc">Bon soumis au workflow de validation.</div>
+                        </li>
+                        <li class="timeline-item timeline-item--info">
+                            <div class="timeline-item__title">Création <span class="badge-status badge--brouillon">Brouillon</span></div>
+                            <div class="timeline-item__meta">Rakotobe Hery · 12/08/2026 à 09:14</div>
+                            <div class="timeline-item__desc">Création du BS avec 4 lignes d'articles.</div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Anomalies liées -->
+            <div class="mock-card">
+                <div class="mock-card__head">
+                    <h2 class="mock-card__title"><i class="fa-solid fa-triangle-exclamation"></i> Anomalies liées</h2>
+                    <a href="index.html?page=anomalies" class="link-soft">Toutes les anomalies <i class="fa-solid fa-arrow-right"></i></a>
+                </div>
+                <div class="mock-card__body mock-card__body--flush">
+                    <table class="table-mock">
+                        <thead>
+                            <tr>
+                                <th>Code</th>
+                                <th>Point de contrôle</th>
+                                <th>Motif</th>
+                                <th>Statut</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><a class="cell-link" href="index.html?page=anomalie-detail">ANO-2026-018</a></td>
+                                <td>Transit 1 · Barrière</td>
+                                <td>Étiquette colis partiellement illisible</td>
+                                <td><span class="badge-status badge--valide">Résolue</span></td>
+                                <td class="cell-actions">
+                                    <a href="index.html?page=anomalie-detail" class="btn-mock btn-mock--outline btn-mock--sm"><i class="fa-solid fa-eye"></i></a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Colonne latérale -->
+        <div class="col-lg-4">
+            <!-- QR Code -->
+            <div class="mock-card">
+                <div class="mock-card__head">
+                    <h2 class="mock-card__title"><i class="fa-solid fa-qrcode"></i> QR Code du BS</h2>
+                </div>
+                <div class="mock-card__body text-center">
+                    <div class="qr-block">
+                        <div class="qr-block__box" data-qr="BS-2026-0142"></div>
+                        <div class="qr-block__ref mono">BS-2026-0142</div>
+                        <div class="qr-block__hint">Généré automatiquement à la création du bon.</div>
+                    </div>
+                    <hr class="hr-soft">
+                    <div class="text-left" style="font-size:0.82rem; color:var(--m-text);">
+                        <p class="mb-2"><i class="fa-solid fa-shield-halved text-teal"></i> <strong>Authentification :</strong>
+                            le scan ouvre le BS et propose les actions autorisées selon le rôle de l'utilisateur
+                            et l'étape courante du workflow.</p>
+                        <p class="mb-0"><i class="fa-solid fa-camera text-teal"></i> <a href="index.html?page=scan" class="link-soft">Ouvrir le module de scan →</a></p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Actions possibles selon rôle -->
+            <div class="mock-card">
+                <div class="mock-card__head">
+                    <h2 class="mock-card__title"><i class="fa-solid fa-user-shield"></i> Actions selon le rôle</h2>
+                    <span class="chip">Connecté : Transit</span>
+                </div>
+                <div class="mock-card__body">
+                    <ul class="list-unstyled mb-0" style="font-size:0.84rem;">
+                        <li class="d-flex align-items-center py-1" style="gap:8px;">
+                            <i class="fa-solid fa-circle-check text-teal"></i> Contrôler le colis (conforme)
+                        </li>
+                        <li class="d-flex align-items-center py-1" style="gap:8px;">
+                            <i class="fa-solid fa-circle-check text-teal"></i> Valider le passage au transit
+                        </li>
+                        <li class="d-flex align-items-center py-1" style="gap:8px;">
+                            <i class="fa-solid fa-circle-xmark text-red"></i> Déclarer une anomalie
+                        </li>
+                        <li class="d-flex align-items-center py-1" style="gap:8px;">
+                            <i class="fa-solid fa-circle-minus text-muted2"></i> Modifier le BS (non autorisé à cette étape)
+                        </li>
+                        <li class="d-flex align-items-center py-1" style="gap:8px;">
+                            <i class="fa-solid fa-circle-minus text-muted2"></i> Annuler le BS (réservé à l'initiateur / administrateur)
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Résumé du circuit -->
+            <div class="mock-card">
+                <div class="mock-card__head">
+                    <h2 class="mock-card__title"><i class="fa-solid fa-location-dot"></i> Parcours</h2>
+                </div>
+                <div class="mock-card__body">
+                    <ol class="list-unstyled mb-0" style="font-size:0.84rem;">
+                        <li class="d-flex justify-content-between py-1">
+                            <span class="cell-muted">Magasin central</span>
+                            <span class="badge-status badge--valide">Sorti</span>
+                        </li>
+                        <li class="d-flex justify-content-between py-1">
+                            <span class="cell-muted">Transit 1 · Barrière</span>
+                            <span class="badge-status badge--valide">Conforme</span>
+                        </li>
+                        <li class="d-flex justify-content-between py-1">
+                            <span class="cell-muted">Transit 2 · Plateforme</span>
+                            <span class="badge-status badge--encours">En cours</span>
+                        </li>
+                        <li class="d-flex justify-content-between py-1">
+                            <span class="cell-muted">Transit 3 · Poste contrôle</span>
+                            <span class="badge-status badge--brouillon">À venir</span>
+                        </li>
+                        <li class="d-flex justify-content-between py-1">
+                            <span class="cell-muted">Siège — Administration</span>
+                            <span class="badge-status badge--brouillon">À venir</span>
+                        </li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

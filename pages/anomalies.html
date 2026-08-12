@@ -1,0 +1,185 @@
+<section>
+    <div data-menu="menu.html"></div>
+
+    <div class="mock-page-head">
+        <div class="mock-page-head__title">
+            <h1><i class="fa-solid fa-triangle-exclamation text-teal"></i> Gestion des anomalies</h1>
+            <p>Création lors d'un contrôle non conforme, suivi du motif et du délai, détection des retards, historique complet.</p>
+        </div>
+        <div class="mock-page-head__actions">
+            <a href="index.html?page=anomalie-create" class="btn-mock"><i class="fa-solid fa-plus"></i> Nouvelle anomalie</a>
+        </div>
+    </div>
+
+    <div class="alert-mock alert-mock--danger">
+        <i class="fa-solid fa-bell"></i>
+        <span><strong>3 anomalies en retard</strong> — délai de résolution dépassé. Actions requises.</span>
+        <a href="#liste" class="alert-mock__link">Voir la liste</a>
+    </div>
+
+    <div class="kpi-grid">
+        <div class="kpi-card">
+            <div class="kpi-card__icon kpi-card__icon--amber"><i class="fa-solid fa-hourglass-half"></i></div>
+            <div>
+                <div class="kpi-card__value">7</div>
+                <div class="kpi-card__label">Anomalies ouvertes</div>
+            </div>
+        </div>
+        <div class="kpi-card">
+            <div class="kpi-card__icon kpi-card__icon--teal"><i class="fa-solid fa-circle-check"></i></div>
+            <div>
+                <div class="kpi-card__value">31</div>
+                <div class="kpi-card__label">Résolues (30 jours)</div>
+            </div>
+        </div>
+        <div class="kpi-card">
+            <div class="kpi-card__icon kpi-card__icon--red"><i class="fa-solid fa-clock"></i></div>
+            <div>
+                <div class="kpi-card__value">3</div>
+                <div class="kpi-card__label">En retard de résolution</div>
+            </div>
+        </div>
+        <div class="kpi-card">
+            <div class="kpi-card__icon kpi-card__icon--blue"><i class="fa-solid fa-stopwatch"></i></div>
+            <div>
+                <div class="kpi-card__value">1,8 j</div>
+                <div class="kpi-card__label">Durée moyenne de résolution</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="filter-bar" id="liste">
+        <div class="input-group search-input">
+            <div class="input-group-prepend">
+                <span class="input-group-text"><i class="fa-solid fa-magnifying-glass"></i></span>
+            </div>
+            <input type="text" class="form-control" placeholder="Rechercher une anomalie, un BS, un motif…">
+        </div>
+        <select class="form-control">
+            <option value="" selected>Tous les statuts</option>
+            <option>Ouverte</option>
+            <option>Résolue</option>
+            <option>En retard</option>
+            <option>Clôturée</option>
+        </select>
+        <select class="form-control">
+            <option value="" selected>Tous les points</option>
+            <option>Transit 1</option>
+            <option>Transit 2</option>
+            <option>Réception</option>
+        </select>
+        <div class="filter-spacer"></div>
+        <button class="btn-export" type="button" title="Exporter en Excel"><i class="fa-solid fa-file-excel"></i></button>
+    </div>
+
+    <div class="table-mock-wrap">
+        <table class="table-mock">
+            <thead>
+                <tr>
+                    <th>Code</th>
+                    <th>BS lié</th>
+                    <th>Point</th>
+                    <th>Motif</th>
+                    <th>Détection</th>
+                    <th>Date limite</th>
+                    <th>Durée</th>
+                    <th>Statut</th>
+                    <th class="text-right">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><a class="cell-link" href="index.html?page=anomalie-detail">ANO-2026-019</a></td>
+                    <td><a class="cell-link" href="index.html?page=bs-detail">BS-2026-0143</a></td>
+                    <td>Transit 2 · Plateforme</td>
+                    <td>Quantité manquante (1 pce sur 6)</td>
+                    <td>14/08/2026</td>
+                    <td class="text-red">16/08/2026</td>
+                    <td class="text-red">J+2 <i class="fa-solid fa-arrow-up"></i></td>
+                    <td><span class="badge-status badge--retard">En retard</span></td>
+                    <td class="cell-actions">
+                        <a href="index.html?page=anomalie-detail" class="btn-mock btn-mock--outline btn-mock--sm"><i class="fa-solid fa-eye"></i></a>
+                    </td>
+                </tr>
+                <tr>
+                    <td><a class="cell-link" href="index.html?page=anomalie-detail">ANO-2026-018</a></td>
+                    <td><a class="cell-link" href="index.html?page=bs-detail">BS-2026-0142</a></td>
+                    <td>Transit 1 · Barrière</td>
+                    <td>Étiquette colis partiellement illisible</td>
+                    <td>14/08/2026</td>
+                    <td>15/08/2026</td>
+                    <td>1,0 j</td>
+                    <td><span class="badge-status badge--valide">Résolue</span></td>
+                    <td class="cell-actions">
+                        <a href="index.html?page=anomalie-detail" class="btn-mock btn-mock--outline btn-mock--sm"><i class="fa-solid fa-eye"></i></a>
+                    </td>
+                </tr>
+                <tr>
+                    <td><a class="cell-link" href="index.html?page=anomalie-detail">ANO-2026-017</a></td>
+                    <td><a class="cell-link" href="index.html?page=bs-detail">BS-2026-0141</a></td>
+                    <td>Réception — Siège</td>
+                    <td>Colis endommagé (carton écrasé)</td>
+                    <td>13/08/2026</td>
+                    <td>14/08/2026</td>
+                    <td class="text-red">J+1 <i class="fa-solid fa-arrow-up"></i></td>
+                    <td><span class="badge-status badge--retard">En retard</span></td>
+                    <td class="cell-actions">
+                        <a href="index.html?page=anomalie-detail" class="btn-mock btn-mock--outline btn-mock--sm"><i class="fa-solid fa-eye"></i></a>
+                    </td>
+                </tr>
+                <tr>
+                    <td><a class="cell-link" href="index.html?page=anomalie-detail">ANO-2026-014</a></td>
+                    <td><a class="cell-link" href="index.html?page=bs-detail">BS-2026-0139</a></td>
+                    <td>Transit 2 · Plateforme</td>
+                    <td>Retard de livraison au point de contrôle</td>
+                    <td>12/08/2026</td>
+                    <td>12/08/2026</td>
+                    <td class="text-red">J+2 <i class="fa-solid fa-arrow-up"></i></td>
+                    <td><span class="badge-status badge--retard">En retard</span></td>
+                    <td class="cell-actions">
+                        <a href="index.html?page=anomalie-detail" class="btn-mock btn-mock--outline btn-mock--sm"><i class="fa-solid fa-eye"></i></a>
+                    </td>
+                </tr>
+                <tr>
+                    <td><a class="cell-link" href="index.html?page=anomalie-detail">ANO-2026-012</a></td>
+                    <td><a class="cell-link" href="index.html?page=bs-detail">BS-2026-0135</a></td>
+                    <td>Réception — Siège</td>
+                    <td>Emballage ouvert / scellé brisé</td>
+                    <td>10/08/2026</td>
+                    <td>11/08/2026</td>
+                    <td>1,2 j</td>
+                    <td><span class="badge-status badge--valide">Résolue</span></td>
+                    <td class="cell-actions">
+                        <a href="index.html?page=anomalie-detail" class="btn-mock btn-mock--outline btn-mock--sm"><i class="fa-solid fa-eye"></i></a>
+                    </td>
+                </tr>
+                <tr>
+                    <td><a class="cell-link" href="index.html?page=anomalie-detail">ANO-2026-010</a></td>
+                    <td><a class="cell-link" href="index.html?page=bs-detail">BS-2026-0133</a></td>
+                    <td>Transit 1 · Barrière</td>
+                    <td>Identité du transporteur non vérifiable</td>
+                    <td>09/08/2026</td>
+                    <td>10/08/2026</td>
+                    <td>2,0 j</td>
+                    <td><span class="badge-status badge--valide">Clôturée</span></td>
+                    <td class="cell-actions">
+                        <a href="index.html?page=anomalie-detail" class="btn-mock btn-mock--outline btn-mock--sm"><i class="fa-solid fa-eye"></i></a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="pagination-bar" role="navigation" aria-label="Pagination">
+        <div class="pagination-info">page 1 sur 7</div>
+        <div class="pagination-jump">
+            <label for="page-input-ano">Allez à la page :</label>
+            <input type="text" id="page-input-ano" aria-label="Numéro de page">
+        </div>
+        <div class="pagination-navigation">
+            <button class="pagination-arrow" type="button" aria-label="Page précédente" disabled>←</button>
+            <span class="pagination-current" aria-current="page">1</span>
+            <button class="pagination-arrow" type="button" aria-label="Page suivante">→</button>
+        </div>
+    </div>
+</section>

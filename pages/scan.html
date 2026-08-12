@@ -1,0 +1,193 @@
+<section>
+    <div data-menu="menu.html"></div>
+
+    <div class="mock-page-head">
+        <div class="mock-page-head__title">
+            <h1><i class="fa-solid fa-qrcode text-teal"></i> Scan QR Code</h1>
+            <p>Identification d'un bon de sortie par scan : consultation des informations et actions selon le rôle et l'état du BS.</p>
+        </div>
+        <div class="mock-page-head__actions">
+            <button class="btn-mock btn-mock--outline"><i class="fa-solid fa-camera"></i> Caméra externe</button>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Cadre de scan -->
+        <div class="col-lg-5">
+            <div class="mock-card">
+                <div class="mock-card__head">
+                    <h2 class="mock-card__title"><i class="fa-solid fa-camera"></i> Scanner</h2>
+                    <span class="chip chip--active"><i class="fa-solid fa-circle"></i> Caméra active</span>
+                </div>
+                <div class="mock-card__body">
+                    <div class="scan-frame">
+                        <span class="scan-frame__corners"></span>
+                        <span class="scan-frame__inner"></span>
+                        <i class="fa-solid fa-qrcode scan-frame__icon"></i>
+                        <span class="scan-frame__line"></span>
+                        <div class="scan-frame__state">Recherche d'un QR code…</div>
+                    </div>
+                    <hr class="hr-soft">
+                    <div class="form-group mb-0">
+                        <label for="scan-manual">Ou saisir la référence du BS</label>
+                        <div class="input-group">
+                            <input type="text" class="form-control" id="scan-manual" placeholder="Ex. BS-2026-0142" value="BS-2026-0142">
+                            <div class="input-group-append">
+                                <button class="btn-mock" type="button"><i class="fa-solid fa-magnifying-glass"></i> Rechercher</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Résultat du scan -->
+        <div class="col-lg-7">
+            <div class="mock-card">
+                <div class="mock-card__head">
+                    <h2 class="mock-card__title"><i class="fa-solid fa-circle-check text-teal"></i> Dernier scan — BS-2026-0142</h2>
+                    <span class="badge-status badge--encours">En cours</span>
+                </div>
+                <div class="mock-card__body">
+                    <div class="info-grid mb-3">
+                        <div class="info-grid__item">
+                            <label>Initiateur</label>
+                            <div class="value">Rakotobe Hery</div>
+                        </div>
+                        <div class="info-grid__item">
+                            <label>Bénéficiaire</label>
+                            <div class="value">Rasoanirina Miora</div>
+                        </div>
+                        <div class="info-grid__item">
+                            <label>Parcours</label>
+                            <div class="value value--muted">Magasin central → Siège</div>
+                        </div>
+                        <div class="info-grid__item">
+                            <label>Étape workflow</label>
+                            <div class="value value--muted">4/6 — Transit</div>
+                        </div>
+                        <div class="info-grid__item">
+                            <label>Articles</label>
+                            <div class="value">18 pièces / 4 lignes</div>
+                        </div>
+                        <div class="info-grid__item">
+                            <label>Dont à rendre</label>
+                            <div class="value">2 articles (retour avant le 12/09/2026)</div>
+                        </div>
+                    </div>
+
+                    <h3 class="mb-2" style="font-size:0.9rem; font-weight:700; color:var(--m-ink);">
+                        <i class="fa-solid fa-boxes-stacked text-teal"></i> Articles du bon
+                    </h3>
+                    <div class="table-mock-wrap mb-3">
+                        <table class="table-mock">
+                            <thead>
+                                <tr>
+                                    <th>Code</th>
+                                    <th>Désignation</th>
+                                    <th>Qté</th>
+                                    <th>État</th>
+                                    <th>À rendre</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="mono">ART-102</td>
+                                    <td>Rame papier A4 80 g (paquet de 500)</td>
+                                    <td>10</td>
+                                    <td>Neuf</td>
+                                    <td class="cell-muted">—</td>
+                                </tr>
+                                <tr>
+                                    <td class="mono">MAT-011</td>
+                                    <td>Écran 24&quot; Dell P2422H</td>
+                                    <td>2</td>
+                                    <td>Bon état</td>
+                                    <td><span class="badge-status badge--info">Oui</span></td>
+                                </tr>
+                                <tr>
+                                    <td class="mono">MAT-008</td>
+                                    <td>Ordinateur portable Dell Latitude 5440</td>
+                                    <td>1</td>
+                                    <td>Neuf</td>
+                                    <td><span class="badge-status badge--info">Oui</span></td>
+                                </tr>
+                                <tr>
+                                    <td class="mono">FOU-031</td>
+                                    <td>Boîte de stylos à bille bleu (12)</td>
+                                    <td>5</td>
+                                    <td>Neuf</td>
+                                    <td class="cell-muted">—</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Authentification : actions selon le rôle et l'état -->
+                    <div class="alert-mock alert-mock--info mb-3">
+                        <i class="fa-solid fa-shield-halved"></i>
+                        <span>Connecté en tant que <strong>Transit</strong> — actions autorisées pour ce BS à son étape actuelle :</span>
+                    </div>
+                    <div class="d-flex flex-wrap" style="gap:10px;">
+                        <button class="btn-mock"><i class="fa-solid fa-clipboard-check"></i> Contrôler le colis</button>
+                        <button class="btn-mock"><i class="fa-solid fa-circle-check"></i> Valider le passage</button>
+                        <a href="index.html?page=anomalie-create&bs=BS-2026-0142&point=transit-1" class="btn-mock btn-mock--danger"><i class="fa-solid fa-triangle-exclamation"></i> Déclarer une anomalie</a>
+                        <button class="btn-mock btn-mock--outline" disabled><i class="fa-solid fa-lock"></i> Modifier (non autorisé)</button>
+                        <a href="index.html?page=bs-detail" class="btn-mock btn-mock--outline"><i class="fa-solid fa-eye"></i> Voir le détail</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Historique des scans -->
+    <div class="mock-card">
+        <div class="mock-card__head">
+            <h2 class="mock-card__title"><i class="fa-solid fa-clock-rotate-left"></i> Historique des scans récents</h2>
+            <a href="index.html?page=trace" class="link-soft">Traçabilité complète <i class="fa-solid fa-arrow-right"></i></a>
+        </div>
+        <div class="mock-card__body mock-card__body--flush">
+            <table class="table-mock">
+                <thead>
+                    <tr>
+                        <th>Horodatage</th>
+                        <th>BS</th>
+                        <th>Utilisateur / rôle</th>
+                        <th>Point</th>
+                        <th>Résultat</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>14/08/2026 · 13:05</td>
+                        <td><a class="cell-link" href="index.html?page=bs-detail">BS-2026-0142</a></td>
+                        <td>Rabemananjara Solo · Transit</td>
+                        <td>Transit 1 · Barrière</td>
+                        <td><span class="badge-status badge--valide">Conforme</span></td>
+                    </tr>
+                    <tr>
+                        <td>14/08/2026 · 12:58</td>
+                        <td><a class="cell-link" href="index.html?page=bs-detail">BS-2026-0142</a></td>
+                        <td>Rabemananjara Solo · Transit</td>
+                        <td>Transit 1 · Barrière</td>
+                        <td><span class="badge-status badge--refuse">Non conforme</span> <span class="cell-muted" style="font-size:0.76rem;">→ anomalie ANO-2026-018</span></td>
+                    </tr>
+                    <tr>
+                        <td>13/08/2026 · 11:22</td>
+                        <td><a class="cell-link" href="index.html?page=bs-detail">BS-2026-0141</a></td>
+                        <td>Andrianarivo Tovo · Sécurité</td>
+                        <td>Sortie magasin</td>
+                        <td><span class="badge-status badge--valide">Conforme</span></td>
+                    </tr>
+                    <tr>
+                        <td>12/08/2026 · 09:20</td>
+                        <td><a class="cell-link" href="index.html?page=bs-detail">BS-2026-0140</a></td>
+                        <td>Rakotobe Hery · Initiateur</td>
+                        <td>Génération du QR</td>
+                        <td><span class="badge-status badge--info">QR créé</span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>

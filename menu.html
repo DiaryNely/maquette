@@ -6,13 +6,86 @@
     </button>
 
     <div class="floating-menu-content" id="navigation">
-        <a class="floating-menu-link" href="index.html?page=create">
-            <i class="flaticon-plus mr-2"></i>
-            Creation
-        </a>
-        <a class="floating-menu-link" href="#configuration">
-            <i class="flaticon-gear mr-2"></i>
-            Configuration
-        </a>
+        <div class="floating-menu-group">
+            <button class="floating-menu-group__toggle" type="button" data-section="bs" aria-expanded="false">
+                <span><i class="flaticon-document-2"></i> Bons de sortie</span>
+                <i class="flaticon-down-arrow"></i>
+            </button>
+            <div class="floating-menu-group__links">
+                <a class="floating-menu-link" data-page="bs-list" href="index.html?page=bs-list">Liste des BS</a>
+                <a class="floating-menu-link" data-page="bs-create" href="index.html?page=bs-create">Création d'un BS</a>
+            </div>
+        </div>
+
+        <div class="floating-menu-group">
+            <button class="floating-menu-group__toggle" type="button" data-section="scan" aria-expanded="false">
+                <span><i class="flaticon-camera-fill"></i> QR Code &amp; scan</span>
+                <i class="flaticon-down-arrow"></i>
+            </button>
+            <div class="floating-menu-group__links">
+                <a class="floating-menu-link" data-page="scan" href="index.html?page=scan">Scan QR</a>
+            </div>
+        </div>
+
+        <div class="floating-menu-group">
+            <button class="floating-menu-group__toggle" type="button" data-section="transit" aria-expanded="false">
+                <span><i class="flaticon-logistics"></i> Transit</span>
+                <i class="flaticon-down-arrow"></i>
+            </button>
+            <div class="floating-menu-group__links">
+                <a class="floating-menu-link" data-page="transit" href="index.html?page=transit">Gestion du transit</a>
+            </div>
+        </div>
+
+        <div class="floating-menu-group">
+            <button class="floating-menu-group__toggle" type="button" data-section="anomalie" aria-expanded="false">
+                <span><i class="flaticon-danger"></i> Anomalies</span>
+                <i class="flaticon-down-arrow"></i>
+            </button>
+            <div class="floating-menu-group__links">
+                <a class="floating-menu-link" data-page="anomalies" href="index.html?page=anomalies">Liste des anomalies</a>
+                <a class="floating-menu-link" data-page="anomalie-create" href="index.html?page=anomalie-create">Créer une anomalie</a>
+            </div>
+        </div>
+
+        <div class="floating-menu-group">
+            <button class="floating-menu-group__toggle" type="button" data-section="notif" aria-expanded="false">
+                <span><i class="flaticon-bell"></i> Notifications</span>
+                <i class="flaticon-down-arrow"></i>
+            </button>
+            <div class="floating-menu-group__links">
+                <a class="floating-menu-link" data-page="notifications" href="index.html?page=notifications">Centre de notifications</a>
+            </div>
+        </div>
+
+        <div class="floating-menu-group">
+            <button class="floating-menu-group__toggle" type="button" data-section="rapport" aria-expanded="false">
+                <span><i class="flaticon-bar-chart"></i> Rapports</span>
+                <i class="flaticon-down-arrow"></i>
+            </button>
+            <div class="floating-menu-group__links">
+                <a class="floating-menu-link" data-page="rapports" href="index.html?page=rapports">Rapports &amp; statistiques</a>
+            </div>
+        </div>
+
+        <div class="floating-menu-group">
+            <button class="floating-menu-group__toggle" type="button" data-section="admin" aria-expanded="false">
+                <span><i class="flaticon-gear"></i> Administration</span>
+                <i class="flaticon-down-arrow"></i>
+            </button>
+            <div class="floating-menu-group__links">
+                <a class="floating-menu-link" data-page="admin" href="index.html?page=admin">Espace administrateur</a>
+            </div>
+        </div>
+
+        <div class="floating-menu-group">
+            <button class="floating-menu-group__toggle" type="button" data-section="trace" aria-expanded="false">
+                <span><i class="flaticon-map"></i> Traçabilité</span>
+                <i class="flaticon-down-arrow"></i>
+            </button>
+            <div class="floating-menu-group__links">
+                <a class="floating-menu-link" data-page="trace" href="index.html?page=trace">Parcours d'un BS</a>
+            </div>
+        </div>
     </div>
 </div>

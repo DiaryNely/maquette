@@ -1,0 +1,129 @@
+<section>
+    <div data-menu="menu.html"></div>
+
+    <div class="mock-page-head">
+        <div class="mock-page-head__title">
+            <h1><i class="fa-solid fa-triangle-exclamation text-teal"></i> Création d'une anomalie</h1>
+            <p>Déclenchée lors d'un contrôle non conforme : motif, délai de résolution et impact sur le bon de sortie.</p>
+        </div>
+        <div class="mock-page-head__actions">
+            <a href="index.html?page=anomalies" class="btn-mock btn-mock--outline"><i class="fa-solid fa-arrow-left"></i> Retour aux anomalies</a>
+        </div>
+    </div>
+
+    <form data-anomalie-form data-next-code="ANO-2026-020">
+        <!-- 1. Contexte -->
+        <div class="mock-card">
+            <div class="mock-card__head">
+                <h2 class="mock-card__title"><i class="fa-solid fa-circle-info"></i> 1. Contexte de l'anomalie</h2>
+            </div>
+            <div class="mock-card__body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="ano-bs">Bon de sortie concerné</label>
+                            <select class="form-control" id="ano-bs">
+                                <option value="" selected disabled>Sélectionner un BS</option>
+                                <option value="BS-2026-0142">BS-2026-0142 — En cours</option>
+                                <option value="BS-2026-0143">BS-2026-0143 — En cours</option>
+                                <option value="BS-2026-0141">BS-2026-0141 — Clôturé</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="ano-point">Point de contrôle</label>
+                            <select class="form-control" id="ano-point">
+                                <option value="" selected disabled>Sélectionner un point</option>
+                                <option value="transit-1">Transit 1 · Barrière</option>
+                                <option value="transit-2">Transit 2 · Plateforme</option>
+                                <option value="transit-3">Transit 3 · Poste contrôle</option>
+                                <option value="transit-4">Transit 4 · Arrivée siège</option>
+                                <option value="securite">Poste de sécurité</option>
+                                <option value="reception">Réception</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="ano-motif">Motif de l'anomalie</label>
+                            <select class="form-control" id="ano-motif">
+                                <option value="" selected disabled>Sélectionner un motif</option>
+                                <option>Quantité manquante</option>
+                                <option>Colis endommagé</option>
+                                <option>Étiquette illisible</option>
+                                <option>Emballage ouvert / scellé brisé</option>
+                                <option>Retard de livraison</option>
+                                <option>Identité non vérifiable</option>
+                                <option>Autre…</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="ano-date-limite">Date limite de résolution</label>
+                            <input type="date" class="form-control" id="ano-date-limite" value="2026-08-16">
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="form-group mb-0">
+                            <label for="ano-description">Description détaillée</label>
+                            <textarea class="form-control" id="ano-description" rows="3"
+                                placeholder="Constat précis au moment du contrôle : état du colis, quantité, référence…"></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 2. Suivi et notifications -->
+        <div class="mock-card">
+            <div class="mock-card__head">
+                <h2 class="mock-card__title"><i class="fa-solid fa-bell"></i> 2. Suivi &amp; notifications</h2>
+            </div>
+            <div class="mock-card__body">
+                <div class="d-flex justify-content-between align-items-center py-1">
+                    <span style="font-size:0.86rem;">Bloquer la progression du BS tant que l'anomalie n'est pas résolue</span>
+                    <label class="switch mb-0"><input type="checkbox" checked><span class="switch__slider"></span></label>
+                </div>
+                <div class="d-flex justify-content-between align-items-center py-1">
+                    <span style="font-size:0.86rem;">Alerte automatique en cas de dépassement du délai</span>
+                    <label class="switch mb-0"><input type="checkbox" checked><span class="switch__slider"></span></label>
+                </div>
+                <hr class="hr-soft">
+                <p class="mb-0" style="font-size:0.82rem; color:var(--m-muted);">
+                    <i class="fa-solid fa-envelope-open-text text-teal"></i>
+                    Notification envoyée automatiquement à : <strong>Responsable magasin</strong>,
+                    <strong>Transit</strong> et <strong>Administrateur</strong>.
+                </p>
+            </div>
+        </div>
+
+        <div class="d-flex justify-content-center flex-wrap" style="gap:10px; margin-bottom:28px;">
+            <a href="index.html?page=anomalies" class="btn-mock btn-mock--outline"><i class="fa-solid fa-xmark"></i> Annuler</a>
+            <button class="btn-mock" type="submit"><i class="fa-solid fa-triangle-exclamation"></i> Créer l'anomalie</button>
+        </div>
+    </form>
+
+    <!-- Confirmation (affichée après soumission) -->
+    <div class="mock-card is-hidden" data-anomalie-success>
+        <div class="mock-card__body text-center py-4">
+            <div class="confirm-icon"><i class="fa-solid fa-circle-check"></i></div>
+            <h2 class="mb-1" style="font-size:1.15rem; font-weight:700; color:var(--m-ink);">
+                Anomalie <span class="mono" data-anomalie-code>ANO-2026-020</span> créée
+            </h2>
+            <p style="color:var(--m-muted); margin-bottom:0;">
+                La progression du bon <strong data-anomalie-bs>BS-2026-0142</strong> est bloquée jusqu'à
+                résolution. Le délai et l'historique de l'anomalie sont tracés.
+            </p>
+            <div class="alert-mock alert-mock--success mt-3 text-left">
+                <i class="fa-solid fa-bell"></i>
+                <span>Notifications envoyées : Responsable magasin, Transit, Administrateur.</span>
+            </div>
+            <div class="d-flex justify-content-center flex-wrap mt-4" style="gap:10px;">
+                <a href="index.html?page=anomalie-detail" class="btn-mock"><i class="fa-solid fa-eye"></i> Voir l'anomalie</a>
+                <a href="index.html?page=anomalies" class="btn-mock btn-mock--outline">Retour à la liste</a>
+            </div>
+        </div>
+    </div>
+</section>

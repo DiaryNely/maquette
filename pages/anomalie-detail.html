@@ -1,0 +1,168 @@
+<section>
+    <div data-menu="menu.html"></div>
+
+    <div class="mock-page-head">
+        <div class="mock-page-head__title">
+            <h1><i class="fa-solid fa-triangle-exclamation text-teal"></i> Anomalie <span class="mono">ANO-2026-018</span>
+                <span class="badge-status badge--valide">Résolue</span></h1>
+            <p>Détail du motif, du délai de résolution et historique complet (créateur, actions, résolution, clôture).</p>
+        </div>
+        <div class="mock-page-head__actions">
+            <a href="index.html?page=anomalies" class="btn-mock btn-mock--outline"><i class="fa-solid fa-arrow-left"></i> Retour aux anomalies</a>
+            <button class="btn-mock btn-mock--outline"><i class="fa-solid fa-print"></i> PDF</button>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-7">
+            <!-- Infos -->
+            <div class="mock-card">
+                <div class="mock-card__head">
+                    <h2 class="mock-card__title"><i class="fa-solid fa-circle-info"></i> Informations</h2>
+                    <span class="chip chip--active">Déclenchée lors d'un contrôle non conforme</span>
+                </div>
+                <div class="mock-card__body">
+                    <div class="info-grid">
+                        <div class="info-grid__item">
+                            <label>BS concerné</label>
+                            <div class="value"><a class="cell-link" href="index.html?page=bs-detail">BS-2026-0142</a></div>
+                        </div>
+                        <div class="info-grid__item">
+                            <label>Point de contrôle</label>
+                            <div class="value">Transit 1 · Barrière de sortie</div>
+                        </div>
+                        <div class="info-grid__item">
+                            <label>Créateur</label>
+                            <div class="value">Rabemananjara Solo (Transit)</div>
+                        </div>
+                        <div class="info-grid__item">
+                            <label>Détection</label>
+                            <div class="value">14/08/2026 à 12:58</div>
+                        </div>
+                        <div class="info-grid__item">
+                            <label>Motif</label>
+                            <div class="value">Étiquette colis partiellement illisible</div>
+                        </div>
+                        <div class="info-grid__item">
+                            <label>Description</label>
+                            <div class="value value--muted">L'étiquette du colis n°2 est décollée : le code BS
+                                reste lisible après recoupe à la main.</div>
+                        </div>
+                        <div class="info-grid__item">
+                            <label>Date limite de résolution</label>
+                            <div class="value">15/08/2026</div>
+                        </div>
+                        <div class="info-grid__item">
+                            <label>Résolution</label>
+                            <div class="value value--muted">15/08/2026 · durée 1,0 j (dans les délais)</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Historique complet -->
+            <div class="mock-card">
+                <div class="mock-card__head">
+                    <h2 class="mock-card__title"><i class="fa-solid fa-clock-rotate-left"></i> Historique complet</h2>
+                </div>
+                <div class="mock-card__body">
+                    <ul class="timeline">
+                        <li class="timeline-item timeline-item--done">
+                            <div class="timeline-item__title">Clôture <span class="badge-status badge--cloture">Clôturée</span></div>
+                            <div class="timeline-item__meta">Andrianarivo Tovo (Sécurité) · 15/08/2026 à 17:20</div>
+                            <div class="timeline-item__desc">Anomalie clôturée après contrôle de la correction. Passage Transit 2 autorisé.</div>
+                        </li>
+                        <li class="timeline-item">
+                            <div class="timeline-item__title">Résolution <span class="badge-status badge--valide">Résolue</span></div>
+                            <div class="timeline-item__meta">Rabemananjara Solo (Transit) · 15/08/2026 à 09:05</div>
+                            <div class="timeline-item__desc">Étiquette recollée et réimprimée, référence vérifiée par lecture du QR.</div>
+                        </li>
+                        <li class="timeline-item">
+                            <div class="timeline-item__title">Action — transmission au responsable transit</div>
+                            <div class="timeline-item__meta">Système · 14/08/2026 à 13:10</div>
+                            <div class="timeline-item__desc">Notification envoyée au responsable du transit et au responsable magasin.</div>
+                        </li>
+                        <li class="timeline-item timeline-item--reject">
+                            <div class="timeline-item__title">Création de l'anomalie <span class="badge-status badge--encours">Ouverte</span></div>
+                            <div class="timeline-item__meta">Rabemananjara Solo (Transit) · 14/08/2026 à 12:58</div>
+                            <div class="timeline-item__desc">Contrôle non conforme au point Transit 1 — progression du BS bloquée.</div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-5">
+            <!-- Délai -->
+            <div class="mock-card">
+                <div class="mock-card__head">
+                    <h2 class="mock-card__title"><i class="fa-solid fa-stopwatch"></i> Délai de résolution</h2>
+                </div>
+                <div class="mock-card__body">
+                    <div class="chart-bar-row">
+                        <span class="chart-bar-row__label">Durée effective</span>
+                        <div class="chart-bar-row__track">
+                            <div class="chart-bar-row__fill chart-bar-row__fill--teal" style="width: 50%;"></div>
+                        </div>
+                        <span class="chart-bar-row__value">1,0 j / 2 j</span>
+                    </div>
+                    <hr class="hr-soft">
+                    <div class="d-flex justify-content-between" style="font-size:0.84rem;">
+                        <span class="cell-muted">Délai imparti</span>
+                        <strong class="text-teal">2 jours</strong>
+                    </div>
+                    <div class="d-flex justify-content-between mt-2" style="font-size:0.84rem;">
+                        <span class="cell-muted">Alerte de retard déclenchée si &gt; délai</span>
+                        <strong>Oui — système</strong>
+                    </div>
+                    <div class="d-flex justify-content-between mt-2" style="font-size:0.84rem;">
+                        <span class="cell-muted">Impact sur le BS</span>
+                        <strong class="text-amber">Progression bloquée</strong>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Actions -->
+            <div class="mock-card">
+                <div class="mock-card__head">
+                    <h2 class="mock-card__title"><i class="fa-solid fa-bolt"></i> Actions</h2>
+                    <span class="chip">Connecté : Sécurité</span>
+                </div>
+                <div class="mock-card__body">
+                    <div class="d-flex flex-wrap" style="gap:10px;">
+                        <button class="btn-mock"><i class="fa-solid fa-check"></i> Marquer résolue</button>
+                        <button class="btn-mock btn-mock--outline"><i class="fa-solid fa-comment"></i> Ajouter une action</button>
+                        <button class="btn-mock btn-mock--outline"><i class="fa-solid fa-user-plus"></i> Transférer</button>
+                    </div>
+                    <hr class="hr-soft">
+                    <p class="mb-0" style="font-size:0.82rem; color:var(--m-muted);">
+                        <i class="fa-solid fa-circle-info text-teal"></i>
+                        Chaque action est horodatée et rattachée à son auteur. La résolution puis la clôture sont
+                        tracées dans l'historique ci-contre.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Notifications liées -->
+            <div class="mock-card">
+                <div class="mock-card__head">
+                    <h2 class="mock-card__title"><i class="fa-solid fa-bell"></i> Notifications émises</h2>
+                    <a href="index.html?page=notifications" class="link-soft">Voir tout</a>
+                </div>
+                <div class="mock-card__body">
+                    <ul class="list-unstyled mb-0" style="font-size:0.82rem;">
+                        <li class="d-flex align-items-center py-1" style="gap:8px;">
+                            <i class="fa-solid fa-envelope-open-text text-teal"></i> Anomalie créée → Responsable magasin + Transit
+                        </li>
+                        <li class="d-flex align-items-center py-1" style="gap:8px;">
+                            <i class="fa-solid fa-envelope-open-text text-amber"></i> Alerte retard (si délai dépassé) → Administrateur
+                        </li>
+                        <li class="d-flex align-items-center py-1" style="gap:8px;">
+                            <i class="fa-solid fa-envelope-open-text text-teal"></i> Anomalie résolue → Initiateur + Sécurité
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

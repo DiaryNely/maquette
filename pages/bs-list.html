@@ -1,0 +1,217 @@
+<section>
+    <div data-menu="menu.html"></div>
+
+    <div class="mock-page-head">
+        <div class="mock-page-head__title">
+            <h1><i class="fa-solid fa-file-lines text-teal"></i> Gestion des Bons de Sortie</h1>
+            <p>Suivi de bout en bout : création, workflow de validation, transit, retours et clôture.</p>
+        </div>
+        <div class="mock-page-head__actions">
+            <a href="index.html?page=bs-create" class="btn-mock">
+                <i class="fa-solid fa-plus"></i> Nouveau bon de sortie
+            </a>
+        </div>
+    </div>
+
+    <!-- Indicateurs -->
+    <div class="kpi-grid">
+        <div class="kpi-card">
+            <div class="kpi-card__icon kpi-card__icon--slate"><i class="fa-solid fa-file-lines"></i></div>
+            <div>
+                <div class="kpi-card__value">128</div>
+                <div class="kpi-card__label">BS au total (ce mois)</div>
+            </div>
+        </div>
+        <div class="kpi-card">
+            <div class="kpi-card__icon kpi-card__icon--amber"><i class="fa-solid fa-route"></i></div>
+            <div>
+                <div class="kpi-card__value">24</div>
+                <div class="kpi-card__label">En cours de circuit</div>
+            </div>
+        </div>
+        <div class="kpi-card">
+            <div class="kpi-card__icon kpi-card__icon--teal"><i class="fa-solid fa-circle-check"></i></div>
+            <div>
+                <div class="kpi-card__value">86</div>
+                <div class="kpi-card__label">Validés / clôturés</div>
+            </div>
+        </div>
+        <div class="kpi-card">
+            <div class="kpi-card__icon kpi-card__icon--red"><i class="fa-solid fa-circle-xmark"></i></div>
+            <div>
+                <div class="kpi-card__value">9</div>
+                <div class="kpi-card__label">Refusés ou annulés</div>
+            </div>
+        </div>
+        <div class="kpi-card">
+            <div class="kpi-card__icon kpi-card__icon--blue"><i class="fa-solid fa-boxes-stacked"></i></div>
+            <div>
+                <div class="kpi-card__value">14</div>
+                <div class="kpi-card__label">Retours de matériel en attente</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Filtres -->
+    <div class="filter-bar">
+        <div class="input-group search-input">
+            <div class="input-group-prepend">
+                <span class="input-group-text"><i class="fa-solid fa-magnifying-glass"></i></span>
+            </div>
+            <input type="text" class="form-control" placeholder="Rechercher un BS, un initiateur, un motif…">
+        </div>
+        <select class="form-control">
+            <option value="" selected>Tous les statuts</option>
+            <option>Brouillon</option>
+            <option>Soumis</option>
+            <option>En cours</option>
+            <option>Validé</option>
+            <option>Refusé</option>
+            <option>Annulé</option>
+            <option>Clôturé</option>
+        </select>
+        <select class="form-control">
+            <option value="" selected>Tous les magasins</option>
+            <option>Magasin central</option>
+            <option>Entrepôt S2M</option>
+            <option>Siège - Administration S2M</option>
+        </select>
+        <input type="date" class="form-control" value="2026-08-01" aria-label="Date de début">
+        <input type="date" class="form-control" value="2026-08-12" aria-label="Date de fin">
+        <div class="filter-spacer"></div>
+        <button class="btn-mock btn-mock--outline btn-mock--sm"><i class="fa-solid fa-rotate"></i> Réinitialiser</button>
+        <button class="btn-export" type="button" title="Exporter en Excel"><i class="fa-solid fa-file-excel"></i></button>
+    </div>
+
+    <!-- Liste -->
+    <div class="table-mock-wrap">
+        <table class="table-mock">
+            <thead>
+                <tr>
+                    <th>N° BS</th>
+                    <th>Date</th>
+                    <th>Initiateur</th>
+                    <th>Bénéficiaire</th>
+                    <th>Parcours</th>
+                    <th>Motif</th>
+                    <th>Statut</th>
+                    <th class="text-right">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><a class="cell-link" href="index.html?page=bs-detail">BS-2026-0142</a></td>
+                    <td>12/08/2026</td>
+                    <td>Rakotobe Hery</td>
+                    <td>Rasoanirina Miora</td>
+                    <td class="cell-muted">Magasin central → Siège</td>
+                    <td>Équipement informatique</td>
+                    <td><span class="badge-status badge--encours">En cours</span></td>
+                    <td class="cell-actions">
+                        <a class="btn-mock btn-mock--outline btn-mock--sm" href="index.html?page=bs-detail"><i class="fa-solid fa-eye"></i></a>
+                        <a class="btn-mock btn-mock--outline btn-mock--sm" href="index.html?page=bs-create"><i class="fa-solid fa-pen"></i></a>
+                    </td>
+                </tr>
+                <tr>
+                    <td><a class="cell-link" href="index.html?page=bs-detail">BS-2026-0141</a></td>
+                    <td>11/08/2026</td>
+                    <td>Razafindratsima Vola</td>
+                    <td>Rabeharisoa Andry</td>
+                    <td class="cell-muted">Entrepôt S2M → Magasin central</td>
+                    <td>Réapprovisionnement</td>
+                    <td><span class="badge-status badge--cloture">Clôturé</span></td>
+                    <td class="cell-actions">
+                        <a class="btn-mock btn-mock--outline btn-mock--sm" href="index.html?page=bs-detail"><i class="fa-solid fa-eye"></i></a>
+                    </td>
+                </tr>
+                <tr>
+                    <td><a class="cell-link" href="index.html?page=bs-detail">BS-2026-0140</a></td>
+                    <td>10/08/2026</td>
+                    <td>Rakotobe Hery</td>
+                    <td>Ranarivelo Tsiky</td>
+                    <td class="cell-muted">Magasin central → Entrepôt S2M</td>
+                    <td>Fournitures de bureau</td>
+                    <td><span class="badge-status badge--valide">Validé</span></td>
+                    <td class="cell-actions">
+                        <a class="btn-mock btn-mock--outline btn-mock--sm" href="index.html?page=bs-detail"><i class="fa-solid fa-eye"></i></a>
+                    </td>
+                </tr>
+                <tr>
+                    <td><a class="cell-link" href="index.html?page=bs-detail">BS-2026-0139</a></td>
+                    <td>09/08/2026</td>
+                    <td>Andrianarivo Tovo</td>
+                    <td>Rasoanirina Miora</td>
+                    <td class="cell-muted">Magasin central → Siège</td>
+                    <td>Matériel de sécurité</td>
+                    <td><span class="badge-status badge--refuse">Refusé</span></td>
+                    <td class="cell-actions">
+                        <a class="btn-mock btn-mock--outline btn-mock--sm" href="index.html?page=bs-detail"><i class="fa-solid fa-eye"></i></a>
+                    </td>
+                </tr>
+                <tr>
+                    <td><a class="cell-link" href="index.html?page=bs-detail">BS-2026-0138</a></td>
+                    <td>08/08/2026</td>
+                    <td>Rabenjanahary Mamy</td>
+                    <td>Razafindrakoto Lova</td>
+                    <td class="cell-muted">Siège → Magasin central</td>
+                    <td>Retour de matériel</td>
+                    <td><span class="badge-status badge--soumis">Soumis</span></td>
+                    <td class="cell-actions">
+                        <a class="btn-mock btn-mock--outline btn-mock--sm" href="index.html?page=bs-detail"><i class="fa-solid fa-eye"></i></a>
+                    </td>
+                </tr>
+                <tr>
+                    <td><a class="cell-link" href="index.html?page=bs-detail">BS-2026-0137</a></td>
+                    <td>07/08/2026</td>
+                    <td>Rakotobe Hery</td>
+                    <td>Rasoanirina Miora</td>
+                    <td class="cell-muted">Magasin central → Siège</td>
+                    <td>Équipement informatique</td>
+                    <td><span class="badge-status badge--brouillon">Brouillon</span></td>
+                    <td class="cell-actions">
+                        <a class="btn-mock btn-mock--outline btn-mock--sm" href="index.html?page=bs-detail"><i class="fa-solid fa-eye"></i></a>
+                        <a class="btn-mock btn-mock--outline btn-mock--sm" href="index.html?page=bs-create"><i class="fa-solid fa-pen"></i></a>
+                        <button class="btn-mock btn-mock--danger btn-mock--sm" title="Annuler ce brouillon"><i class="fa-solid fa-xmark"></i></button>
+                    </td>
+                </tr>
+                <tr>
+                    <td><a class="cell-link" href="index.html?page=bs-detail">BS-2026-0136</a></td>
+                    <td>06/08/2026</td>
+                    <td>Razafindratsima Vola</td>
+                    <td>Rabeharisoa Andry</td>
+                    <td class="cell-muted">Entrepôt S2M → Magasin central</td>
+                    <td>Équipement mobilier</td>
+                    <td><span class="badge-status badge--annule">Annulé</span></td>
+                    <td class="cell-actions">
+                        <a class="btn-mock btn-mock--outline btn-mock--sm" href="index.html?page=bs-detail"><i class="fa-solid fa-eye"></i></a>
+                    </td>
+                </tr>
+                <tr>
+                    <td><a class="cell-link" href="index.html?page=bs-detail">BS-2026-0135</a></td>
+                    <td>05/08/2026</td>
+                    <td>Rakotomalala Njato</td>
+                    <td>Rasolofoniaina Fanja</td>
+                    <td class="cell-muted">Magasin central → Entrepôt S2M</td>
+                    <td>Consommables atelier</td>
+                    <td><span class="badge-status badge--cloture">Clôturé</span></td>
+                    <td class="cell-actions">
+                        <a class="btn-mock btn-mock--outline btn-mock--sm" href="index.html?page=bs-detail"><i class="fa-solid fa-eye"></i></a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="pagination-bar" role="navigation" aria-label="Pagination">
+        <div class="pagination-info">page 1 sur 16</div>
+        <div class="pagination-jump">
+            <label for="page-input-bs">Allez à la page :</label>
+            <input type="text" id="page-input-bs" aria-label="Numéro de page">
+        </div>
+        <div class="pagination-navigation">
+            <button class="pagination-arrow" type="button" aria-label="Page précédente" disabled>←</button>
+            <span class="pagination-current" aria-current="page">1</span>
+            <button class="pagination-arrow" type="button" aria-label="Page suivante">→</button>
+        </div>
+    </div>
+</section>

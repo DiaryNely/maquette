@@ -16,7 +16,7 @@ async function chargerMenus() {
 }
 
 async function chargerPage() {
-    const page = new URLSearchParams(location.search).get('page') || 'create';
+    const page = new URLSearchParams(location.search).get('page') || 'bs-list';
 
     if (!/^[a-z0-9-]+$/i.test(page)) throw new Error('Nom de page invalide');
 

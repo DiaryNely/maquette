@@ -1,0 +1,250 @@
+<section>
+    <div data-menu="menu.html"></div>
+
+    <div class="mock-page-head">
+        <div class="mock-page-head__title">
+            <h1><i class="fa-solid fa-route text-teal"></i> Traçabilité d'un BS</h1>
+            <p>Reconstitution du parcours complet d'un bon de sortie, de la création à la clôture : qui a fait quoi, où et quand.</p>
+        </div>
+        <div class="mock-page-head__actions">
+            <a href="index.html?page=bs-detail" class="btn-mock btn-mock--outline"><i class="fa-solid fa-arrow-left"></i> Retour au BS</a>
+            <button class="btn-export" type="button" title="Exporter le parcours en Excel"><i class="fa-solid fa-file-excel"></i></button>
+        </div>
+    </div>
+
+    <!-- En-tête du BS tracé -->
+    <div class="mock-card">
+        <div class="mock-card__head">
+            <h2 class="mock-card__title">
+                <i class="fa-solid fa-file-lines"></i> Parcours de <span class="mono">BS-2026-0140</span>
+                <span class="badge-status badge--cloture">Clôturé</span>
+            </h2>
+            <span class="chip"><i class="fa-solid fa-stopwatch"></i> Durée totale : 4 j 06 h 32 min</span>
+        </div>
+        <div class="mock-card__body">
+            <div class="info-grid">
+                <div class="info-grid__item">
+                    <label>Initiateur</label>
+                    <div class="value">Rakotobe Hery</div>
+                </div>
+                <div class="info-grid__item">
+                    <label>Bénéficiaire</label>
+                    <div class="value">Ranarivelo Tsiky</div>
+                </div>
+                <div class="info-grid__item">
+                    <label>Parcours</label>
+                    <div class="value">Magasin central → Entrepôt S2M</div>
+                </div>
+                <div class="info-grid__item">
+                    <label>Motif</label>
+                    <div class="value value--muted">Fournitures de bureau</div>
+                </div>
+                <div class="info-grid__item">
+                    <label>Créé le</label>
+                    <div class="value">10/08/2026 à 08:40</div>
+                </div>
+                <div class="info-grid__item">
+                    <label>Clôturé le</label>
+                    <div class="value">14/08/2026 à 15:12</div>
+                </div>
+            </div>
+
+            <!-- Chaîne du parcours -->
+            <hr class="hr-soft">
+            <div class="workflow-steps-wrap">
+                <div class="workflow-steps">
+                    <div class="workflow-step workflow-step--done">
+                        <div class="workflow-step__dot"><i class="fa-solid fa-user"></i></div>
+                        <div class="workflow-step__label">Création</div>
+                        <div class="workflow-step__actor">10/08 · 08:40</div>
+                    </div>
+                    <div class="workflow-step workflow-step--done">
+                        <div class="workflow-step__dot"><i class="fa-solid fa-user-check"></i></div>
+                        <div class="workflow-step__label">Responsable</div>
+                        <div class="workflow-step__actor">10/08 · 10:05</div>
+                    </div>
+                    <div class="workflow-step workflow-step--done">
+                        <div class="workflow-step__dot"><i class="fa-solid fa-shield-halved"></i></div>
+                        <div class="workflow-step__label">Sécurité</div>
+                        <div class="workflow-step__actor">11/08 · 09:18</div>
+                    </div>
+                    <div class="workflow-step workflow-step--done">
+                        <div class="workflow-step__dot"><i class="fa-solid fa-truck"></i></div>
+                        <div class="workflow-step__label">Transit</div>
+                        <div class="workflow-step__actor">11–12/08 · 3 points</div>
+                    </div>
+                    <div class="workflow-step workflow-step--done">
+                        <div class="workflow-step__dot"><i class="fa-solid fa-box-open"></i></div>
+                        <div class="workflow-step__label">Réception</div>
+                        <div class="workflow-step__actor">12/08 · 14:30</div>
+                    </div>
+                    <div class="workflow-step workflow-step--done">
+                        <div class="workflow-step__dot"><i class="fa-solid fa-flag-checkered"></i></div>
+                        <div class="workflow-step__label">Clôture</div>
+                        <div class="workflow-step__actor">14/08 · 15:12</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-8">
+            <!-- Chronologie complète -->
+            <div class="mock-card">
+                <div class="mock-card__head">
+                    <h2 class="mock-card__title"><i class="fa-solid fa-clock-rotate-left"></i> Chronologie complète (13 événements)</h2>
+                    <span class="chip">Ordre chronologique</span>
+                </div>
+                <div class="mock-card__body">
+                    <ul class="timeline">
+                        <li class="timeline-item timeline-item--done">
+                            <div class="timeline-item__title">Clôture du BS <span class="badge-status badge--cloture">Clôturé</span></div>
+                            <div class="timeline-item__meta">Système + Ranarivelo Tsiky · 14/08/2026 à 15:12</div>
+                            <div class="timeline-item__desc">Retours confirmés, bon clôturé automatiquement. Notification envoyée à l'initiateur.</div>
+                        </li>
+                        <li class="timeline-item">
+                            <div class="timeline-item__title">Retour du matériel à rendre <span class="badge-status badge--valide">Effectué</span></div>
+                            <div class="timeline-item__meta">Randria Jean (Réception) · 14/08/2026 à 15:02</div>
+                            <div class="timeline-item__desc">2 imprimantes restituées en bon état, dans les délais (retour partiel 1/2 puis 2/2).</div>
+                        </li>
+                        <li class="timeline-item">
+                            <div class="timeline-item__title">Validation Destinataire <span class="badge-status badge--valide">Validé</span></div>
+                            <div class="timeline-item__meta">Ranarivelo Tsiky (Destinataire) · 12/08/2026 à 15:20</div>
+                            <div class="timeline-item__desc">Accusé de réception signé — 26 articles reçus, conformes au bon.</div>
+                        </li>
+                        <li class="timeline-item">
+                            <div class="timeline-item__title">Validation Réception <span class="badge-status badge--valide">Validé</span></div>
+                            <div class="timeline-item__meta">Randria Jean (Réception) · 12/08/2026 à 14:30</div>
+                            <div class="timeline-item__desc">Contrôle colis : 2 cartons, 26 articles, aucun dommage constaté.</div>
+                        </li>
+                        <li class="timeline-item">
+                            <div class="timeline-item__title">Passage Transit 3 <span class="badge-status badge--valide">Conforme</span></div>
+                            <div class="timeline-item__meta">Rabemananjara Solo (Transit) · 12/08/2026 à 11:08</div>
+                            <div class="timeline-item__desc">Scan QR au poste de contrôle — conformité validée.</div>
+                        </li>
+                        <li class="timeline-item">
+                            <div class="timeline-item__title">Passage Transit 2 <span class="badge-status badge--valide">Conforme</span></div>
+                            <div class="timeline-item__meta">Rabemananjara Solo (Transit) · 11/08/2026 à 16:45</div>
+                            <div class="timeline-item__desc">Scan QR à la plateforme logistique — colis scellé et complet.</div>
+                        </li>
+                        <li class="timeline-item">
+                            <div class="timeline-item__title">Passage Transit 1 <span class="badge-status badge--valide">Conforme</span></div>
+                            <div class="timeline-item__meta">Rakotobe Hery (Transit 1) · 11/08/2026 à 10:12</div>
+                            <div class="timeline-item__desc">Sortie du magasin contrôlée à la barrière.</div>
+                        </li>
+                        <li class="timeline-item">
+                            <div class="timeline-item__title">Validation Sécurité <span class="badge-status badge--valide">Validé</span></div>
+                            <div class="timeline-item__meta">Andrianarivo Tovo (Sécurité) · 11/08/2026 à 09:18</div>
+                            <div class="timeline-item__desc">Identité du transporteur et autorisation vérifiées.</div>
+                        </li>
+                        <li class="timeline-item">
+                            <div class="timeline-item__title">Validation Responsable <span class="badge-status badge--valide">Validé</span></div>
+                            <div class="timeline-item__meta">Razafindratsima Vola (Responsable) · 10/08/2026 à 10:05</div>
+                            <div class="timeline-item__desc">Stock disponible, bon conforme aux règles.</div>
+                        </li>
+                        <li class="timeline-item">
+                            <div class="timeline-item__title">Soumission <span class="badge-status badge--soumis">Soumis</span></div>
+                            <div class="timeline-item__meta">Rakotobe Hery (Initiateur) · 10/08/2026 à 08:52</div>
+                            <div class="timeline-item__desc">Bon soumis au workflow — notification envoyée au Responsable.</div>
+                        </li>
+                        <li class="timeline-item timeline-item--info">
+                            <div class="timeline-item__title">Création <span class="badge-status badge--brouillon">Brouillon</span></div>
+                            <div class="timeline-item__meta">Rakotobe Hery (Initiateur) · 10/08/2026 à 08:40</div>
+                            <div class="timeline-item__desc">Création avec 5 lignes d'articles. QR code généré automatiquement.</div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <!-- Filtres -->
+            <div class="mock-card">
+                <div class="mock-card__head">
+                    <h2 class="mock-card__title"><i class="fa-solid fa-filter"></i> Filtrer les événements</h2>
+                </div>
+                <div class="mock-card__body">
+                    <div class="d-flex flex-wrap mb-3" style="gap:8px;">
+                        <button class="chip chip--active" type="button">Tout (13)</button>
+                        <button class="chip" type="button">Workflow (6)</button>
+                        <button class="chip" type="button">Transit (3)</button>
+                        <button class="chip" type="button">Retours (2)</button>
+                        <button class="chip" type="button">Anomalies (1)</button>
+                    </div>
+                    <p class="mb-0" style="font-size:0.82rem; color:var(--m-muted);">
+                        <i class="fa-solid fa-circle-info text-teal"></i>
+                        Chaque événement est signé par son acteur : toute modification du BS, validation,
+                        refus, passage, retour ou clôture est tracée.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Statistiques du parcours -->
+            <div class="mock-card">
+                <div class="mock-card__head">
+                    <h2 class="mock-card__title"><i class="fa-solid fa-chart-line"></i> Analyse du parcours</h2>
+                </div>
+                <div class="mock-card__body">
+                    <div class="chart-bar-row">
+                        <span class="chart-bar-row__label">Délai création → sortie</span>
+                        <div class="chart-bar-row__track"><div class="chart-bar-row__fill" style="width: 26%;"></div></div>
+                        <span class="chart-bar-row__value">1,2 j</span>
+                    </div>
+                    <div class="chart-bar-row">
+                        <span class="chart-bar-row__label">Durée en transit</span>
+                        <div class="chart-bar-row__track"><div class="chart-bar-row__fill chart-bar-row__fill--blue" style="width: 34%;"></div></div>
+                        <span class="chart-bar-row__value">1,4 j</span>
+                    </div>
+                    <div class="chart-bar-row mb-0">
+                        <span class="chart-bar-row__label">Délai de clôture</span>
+                        <div class="chart-bar-row__track"><div class="chart-bar-row__fill chart-bar-row__fill--purple" style="width: 40%;"></div></div>
+                        <span class="chart-bar-row__value">1,6 j</span>
+                    </div>
+                    <hr class="hr-soft">
+                    <div class="d-flex justify-content-between" style="font-size:0.84rem;">
+                        <span class="cell-muted">Étapes validées</span>
+                        <strong>6 / 6</strong>
+                    </div>
+                    <div class="d-flex justify-content-between mt-2" style="font-size:0.84rem;">
+                        <span class="cell-muted">Passages conformes</span>
+                        <strong class="text-teal">3 / 3</strong>
+                    </div>
+                    <div class="d-flex justify-content-between mt-2" style="font-size:0.84rem;">
+                        <span class="cell-muted">Anomalies</span>
+                        <strong>1 (résolue en 0,5 j)</strong>
+                    </div>
+                    <div class="d-flex justify-content-between mt-2" style="font-size:0.84rem;">
+                        <span class="cell-muted">Retours</span>
+                        <strong class="text-teal">2/2 effectués</strong>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Autres BS tracés -->
+            <div class="mock-card">
+                <div class="mock-card__head">
+                    <h2 class="mock-card__title"><i class="fa-solid fa-clock-rotate-left"></i> Parcours récents</h2>
+                </div>
+                <div class="mock-card__body">
+                    <div class="d-flex justify-content-between py-1">
+                        <a class="cell-link" href="index.html?page=trace">BS-2026-0142</a>
+                        <span class="badge-status badge--encours">En cours</span>
+                    </div>
+                    <div class="d-flex justify-content-between py-1">
+                        <a class="cell-link" href="index.html?page=trace">BS-2026-0141</a>
+                        <span class="badge-status badge--cloture">Clôturé</span>
+                    </div>
+                    <div class="d-flex justify-content-between py-1">
+                        <a class="cell-link" href="index.html?page=trace">BS-2026-0139</a>
+                        <span class="badge-status badge--refuse">Refusé</span>
+                    </div>
+                    <div class="d-flex justify-content-between py-1">
+                        <a class="cell-link" href="index.html?page=trace">BS-2026-0135</a>
+                        <span class="badge-status badge--cloture">Clôturé</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
