@@ -1,4 +1,4 @@
-<section>
+<section data-bslist>
     <div data-menu="menu.html"></div>
 
     <div class="mock-page-head">
@@ -7,10 +7,22 @@
             <p>Suivi de bout en bout : création, workflow de validation, transit, retours et clôture.</p>
         </div>
         <div class="mock-page-head__actions">
+            <div class="input-group" style="width:auto;">
+                <div class="input-group-prepend">
+                    <span class="input-group-text"><i class="fa-solid fa-user"></i></span>
+                </div>
+                <select class="form-control" data-bslist-user aria-label="Personne connectée"></select>
+            </div>
             <a href="index.html?page=bs-create" class="btn-mock">
                 <i class="fa-solid fa-plus"></i> Nouveau bon de sortie
             </a>
         </div>
+    </div>
+
+    <div class="alert-mock alert-mock--info mb-3">
+        <i class="fa-solid fa-circle-info"></i>
+        <span>Connecté : <strong>voir le sélecteur ci-dessus</strong> — la liste est filtrée par magasin.
+            <span data-bslist-store class="cell-muted">Mon magasin : Magasin central</span></span>
     </div>
 
     <!-- Indicateurs -->
@@ -52,166 +64,141 @@
         </div>
     </div>
 
-    <!-- Filtres -->
-    <div class="filter-bar">
-        <div class="input-group search-input">
-            <div class="input-group-prepend">
-                <span class="input-group-text"><i class="fa-solid fa-magnifying-glass"></i></span>
+    <!-- Sous-menus : envoyés / à recevoir -->
+    <div class="mock-tabs" data-mock-tabs role="tablist">
+        <button class="mock-tab active" data-mock-tab="envoyes" type="button">
+            <i class="fa-solid fa-paper-plane"></i> BS envoyés
+            <span class="chip chip--active" data-bslist-count data-tab="envoyes">0</span>
+        </button>
+        <button class="mock-tab" data-mock-tab="recevoir" type="button">
+            <i class="fa-solid fa-inbox"></i> BS à recevoir
+            <span class="chip chip--active" data-bslist-count data-tab="recevoir">0</span>
+        </button>
+    </div>
+
+    <!-- ============ BS ENVOYÉS ============ -->
+    <div class="mock-panel is-active" data-mock-panel="envoyes" data-bslist-panel>
+        <div class="filter-bar">
+            <div class="input-group search-input">
+                <div class="input-group-prepend">
+                    <span class="input-group-text"><i class="fa-solid fa-magnifying-glass"></i></span>
+                </div>
+                <input type="text" class="form-control" data-bslist-search placeholder="Rechercher un BS, un bénéficiaire, un motif…">
             </div>
-            <input type="text" class="form-control" placeholder="Rechercher un BS, un initiateur, un motif…">
+            <select class="form-control" data-bslist-statut>
+                <option value="" selected>Tous les statuts</option>
+                <option>Brouillon</option>
+                <option>Soumis</option>
+                <option>En cours</option>
+                <option>Validé</option>
+                <option>Refusé</option>
+                <option>Annulé</option>
+                <option>Clôturé</option>
+            </select>
+            <select class="form-control" data-bslist-retour>
+                <option value="tous" selected>Retour attendu : Tous</option>
+                <option value="a-rendre">À rendre</option>
+                <option value="sans-retour">Sans retour</option>
+            </select>
+            <input type="date" class="form-control" value="2026-08-01" aria-label="Date de début">
+            <input type="date" class="form-control" value="2026-08-12" aria-label="Date de fin">
+            <div class="filter-spacer"></div>
+            <button class="btn-mock btn-mock--outline btn-mock--sm" data-bslist-reset><i class="fa-solid fa-rotate"></i> Réinitialiser</button>
+            <button class="btn-export" type="button" title="Exporter en Excel"><i class="fa-solid fa-file-excel"></i></button>
         </div>
-        <select class="form-control">
-            <option value="" selected>Tous les statuts</option>
-            <option>Brouillon</option>
-            <option>Soumis</option>
-            <option>En cours</option>
-            <option>Validé</option>
-            <option>Refusé</option>
-            <option>Annulé</option>
-            <option>Clôturé</option>
-        </select>
-        <select class="form-control">
-            <option value="" selected>Tous les magasins</option>
-            <option>Magasin central</option>
-            <option>Entrepôt S2M</option>
-            <option>Siège - Administration S2M</option>
-        </select>
-        <input type="date" class="form-control" value="2026-08-01" aria-label="Date de début">
-        <input type="date" class="form-control" value="2026-08-12" aria-label="Date de fin">
-        <div class="filter-spacer"></div>
-        <button class="btn-mock btn-mock--outline btn-mock--sm"><i class="fa-solid fa-rotate"></i> Réinitialiser</button>
-        <button class="btn-export" type="button" title="Exporter en Excel"><i class="fa-solid fa-file-excel"></i></button>
+
+        <div class="table-mock-wrap">
+            <table class="table-mock">
+                <thead>
+                    <tr>
+                        <th>N° BS</th>
+                        <th>Date</th>
+                        <th>Bénéficiaire</th>
+                        <th>Parcours</th>
+                        <th>Retour attendu</th>
+                        <th>Motif</th>
+                        <th>Statut</th>
+                        <th class="text-right">Actions</th>
+                    </tr>
+                </thead>
+                <tbody data-bslist-body data-tab="envoyes"></tbody>
+            </table>
+        </div>
+
+        <div class="pagination-bar" role="navigation" aria-label="Pagination">
+            <div class="pagination-info"><span data-bslist-results data-tab="envoyes">—</span></div>
+            <div class="pagination-jump">
+                <label for="page-input-env">Allez à la page :</label>
+                <input type="text" id="page-input-env" aria-label="Numéro de page">
+            </div>
+            <div class="pagination-navigation">
+                <button class="pagination-arrow" type="button" aria-label="Page précédente" disabled>←</button>
+                <span class="pagination-current" aria-current="page">1</span>
+                <button class="pagination-arrow" type="button" aria-label="Page suivante">→</button>
+            </div>
+        </div>
     </div>
 
-    <!-- Liste -->
-    <div class="table-mock-wrap">
-        <table class="table-mock">
-            <thead>
-                <tr>
-                    <th>N° BS</th>
-                    <th>Date</th>
-                    <th>Initiateur</th>
-                    <th>Bénéficiaire</th>
-                    <th>Parcours</th>
-                    <th>Motif</th>
-                    <th>Statut</th>
-                    <th class="text-right">Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td><a class="cell-link" href="index.html?page=bs-detail">BS-2026-0142</a></td>
-                    <td>12/08/2026</td>
-                    <td>Rakotobe Hery</td>
-                    <td>Rasoanirina Miora</td>
-                    <td class="cell-muted">Magasin central → Siège</td>
-                    <td>Équipement informatique</td>
-                    <td><span class="badge-status badge--encours">En cours</span></td>
-                    <td class="cell-actions">
-                        <a class="btn-mock btn-mock--outline btn-mock--sm" href="index.html?page=bs-detail"><i class="fa-solid fa-eye"></i></a>
-                        <a class="btn-mock btn-mock--outline btn-mock--sm" href="index.html?page=bs-create"><i class="fa-solid fa-pen"></i></a>
-                    </td>
-                </tr>
-                <tr>
-                    <td><a class="cell-link" href="index.html?page=bs-detail">BS-2026-0141</a></td>
-                    <td>11/08/2026</td>
-                    <td>Razafindratsima Vola</td>
-                    <td>Rabeharisoa Andry</td>
-                    <td class="cell-muted">Entrepôt S2M → Magasin central</td>
-                    <td>Réapprovisionnement</td>
-                    <td><span class="badge-status badge--cloture">Clôturé</span></td>
-                    <td class="cell-actions">
-                        <a class="btn-mock btn-mock--outline btn-mock--sm" href="index.html?page=bs-detail"><i class="fa-solid fa-eye"></i></a>
-                    </td>
-                </tr>
-                <tr>
-                    <td><a class="cell-link" href="index.html?page=bs-detail">BS-2026-0140</a></td>
-                    <td>10/08/2026</td>
-                    <td>Rakotobe Hery</td>
-                    <td>Ranarivelo Tsiky</td>
-                    <td class="cell-muted">Magasin central → Entrepôt S2M</td>
-                    <td>Fournitures de bureau</td>
-                    <td><span class="badge-status badge--valide">Validé</span></td>
-                    <td class="cell-actions">
-                        <a class="btn-mock btn-mock--outline btn-mock--sm" href="index.html?page=bs-detail"><i class="fa-solid fa-eye"></i></a>
-                    </td>
-                </tr>
-                <tr>
-                    <td><a class="cell-link" href="index.html?page=bs-detail">BS-2026-0139</a></td>
-                    <td>09/08/2026</td>
-                    <td>Andrianarivo Tovo</td>
-                    <td>Rasoanirina Miora</td>
-                    <td class="cell-muted">Magasin central → Siège</td>
-                    <td>Matériel de sécurité</td>
-                    <td><span class="badge-status badge--refuse">Refusé</span></td>
-                    <td class="cell-actions">
-                        <a class="btn-mock btn-mock--outline btn-mock--sm" href="index.html?page=bs-detail"><i class="fa-solid fa-eye"></i></a>
-                    </td>
-                </tr>
-                <tr>
-                    <td><a class="cell-link" href="index.html?page=bs-detail">BS-2026-0138</a></td>
-                    <td>08/08/2026</td>
-                    <td>Rabenjanahary Mamy</td>
-                    <td>Razafindrakoto Lova</td>
-                    <td class="cell-muted">Siège → Magasin central</td>
-                    <td>Retour de matériel</td>
-                    <td><span class="badge-status badge--soumis">Soumis</span></td>
-                    <td class="cell-actions">
-                        <a class="btn-mock btn-mock--outline btn-mock--sm" href="index.html?page=bs-detail"><i class="fa-solid fa-eye"></i></a>
-                    </td>
-                </tr>
-                <tr>
-                    <td><a class="cell-link" href="index.html?page=bs-detail">BS-2026-0137</a></td>
-                    <td>07/08/2026</td>
-                    <td>Rakotobe Hery</td>
-                    <td>Rasoanirina Miora</td>
-                    <td class="cell-muted">Magasin central → Siège</td>
-                    <td>Équipement informatique</td>
-                    <td><span class="badge-status badge--brouillon">Brouillon</span></td>
-                    <td class="cell-actions">
-                        <a class="btn-mock btn-mock--outline btn-mock--sm" href="index.html?page=bs-detail"><i class="fa-solid fa-eye"></i></a>
-                        <a class="btn-mock btn-mock--outline btn-mock--sm" href="index.html?page=bs-create"><i class="fa-solid fa-pen"></i></a>
-                        <button class="btn-mock btn-mock--danger btn-mock--sm" title="Annuler ce brouillon"><i class="fa-solid fa-xmark"></i></button>
-                    </td>
-                </tr>
-                <tr>
-                    <td><a class="cell-link" href="index.html?page=bs-detail">BS-2026-0136</a></td>
-                    <td>06/08/2026</td>
-                    <td>Razafindratsima Vola</td>
-                    <td>Rabeharisoa Andry</td>
-                    <td class="cell-muted">Entrepôt S2M → Magasin central</td>
-                    <td>Équipement mobilier</td>
-                    <td><span class="badge-status badge--annule">Annulé</span></td>
-                    <td class="cell-actions">
-                        <a class="btn-mock btn-mock--outline btn-mock--sm" href="index.html?page=bs-detail"><i class="fa-solid fa-eye"></i></a>
-                    </td>
-                </tr>
-                <tr>
-                    <td><a class="cell-link" href="index.html?page=bs-detail">BS-2026-0135</a></td>
-                    <td>05/08/2026</td>
-                    <td>Rakotomalala Njato</td>
-                    <td>Rasolofoniaina Fanja</td>
-                    <td class="cell-muted">Magasin central → Entrepôt S2M</td>
-                    <td>Consommables atelier</td>
-                    <td><span class="badge-status badge--cloture">Clôturé</span></td>
-                    <td class="cell-actions">
-                        <a class="btn-mock btn-mock--outline btn-mock--sm" href="index.html?page=bs-detail"><i class="fa-solid fa-eye"></i></a>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
-
-    <div class="pagination-bar" role="navigation" aria-label="Pagination">
-        <div class="pagination-info">page 1 sur 16</div>
-        <div class="pagination-jump">
-            <label for="page-input-bs">Allez à la page :</label>
-            <input type="text" id="page-input-bs" aria-label="Numéro de page">
+    <!-- ============ BS À RECEVOIR ============ -->
+    <div class="mock-panel" data-mock-panel="recevoir" data-bslist-panel>
+        <div class="filter-bar">
+            <div class="input-group search-input">
+                <div class="input-group-prepend">
+                    <span class="input-group-text"><i class="fa-solid fa-magnifying-glass"></i></span>
+                </div>
+                <input type="text" class="form-control" data-bslist-search placeholder="Rechercher un BS, un expéditeur, un motif…">
+            </div>
+            <select class="form-control" data-bslist-statut>
+                <option value="" selected>Tous les statuts</option>
+                <option>Brouillon</option>
+                <option>Soumis</option>
+                <option>En cours</option>
+                <option>Validé</option>
+                <option>Refusé</option>
+                <option>Annulé</option>
+                <option>Clôturé</option>
+            </select>
+            <select class="form-control" data-bslist-retour>
+                <option value="tous" selected>Retour attendu : Tous</option>
+                <option value="a-rendre">À rendre</option>
+                <option value="sans-retour">Sans retour</option>
+            </select>
+            <input type="date" class="form-control" value="2026-08-01" aria-label="Date de début">
+            <input type="date" class="form-control" value="2026-08-12" aria-label="Date de fin">
+            <div class="filter-spacer"></div>
+            <button class="btn-mock btn-mock--outline btn-mock--sm" data-bslist-reset><i class="fa-solid fa-rotate"></i> Réinitialiser</button>
+            <button class="btn-export" type="button" title="Exporter en Excel"><i class="fa-solid fa-file-excel"></i></button>
         </div>
-        <div class="pagination-navigation">
-            <button class="pagination-arrow" type="button" aria-label="Page précédente" disabled>←</button>
-            <span class="pagination-current" aria-current="page">1</span>
-            <button class="pagination-arrow" type="button" aria-label="Page suivante">→</button>
+
+        <div class="table-mock-wrap">
+            <table class="table-mock">
+                <thead>
+                    <tr>
+                        <th>N° BS</th>
+                        <th>Date</th>
+                        <th>Expéditeur</th>
+                        <th>Parcours</th>
+                        <th>Retour attendu</th>
+                        <th>Motif</th>
+                        <th>Statut</th>
+                        <th class="text-right">Actions</th>
+                    </tr>
+                </thead>
+                <tbody data-bslist-body data-tab="recevoir"></tbody>
+            </table>
+        </div>
+
+        <div class="pagination-bar" role="navigation" aria-label="Pagination">
+            <div class="pagination-info"><span data-bslist-results data-tab="recevoir">—</span></div>
+            <div class="pagination-jump">
+                <label for="page-input-rec">Allez à la page :</label>
+                <input type="text" id="page-input-rec" aria-label="Numéro de page">
+            </div>
+            <div class="pagination-navigation">
+                <button class="pagination-arrow" type="button" aria-label="Page précédente" disabled>←</button>
+                <span class="pagination-current" aria-current="page">1</span>
+                <button class="pagination-arrow" type="button" aria-label="Page suivante">→</button>
+            </div>
         </div>
     </div>
 </section>

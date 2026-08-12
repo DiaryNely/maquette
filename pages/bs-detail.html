@@ -18,7 +18,8 @@
     <div class="alert-mock alert-mock--info">
         <i class="fa-solid fa-circle-info"></i>
         <span><strong>Étape courante :</strong> validation <strong>Transit</strong> (Rabemananjara Solo) —
-            passage Transit 1 contrôlé, en attente du passage Transit 2.</span>
+            passage à la <strong>Barrière de sortie</strong> contrôlé, en attente du contrôle à la
+            <strong>Plateforme logistique</strong>.</span>
     </div>
 
     <div class="row">
@@ -197,14 +198,14 @@
                     </h3>
                     <ul class="timeline">
                         <li class="timeline-item timeline-item--warn">
-                            <div class="timeline-item__title">En attente — Passage Transit 2</div>
-                            <div class="timeline-item__meta">Rabemananjara Solo · attendu le 14/08/2026</div>
-                            <div class="timeline-item__desc">Scan du QR au point de transit 2 (plateforme logistique).</div>
+                            <div class="timeline-item__title">En attente — Contrôle au magasin Plateforme logistique</div>
+                            <div class="timeline-item__meta">Rabemananjara Solo · arrivé le 14/08/2026 à 14:20</div>
+                            <div class="timeline-item__desc">Transit créé par scan du QR à la Plateforme logistique — contrôle à effectuer.</div>
                         </li>
                         <li class="timeline-item">
-                            <div class="timeline-item__title">Passage Transit 1 <span class="badge-status badge--valide">Conforme</span></div>
-                            <div class="timeline-item__meta">Rabemananjara Solo · 14/08/2026 à 13:05</div>
-                            <div class="timeline-item__desc">Contrôle colis à la barrière — scan QR OK, quantité conforme.</div>
+                            <div class="timeline-item__title">Passage — Barrière de sortie <span class="badge-status badge--valide">Conforme</span></div>
+                            <div class="timeline-item__meta">Rakotobe Hery · 14/08/2026 à 13:05</div>
+                            <div class="timeline-item__desc">Transit créé par scan du QR à la barrière — colis contrôlé, quantité conforme.</div>
                         </li>
                         <li class="timeline-item">
                             <div class="timeline-item__title">Validation Sécurité <span class="badge-status badge--valide">Validé</span></div>
@@ -250,7 +251,7 @@
                         <tbody>
                             <tr>
                                 <td><a class="cell-link" href="index.html?page=anomalie-detail">ANO-2026-018</a></td>
-                                <td>Transit 1 · Barrière</td>
+                                <td>Barrière de sortie</td>
                                 <td>Étiquette colis partiellement illisible</td>
                                 <td><span class="badge-status badge--valide">Résolue</span></td>
                                 <td class="cell-actions">
@@ -319,28 +320,13 @@
                     <h2 class="mock-card__title"><i class="fa-solid fa-location-dot"></i> Parcours</h2>
                 </div>
                 <div class="mock-card__body">
-                    <ol class="list-unstyled mb-0" style="font-size:0.84rem;">
-                        <li class="d-flex justify-content-between py-1">
-                            <span class="cell-muted">Magasin central</span>
-                            <span class="badge-status badge--valide">Sorti</span>
-                        </li>
-                        <li class="d-flex justify-content-between py-1">
-                            <span class="cell-muted">Transit 1 · Barrière</span>
-                            <span class="badge-status badge--valide">Conforme</span>
-                        </li>
-                        <li class="d-flex justify-content-between py-1">
-                            <span class="cell-muted">Transit 2 · Plateforme</span>
-                            <span class="badge-status badge--encours">En cours</span>
-                        </li>
-                        <li class="d-flex justify-content-between py-1">
-                            <span class="cell-muted">Transit 3 · Poste contrôle</span>
-                            <span class="badge-status badge--brouillon">À venir</span>
-                        </li>
-                        <li class="d-flex justify-content-between py-1">
-                            <span class="cell-muted">Siège — Administration</span>
-                            <span class="badge-status badge--brouillon">À venir</span>
-                        </li>
-                    </ol>
+                    <ol class="list-unstyled mb-0" style="font-size:0.84rem;"
+                        data-bs-parcours data-bs="BS-2026-0142"
+                        data-origin="Magasin central" data-destination="Siège - Administration S2M"></ol>
+                    <p class="cell-muted mt-2 mb-0" style="font-size:0.78rem;">
+                        <i class="fa-solid fa-circle-info text-teal"></i>
+                        Parcours construit au fil des scans : chaque magasin où le QR est scanné ajoute un passage.
+                    </p>
                 </div>
             </div>
         </div>

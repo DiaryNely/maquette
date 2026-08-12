@@ -103,9 +103,19 @@
 }
 
 .floating-menu-group__links .floating-menu-link {
+    display: flex;
+    align-items: center;
+    gap: 10px;
     padding-left: 46px;
     font-size: 0.85rem;
     letter-spacing: 0;
+}
+
+.floating-menu-group__links .floating-menu-link [class^="flaticon-"] {
+    font-size: 14px;
+    opacity: 0.8;
+    vertical-align: -1px;
+    flex: none;
 }
 
 .floating-menu-link.active {
@@ -1101,6 +1111,61 @@
 .matrix-mock .perm-no {
     color: #c3cad4;
     font-size: 0.95rem;
+}
+
+/* cases à cocher des matrices (admin) */
+.matrix-mock .matrix-cb {
+    text-align: center;
+}
+
+.matrix-mock .matrix-cb input[type="checkbox"] {
+    width: 15px;
+    height: 15px;
+    accent-color: var(--m-teal);
+    cursor: pointer;
+}
+
+.col-group-name {
+    display: inline-block;
+    margin-top: 5px;
+    font-size: 0.66rem;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    color: var(--m-faint);
+    text-transform: uppercase;
+    line-height: 1.2;
+}
+
+.fonction-cell {
+    font-weight: 700;
+    color: var(--m-ink);
+}
+
+/* canaux de notification (e-mail / application / SMS) */
+.chan-chip {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    margin: 0 2px;
+    border: 1px solid var(--m-line);
+    border-radius: 6px;
+    background: #fff;
+    cursor: pointer;
+    color: var(--m-faint);
+    vertical-align: middle;
+    transition: all 0.15s ease;
+}
+
+.chan-chip input {
+    display: none;
+}
+
+.chan-chip:has(input:checked) {
+    background: var(--m-teal-soft);
+    border-color: var(--m-teal);
+    color: var(--m-teal);
 }
 
 /* ==============================

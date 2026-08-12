@@ -4,10 +4,10 @@
     <div class="mock-page-head">
         <div class="mock-page-head__title">
             <h1><i class="fa-solid fa-qrcode text-teal"></i> Scan QR Code</h1>
-            <p>Identification d'un bon de sortie par scan : consultation des informations et actions selon le rôle et l'état du BS.</p>
+            <p>Le transit d'un bon de sortie est créé ici, au magasin, au moment du scan : chaque passage enregistré construit le parcours du BS.</p>
         </div>
         <div class="mock-page-head__actions">
-            <button class="btn-mock btn-mock--outline"><i class="fa-solid fa-camera"></i> Caméra externe</button>
+            <a href="index.html?page=transit" class="btn-mock btn-mock--outline"><i class="fa-solid fa-truck"></i> Voir les transits</a>
         </div>
     </div>
 
@@ -28,15 +28,32 @@
                         <div class="scan-frame__state">Recherche d'un QR code…</div>
                     </div>
                     <hr class="hr-soft">
-                    <div class="form-group mb-0">
-                        <label for="scan-manual">Ou saisir la référence du BS</label>
-                        <div class="input-group">
-                            <input type="text" class="form-control" id="scan-manual" placeholder="Ex. BS-2026-0142" value="BS-2026-0142">
-                            <div class="input-group-append">
-                                <button class="btn-mock" type="button"><i class="fa-solid fa-magnifying-glass"></i> Rechercher</button>
+                    <form data-scan-form>
+                        <div class="form-group">
+                            <label for="scan-magasin">Magasin où je me trouve</label>
+                            <select class="form-control" id="scan-magasin" data-scan-magasin data-default="Plateforme logistique"></select>
+                        </div>
+                        <div class="form-group">
+                            <label for="scan-agent">Agent connecté</label>
+                            <select class="form-control" id="scan-agent" data-scan-agent data-default="Rabemananjara Solo"></select>
+                        </div>
+                        <div class="form-group mb-0">
+                            <label for="scan-manual">Ou saisir la référence du BS</label>
+                            <div class="input-group">
+                                <input type="text" class="form-control" id="scan-manual" data-scan-bs
+                                    placeholder="Ex. BS-2026-0142" value="BS-2026-0142">
+                                <div class="input-group-append">
+                                    <button class="btn-mock" type="submit"><i class="fa-solid fa-qrcode"></i> Scanner</button>
+                                </div>
                             </div>
                         </div>
-                    </div>
+                    </form>
+                    <hr class="hr-soft">
+                    <p class="mb-0" style="font-size:0.82rem; color:var(--m-muted);">
+                        <i class="fa-solid fa-circle-info text-teal"></i>
+                        Le scan du QR dans un magasin <strong>crée le transit</strong> du BS à cet endroit :
+                        le parcours se construit au fil des passages, sans itinéraire planifié à l'avance.
+                    </p>
                 </div>
             </div>
         </div>
@@ -122,19 +139,24 @@
                             </tbody>
                         </table>
                     </div>
+                </div>
+            </div>
 
-                    <!-- Authentification : actions selon le rôle et l'état -->
+            <!-- Transit : création au scan -->
+            <div class="mock-card">
+                <div class="mock-card__head">
+                    <h2 class="mock-card__title"><i class="fa-solid fa-truck text-teal"></i> Transit — enregistrement du passage</h2>
+                    <span class="chip">Créé au scan du QR</span>
+                </div>
+                <div class="mock-card__body" data-scan-panel>
                     <div class="alert-mock alert-mock--info mb-3">
-                        <i class="fa-solid fa-shield-halved"></i>
-                        <span>Connecté en tant que <strong>Transit</strong> — actions autorisées pour ce BS à son étape actuelle :</span>
+                        <i class="fa-solid fa-circle-info"></i>
+                        <span>Scannez le QR du BS ci-contre : le transit sera créé au magasin sélectionné.</span>
                     </div>
-                    <div class="d-flex flex-wrap" style="gap:10px;">
-                        <button class="btn-mock"><i class="fa-solid fa-clipboard-check"></i> Contrôler le colis</button>
-                        <button class="btn-mock"><i class="fa-solid fa-circle-check"></i> Valider le passage</button>
-                        <a href="index.html?page=anomalie-create&bs=BS-2026-0142&point=transit-1" class="btn-mock btn-mock--danger"><i class="fa-solid fa-triangle-exclamation"></i> Déclarer une anomalie</a>
-                        <button class="btn-mock btn-mock--outline" disabled><i class="fa-solid fa-lock"></i> Modifier (non autorisé)</button>
-                        <a href="index.html?page=bs-detail" class="btn-mock btn-mock--outline"><i class="fa-solid fa-eye"></i> Voir le détail</a>
-                    </div>
+                    <p class="mb-0" style="font-size:0.84rem; color:var(--m-muted);">
+                        Connecté en tant que <strong>Transit</strong> (Rabemananjara Solo). Les actions de
+                        contrôle, de validation et de déclaration d'anomalie apparaissent après le scan.
+                    </p>
                 </div>
             </div>
         </div>
@@ -153,7 +175,7 @@
                         <th>Horodatage</th>
                         <th>BS</th>
                         <th>Utilisateur / rôle</th>
-                        <th>Point</th>
+                        <th>Magasin</th>
                         <th>Résultat</th>
                     </tr>
                 </thead>
@@ -161,15 +183,15 @@
                     <tr>
                         <td>14/08/2026 · 13:05</td>
                         <td><a class="cell-link" href="index.html?page=bs-detail">BS-2026-0142</a></td>
-                        <td>Rabemananjara Solo · Transit</td>
-                        <td>Transit 1 · Barrière</td>
+                        <td>Rakotobe Hery · Transit</td>
+                        <td>Barrière de sortie</td>
                         <td><span class="badge-status badge--valide">Conforme</span></td>
                     </tr>
                     <tr>
                         <td>14/08/2026 · 12:58</td>
                         <td><a class="cell-link" href="index.html?page=bs-detail">BS-2026-0142</a></td>
                         <td>Rabemananjara Solo · Transit</td>
-                        <td>Transit 1 · Barrière</td>
+                        <td>Barrière de sortie</td>
                         <td><span class="badge-status badge--refuse">Non conforme</span> <span class="cell-muted" style="font-size:0.76rem;">→ anomalie ANO-2026-018</span></td>
                     </tr>
                     <tr>

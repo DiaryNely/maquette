@@ -51,7 +51,7 @@
 
         var params = new URLSearchParams(location.search);
         var bs = params.get('bs');
-        var point = params.get('point');
+        var point = params.get('magasin') || params.get('point');
 
         if (bs) {
             for (var i = 0; i < bsSelect.options.length; i++) {
