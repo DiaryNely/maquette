@@ -1,53 +1,160 @@
-<section>
+<section class="page-transit">
     <div data-menu="menu.html"></div>
 
     <div class="mock-page-head">
         <div class="mock-page-head__title">
-            <h1><i class="fa-solid fa-truck text-teal"></i> Gestion du transit</h1>
-            <p>Le transit n'est plus planifié à l'avance : il est créé au magasin lors du scan du QR d'un bon de sortie. Chaque passage enregistré construit le parcours du BS.</p>
+            <h1><i class="fa-solid fa-qrcode text-teal"></i> Scan &amp; Gestion du transit</h1>
+            <p>Scannez le bon de sortie qui passe par votre secteur, contrôlez le matériel, puis validez le passage
+                ou déclarez une anomalie — chaque contrôle est enregistré avec l'identité de l'agent.</p>
         </div>
-        <div class="mock-page-head__actions">
-            <a href="index.html?page=scan" class="btn-mock"><i class="fa-solid fa-qrcode"></i> Scanner un BS</a>
+    </div>
+    <div class="row">
+        <!-- Étape 1 : scanner le BS -->
+        <div class="col-lg-5">
+            <div class="mock-card">
+                <div class="mock-card__head">
+                    <h2 class="mock-card__title"><i class="fa-solid fa-camera"></i> 1. Scanner le BS</h2>
+                    <span class="chip chip--active"><i class="fa-solid fa-circle"></i> Caméra active</span>
+                </div>
+                <div class="mock-card__body">
+                    <div class="scan-frame">
+                        <span class="scan-frame__corners"></span>
+                        <span class="scan-frame__inner"></span>
+                        <i class="fa-solid fa-qrcode scan-frame__icon"></i>
+                        <span class="scan-frame__line"></span>
+                        <div class="scan-frame__state">Recherche d'un QR code…</div>
+                    </div>
+                    <hr class="hr-soft">
+                    <form data-scan-form>
+                        <div class="row g-2">
+                            <div class="col-sm-6">
+                                <div class="form-group mb-2">
+                                    <label for="scan-magasin">Magasin où je me trouve</label>
+                                    <select class="form-control" id="scan-magasin" data-scan-magasin data-default="Plateforme logistique"></select>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group mb-2">
+                                    <label for="scan-agent">Agent connecté (personnel)</label>
+                                    <div class="personnel-search" data-scan-personnel>
+                                        <input type="text" class="form-control" id="scan-agent"
+                                            placeholder="Rechercher un agent du magasin…" autocomplete="off"
+                                            spellcheck="false" data-scan-agent>
+                                        <ul class="personnel-search__list" data-scan-personnel-list role="listbox" hidden></ul>
+                                    </div>
+                                    <p class="text-muted2 mb-0 mt-1" style="font-size:0.72rem;" data-scan-personnel-hint>
+                                        Plusieurs personnes peuvent porter le même nom — choisissez dans les suggestions.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group mb-0">
+                            <label for="scan-manual">Ou saisir la référence du BS</label>
+                            <div class="input-group">
+                                <input type="text" class="form-control" id="scan-manual" data-scan-bs
+                                    placeholder="Ex. BS-2026-0142" value="BS-2026-0142">
+                                <div class="input-group-append">
+                                    <button class="btn-mock" type="submit"><i class="fa-solid fa-qrcode"></i> Scanner</button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                    <hr class="hr-soft">
+                </div>
+            </div>
+        </div>
+
+        <!-- Étape 2 : détails du bon + contrôle -->
+        <div class="col-lg-7">
+            <div class="mock-card">
+                <div class="mock-card__head">
+                    <h2 class="mock-card__title"><i class="fa-solid fa-file-lines text-teal"></i> 2. Détails du bon — <span class="mono">BS-2026-0142</span></h2>
+                    <span class="badge-status badge--encours">En cours</span>
+                </div>
+                <div class="mock-card__body">
+                    <div class="info-grid mb-3">
+                        <div class="info-grid__item">
+                            <label>Initiateur</label>
+                            <div class="value">Rakotobe Hery</div>
+                        </div>
+                        <div class="info-grid__item">
+                            <label>Bénéficiaire</label>
+                            <div class="value">Rasoanirina Miora</div>
+                        </div>
+                        <div class="info-grid__item">
+                            <label>Parcours</label>
+                            <div class="value value--muted">Magasin central → Siège - Administration S2M</div>
+                        </div>
+                        <div class="info-grid__item">
+                            <label>Étape workflow</label>
+                            <div class="value value--muted">Étape courante : Transit</div>
+                        </div>
+                        <div class="info-grid__item">
+                            <label>Articles</label>
+                            <div class="value">18 pièces / 4 lignes</div>
+                        </div>
+                        <div class="info-grid__item">
+                            <label>Dont à rendre</label>
+                            <div class="value">2 articles (retour avant le 12/09/2026)</div>
+                        </div>
+                    </div>
+
+                    <h3 class="mb-2" style="font-size:0.9rem; font-weight:700; color:var(--m-ink);">
+                        <i class="fa-solid fa-boxes-stacked text-teal"></i> Articles du bon — à contrôler physiquement
+                    </h3>
+                    <div class="table-mock-wrap mb-3">
+                        <table class="table-mock">
+                            <thead>
+                                <tr>
+                                    <th>Code</th>
+                                    <th>Désignation</th>
+                                    <th>Qté</th>
+                                    <th>État</th>
+                                    <th>À rendre</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="mono">ART-102</td>
+                                    <td>Rame papier A4 80 g (paquet de 500)</td>
+                                    <td>10</td>
+                                    <td>Neuf</td>
+                                    <td class="cell-muted">—</td>
+                                </tr>
+                                <tr>
+                                    <td class="mono">MAT-011</td>
+                                    <td>Écran 24&quot; Dell P2422H</td>
+                                    <td>2</td>
+                                    <td>Bon état</td>
+                                    <td><span class="badge-status badge--info">Oui</span></td>
+                                </tr>
+                                <tr>
+                                    <td class="mono">MAT-008</td>
+                                    <td>Ordinateur portable Dell Latitude 5440</td>
+                                    <td>1</td>
+                                    <td>Neuf</td>
+                                    <td><span class="badge-status badge--info">Oui</span></td>
+                                </tr>
+                                <tr>
+                                    <td class="mono">FOU-031</td>
+                                    <td>Boîte de stylos à bille bleu (12)</td>
+                                    <td>5</td>
+                                    <td>Neuf</td>
+                                    <td class="cell-muted">—</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Résultat du scan : transit créé + contrôle / anomalie -->
+                    <div data-scan-panel>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
-    <div class="alert-mock alert-mock--info">
-        <i class="fa-solid fa-circle-info"></i>
-        <span><strong>Nouveau modèle :</strong> on ne sait pas à l'avance où un BS va transiter. L'enregistrement
-            se fait dans le magasin où arrive le bon : c'est au moment du <strong>scan du QR</strong> qu'un transit
-            est créé pour ce BS à cet endroit. Le parcours se construit au fil des passages.</span>
-    </div>
 
-    <div class="kpi-grid">
-        <div class="kpi-card">
-            <div class="kpi-card__icon kpi-card__icon--blue"><i class="fa-solid fa-warehouse"></i></div>
-            <div>
-                <div class="kpi-card__value">6</div>
-                <div class="kpi-card__label">Magasins où un scan crée un transit</div>
-            </div>
-        </div>
-        <div class="kpi-card">
-            <div class="kpi-card__icon kpi-card__icon--teal"><i class="fa-solid fa-clipboard-check"></i></div>
-            <div>
-                <div class="kpi-card__value">37</div>
-                <div class="kpi-card__label">Contrôles conformes (mois)</div>
-            </div>
-        </div>
-        <div class="kpi-card">
-            <div class="kpi-card__icon kpi-card__icon--red"><i class="fa-solid fa-triangle-exclamation"></i></div>
-            <div>
-                <div class="kpi-card__value">3</div>
-                <div class="kpi-card__label">Contrôles non conformes</div>
-            </div>
-        </div>
-        <div class="kpi-card">
-            <div class="kpi-card__icon kpi-card__icon--amber"><i class="fa-solid fa-hourglass-half"></i></div>
-            <div>
-                <div class="kpi-card__value" data-kpi-pending>0</div>
-                <div class="kpi-card__label">Passages en attente de contrôle</div>
-            </div>
-        </div>
-    </div>
 
     <div class="row">
         <!-- Contrôle en cours -->
@@ -67,14 +174,6 @@
                             <div class="info-grid__item">
                                 <label>BS scanné</label>
                                 <div class="value mono" data-c-bs>—</div>
-                            </div>
-                            <div class="info-grid__item">
-                                <label>Destination</label>
-                                <div class="value">Siège - Administration S2M</div>
-                            </div>
-                            <div class="info-grid__item">
-                                <label>Colis</label>
-                                <div class="value">1 colis · 18 articles</div>
                             </div>
                             <div class="info-grid__item">
                                 <label>Arrivé au magasin</label>
@@ -111,8 +210,8 @@
                         </form>
                         <p class="cell-muted mt-3 mb-0" style="font-size:0.8rem;">
                             <i class="fa-solid fa-circle-info text-teal"></i>
-                            Chaque passage est horodaté et rattaché à l'agent ayant scanné. Un contrôle non conforme
-                            bloque automatiquement la progression du BS jusqu'à résolution de l'anomalie.
+                            Chaque passage est horodaté et rattaché à l'agent ayant effectué le contrôle. Un contrôle
+                            non conforme bloque automatiquement la progression du BS jusqu'à résolution de l'anomalie.
                         </p>
                     </div>
                 </div>
@@ -123,7 +222,7 @@
         <div class="col-lg-7">
             <div class="mock-card">
                 <div class="mock-card__head">
-                    <h2 class="mock-card__title"><i class="fa-solid fa-location-dot"></i> Parcours construit — <span class="mono">BS-2026-0142</span></h2>
+                    <h2 class="mock-card__title"><i class="fa-solid fa-location-dot"></i> Parcours construit — <span class="mono" data-parcours-title>BS-2026-0142</span></h2>
                     <span class="chip" id="transit-count-142">— passages enregistrés</span>
                 </div>
                 <div class="mock-card__body mock-card__body--flush">
@@ -153,12 +252,26 @@
 
     <!-- Historique des passages -->
     <div class="mock-card">
-        <div class="mock-card__head">
-            <h2 class="mock-card__title"><i class="fa-solid fa-clock-rotate-left"></i> Transits enregistrés</h2>
-            <a href="index.html?page=bs-detail" class="link-soft">Voir le BS associé <i class="fa-solid fa-arrow-right"></i></a>
-        </div>
-        <div class="mock-card__body mock-card__body--flush">
-            <table class="table-mock" data-transits-table>
+        <div class="mock-card__body">
+            <details class="history-dropdown">
+                <summary>
+                    <span class="history-dropdown__title"><i class="fa-solid fa-clock-rotate-left text-teal"></i> Transits enregistrés</span>
+                    <span class="history-dropdown__side">
+                        <i class="fa-solid fa-chevron-down history-dropdown__chevron" aria-hidden="true"></i>
+                    </span>
+                </summary>
+                <div class="filter-bar mt-3 mb-2">
+                    <div class="search-input">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                        <input type="text" class="form-control" data-transits-search
+                            placeholder="Filtrer par numéro de bon de sortie…">
+                    </div>
+                    <div class="filter-spacer"></div>
+                    <button class="btn-mock btn-mock--outline btn-mock--sm" type="button" data-transits-search-clear>
+                        <i class="fa-solid fa-rotate"></i> Réinitialiser
+                    </button>
+                </div>
+                <table class="table-mock" data-transits-table>
                 <thead>
                     <tr>
                         <th>BS</th>
@@ -171,6 +284,7 @@
                 </thead>
                 <tbody></tbody>
             </table>
+            </details>
         </div>
     </div>
 </section>

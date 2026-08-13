@@ -545,6 +545,10 @@
     padding: 0;
 }
 
+.mock-card__body--compact {
+    padding: 14px 16px;
+}
+
 /* ==============================
    GRILLE D'INFORMATIONS (fiche BS)
    ============================== */
@@ -586,6 +590,13 @@
 .workflow-steps {
     display: flex;
     min-width: 720px;
+}
+
+/* Détail d'un BS : on n'affiche que les étapes déjà connues
+   (réalisées + courante), jamais les étapes à venir — la rangée
+   s'adapte donc à la largeur de la carte, sans scroll. */
+.page-bs-detail .workflow-steps {
+    min-width: 0;
 }
 
 .workflow-step {
@@ -654,6 +665,121 @@
     font-size: 0.72rem;
     color: var(--m-faint);
     margin-top: 1px;
+}
+
+/* ==============================
+   ANALYSE DU PARCOURS (détail d'un BS)
+   Indicateurs compacts issus de l'ancienne page Traçabilité.
+   ============================== */
+.parcours-stats {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px 32px;
+}
+
+.parcours-stats__item {
+    min-width: 160px;
+}
+
+.parcours-stats__label {
+    font-size: 0.74rem;
+    color: var(--m-muted);
+    margin-bottom: 2px;
+}
+
+.parcours-stats__value {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--m-ink);
+}
+
+/* ==============================
+   SOLUTION D'ANOMALIE (détail d'une anomalie)
+   Affiche la solution retenue ; un formulaire permet d'en
+   proposer une nouvelle.
+   ============================== */
+.solution-block {
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+}
+
+.solution-block__icon {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 15px;
+    flex-shrink: 0;
+    background: var(--m-teal-soft);
+    color: var(--m-teal);
+}
+
+.solution-block__content {
+    flex: 1;
+    min-width: 0;
+}
+
+.solution-block__text {
+    font-size: 0.88rem;
+    color: var(--m-ink);
+}
+
+.solution-block__meta {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    font-size: 0.74rem;
+    color: var(--m-faint);
+    margin-top: 2px;
+}
+
+/* ==============================
+   HISTORIQUE DES VALIDATIONS (dropdown)
+   L'historique est replié par défaut : un clic sur l'en-tête
+   ouvre la frise chronologique (élément <details> natif).
+   ============================== */
+.history-dropdown summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    list-style: none;
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--m-ink);
+    padding: 2px 0;
+    border-radius: 4px;
+    user-select: none;
+}
+
+.history-dropdown summary::-webkit-details-marker {
+    display: none;
+}
+
+.history-dropdown summary:hover {
+    color: var(--m-primary);
+}
+
+.history-dropdown__chevron {
+    font-size: 0.8rem;
+    color: var(--m-faint);
+    transition: transform 0.2s ease;
+}
+
+/* côté droit du résumé : lien secondaire + chevron */
+.history-dropdown__side {
+    display: inline-flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.history-dropdown[open] .history-dropdown__chevron {
+    transform: rotate(180deg);
 }
 
 /* ==============================
@@ -760,6 +886,116 @@
     color: var(--m-faint);
 }
 
+/* Détail d'un BS : la carte QR est pleine largeur — QR à gauche,
+   référence + note d'authentification à droite (empilés sur mobile). */
+.page-bs-detail .qr-block {
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 22px;
+    text-align: left;
+}
+
+.page-bs-detail .qr-block__info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+@media (max-width: 576px) {
+    .page-bs-detail .qr-block {
+        flex-direction: column;
+        text-align: center;
+    }
+}
+
+/* ==============================
+   MODALE GÉNÉRIQUE
+   ============================== */
+.modal-mock {
+    position: fixed;
+    inset: 0;
+    z-index: 1050;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+}
+
+.modal-mock[hidden] {
+    display: none;
+}
+
+.modal-mock__backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.55);
+}
+
+.modal-mock__dialog {
+    position: relative;
+    width: min(100%, 420px);
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 18px 50px rgba(15, 23, 42, 0.35);
+    animation: modal-mock-pop 0.18s ease-out;
+}
+
+@keyframes modal-mock-pop {
+    from {
+        opacity: 0;
+        transform: translateY(8px) scale(0.98);
+    }
+    to {
+        opacity: 1;
+        transform: none;
+    }
+}
+
+.modal-mock__head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 14px 18px;
+    border-bottom: 1px solid var(--m-line-soft);
+}
+
+.modal-mock__title {
+    margin: 0;
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--m-ink);
+}
+
+.modal-mock__close {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    padding: 0;
+    border: 0;
+    border-radius: 6px;
+    background: transparent;
+    color: var(--m-faint);
+    font-size: 1rem;
+    cursor: pointer;
+}
+
+.modal-mock__close:hover {
+    background: var(--m-slate-soft);
+    color: var(--m-ink);
+}
+
+.modal-mock__body {
+    padding: 20px 18px 22px;
+}
+
+body.modal-open {
+    overflow: hidden;
+}
+
 /* ==============================
    SCAN — cadre viseur
    ============================== */
@@ -800,6 +1036,44 @@
     background: linear-gradient(90deg, transparent, #2fd4a5, transparent);
     box-shadow: 0 0 12px 2px rgba(47, 212, 165, 0.55);
     animation: mock-scan 2.4s ease-in-out infinite;
+}
+
+/* ==============================
+   PAGE TRANSIT — layout compact (pas de place perdue)
+   ============================== */
+.page-transit .scan-frame {
+    width: min(100%, 190px);
+    height: auto;
+    aspect-ratio: 1 / 1;
+    border-radius: 10px;
+}
+
+.page-transit .scan-frame__icon {
+    font-size: 1.6rem;
+    opacity: 0.5;
+}
+
+.page-transit .scan-frame__state {
+    font-size: 0.68rem;
+}
+
+.page-transit .info-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px 18px;
+}
+
+.page-transit .mock-card__body {
+    padding: 14px 16px;
+}
+
+.page-transit .kpi-grid {
+    margin-bottom: 16px;
+}
+
+@media (max-width: 991px) {
+    .page-transit .info-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
 }
 
 @keyframes mock-scan {
@@ -1093,6 +1367,19 @@
     display: flex;
     gap: 12px;
     flex-wrap: wrap;
+}
+
+.notif-item[data-notif-href] {
+    cursor: pointer;
+    transition: background 0.15s ease;
+}
+
+.notif-item[data-notif-href]:hover {
+    background: var(--m-bg-soft);
+}
+
+.notif-item[data-notif-href]:hover .notif-item__title {
+    color: var(--m-primary);
 }
 
 .notif-item.unread {
@@ -1472,6 +1759,180 @@
 }
 
 /* ==============================
+   SÉLECTEUR « MAGASIN » AU CENTRE DE LA ZONE BLANCHE,
+   AU-DESSUS DU LOGO DU MAGASIN (comme la v1)
+   ============================== */
+.store-select {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 0;
+    margin: 0 0 15px;
+}
+
+/* Page de création : le sélecteur « Magasin » est le tout premier
+   élément du flux, collé en haut du cadre blanc (#contenu) —
+   à 3px de la bordure supérieure. Le bouton hamburger flotte
+   en haut à gauche (retiré du flux). */
+#contenu.page-bs-create {
+    padding-top: 3px;
+}
+
+#contenu.page-bs-create .floating-menu-wrapper {
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    margin: 0;
+}
+
+.store-select__label {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--m-muted);
+    white-space: nowrap;
+}
+
+.store-select__label i {
+    color: var(--m-teal);
+}
+
+.store-select select {
+    width: 180px;
+    padding: 5px 8px;
+    border: 1px solid #cdd4dd;
+    border-radius: 4px;
+    background: #fff;
+    font-size: 12.5px;
+    color: var(--m-ink);
+    cursor: pointer;
+    outline: none;
+}
+
+.store-select select:focus {
+    border-color: var(--m-teal);
+    box-shadow: 0 0 0 2px rgba(14, 159, 110, 0.15);
+}
+
+/* ==============================
+   LOGO DU MAGASIN D'ORIGINE (dans le formulaire, comme la v1)
+   ============================== */
+.origin-logo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    padding: 4px 0 18px;
+}
+
+.origin-logo img {
+    height: 58px;
+    max-width: 280px;
+    object-fit: contain;
+}
+
+.origin-logo__info {
+    font-size: 0.82rem;
+    color: var(--m-muted);
+    line-height: 1.7;
+}
+
+.origin-logo__info div {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+}
+
+.origin-logo__info i {
+    color: var(--m-faint);
+    width: 14px;
+    text-align: center;
+}
+
+/* ==============================
+   GRILLE CENTRÉE 2 COLONNES (informations générales)
+   ============================== */
+.form-grid-2 {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    max-width: 720px;
+    margin: 0 auto;
+    gap: 14px 24px;
+    align-items: start;
+}
+
+/* champs plus compacts dans la section informations générales */
+.form-grid-2 .form-control {
+    font-size: 0.84rem;
+    padding: 0.32rem 0.62rem;
+}
+
+.form-grid-2 .form-group label {
+    font-size: 0.78rem;
+}
+
+@media (max-width: 768px) {
+    .form-grid-2 {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Colonne du bouton « + » (ajouter une ligne) : le dégradé de
+   l'en-tête s'arrête à « Date de retour prévue », la colonne du
+   bouton est blanche, sans contenu ni bordure. */
+.table-mock--products thead th:last-child {
+    background: #fff;
+    border-bottom: 0;
+}
+
+/* ==============================
+   BOUTONS LIGNES D'ARTICLES (style v1)
+   ============================== */
+/* bouton « + » vert pour ajouter une ligne d'article */
+.btn-add-row {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 26px;
+    padding: 0;
+    border: 0;
+    border-radius: 4px;
+    background: #1bb596;
+    color: #fff;
+    font-size: 12px;
+    cursor: pointer;
+    transition: opacity 0.15s ease;
+}
+
+.btn-add-row:hover {
+    opacity: 0.88;
+}
+
+/* croix rouge sans bordure pour supprimer une ligne */
+.btn-remove-row {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 26px;
+    height: 26px;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: var(--m-red);
+    font-size: 0.95rem;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+.btn-remove-row:hover {
+    color: #b33131;
+}
+
+/* ==============================
    CHAMPS DE DATE DE RETOUR (lignes d'articles)
    ============================== */
 .return-date-input {
@@ -1480,6 +1941,66 @@
 
 .return-date-input.is-visible {
     display: block;
+}
+
+/* ==============================
+   RECHERCHE PERSONNEL (création d'un BS)
+   Magasin d'abord, puis saisie du nom : les suggestions
+   filtrent les personnels de ce magasin et affichent
+   matricule + magasin pour distinguer les homonymes.
+   ============================== */
+.personnel-search {
+    position: relative;
+}
+
+.personnel-search .form-control {
+    width: 100%;
+}
+
+.personnel-search__list {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    z-index: 20;
+    margin: 4px 0 0;
+    padding: 4px;
+    list-style: none;
+    background: #fff;
+    border: 1px solid var(--m-line);
+    border-radius: 6px;
+    box-shadow: 0 6px 18px rgba(43, 58, 85, 0.12);
+    max-height: 240px;
+    overflow-y: auto;
+}
+
+.personnel-search__item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 8px 10px;
+    border-radius: 4px;
+    font-size: 0.84rem;
+    color: var(--m-text);
+    cursor: pointer;
+    outline: none;
+}
+
+.personnel-search__item:hover,
+.personnel-search__item:focus {
+    background: var(--m-bg-soft);
+}
+
+.personnel-search__item:hover strong,
+.personnel-search__item:focus strong {
+    color: var(--m-teal);
+}
+
+.personnel-search__empty {
+    padding: 10px;
+    font-size: 0.8rem;
+    color: var(--m-faint);
 }
 
 /* ==============================

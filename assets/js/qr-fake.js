@@ -82,4 +82,9 @@
         }, 80);
         setTimeout(function () { clearInterval(timer); }, 4000);
     }
+
+    /* API publique — renderAll : (re)rend tous les [data-qr] présents,
+       utile quand une modale est ouverte après le boot de la page. */
+    window.S2M = window.S2M || {};
+    window.S2M.qr = { renderAll: init };
 })();

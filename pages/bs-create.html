@@ -1,13 +1,33 @@
 <section>
     <div data-menu="menu.html"></div>
 
+    <!-- Sélecteur du magasin d'origine, au centre de la zone blanche,
+         au-dessus du logo du magasin (comme la v1). -->
+    <div class="store-select">
+        <span class="store-select__label"><i class="fa-solid fa-location-dot"></i> Magasin :</span>
+        <select id="bs-magasin-origine" aria-label="Magasin d'origine">
+            <option selected>Magasin central</option>
+            <option>Entrepôt S2M</option>
+            <option>Siège - Administration S2M</option>
+        </select>
+    </div>
+
+    <!-- Logo du magasin d'origine, affiché dans le formulaire (comme la v1) -->
+    <div class="origin-logo">
+        <img src="assets/img/Jumbo.svg" alt="Logo Magasin central" data-origin-logo-img>
+        <div class="origin-logo__info">
+            <div><i class="fa-solid fa-location-dot"></i> <span data-origin-logo-store>Magasin central</span></div>
+            <div><i class="fa-regular fa-calendar"></i> <span data-origin-logo-date></span></div>
+        </div>
+    </div>
+
     <div class="mock-page-head">
         <div class="mock-page-head__title">
             <h1><i class="fa-solid fa-plus text-teal"></i> Création d'un bon de sortie</h1>
-            <p>Formulaire de saisie : initiateur, bénéficiaire, magasins origine/destination, motif et dates.</p>
+            <p>Formulaire de saisie : bénéficiaire, magasins origine/destination et articles à sortir.</p>
         </div>
         <div class="mock-page-head__actions">
-            <a href="index.html?page=bs-list" class="btn-mock btn-mock--outline"><i class="fa-solid fa-arrow-left"></i> Retour à la liste</a>
+            <button type="button" class="btn-mock" data-go-back><i class="fa-solid fa-arrow-left"></i> Retour</button>
         </div>
     </div>
 
@@ -17,39 +37,9 @@
             <div class="mock-card__head">
                 <h2 class="mock-card__title"><i class="fa-solid fa-user-tie"></i> 1. Informations générales</h2>
             </div>
-            <div class="mock-card__body">
-                <div class="row">
-                    <div class="col-md-6 col-lg-4">
-                        <div class="form-group">
-                            <label for="bs-initiateur">Initiateur</label>
-                            <select class="form-control" id="bs-initiateur">
-                                <option selected>Rakotobe Hery — Magasinier (Magasin central)</option>
-                                <option>Razafindratsima Vola — Responsable magasin</option>
-                                <option>Rabenjanahary Mamy — Gestionnaire entrepôt</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="col-md-6 col-lg-4">
-                        <div class="form-group">
-                            <label for="bs-beneficiaire">Bénéficiaire</label>
-                            <select class="form-control" id="bs-beneficiaire">
-                                <option selected>Rasoanirina Miora — Chef de service (Siège)</option>
-                                <option>Rabeharisoa Andry — Responsable entrepôt</option>
-                                <option>Ranarivelo Tsiky — Magasinier (Entrepôt S2M)</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="col-md-6 col-lg-4">
-                        <div class="form-group">
-                            <label for="bs-magasin-origine">Magasin d'origine</label>
-                            <select class="form-control" id="bs-magasin-origine">
-                                <option selected>Magasin central</option>
-                                <option>Entrepôt S2M</option>
-                                <option>Siège - Administration S2M</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="col-md-6 col-lg-4">
+            <div class="mock-card__body mock-card__body--compact">
+                <div class="form-grid-2">
+                    <div class="form-grid-2__item">
                         <div class="form-group">
                             <label for="bs-magasin-destination">Magasin de destination</label>
                             <select class="form-control" id="bs-magasin-destination">
@@ -59,45 +49,32 @@
                             </select>
                         </div>
                     </div>
-                    <div class="col-md-6 col-lg-4">
+                    <div class="form-grid-2__item">
                         <div class="form-group">
-                            <label for="bs-motif">Motif de la sortie</label>
-                            <select class="form-control" id="bs-motif">
-                                <option>Équipement informatique</option>
-                                <option selected>Fournitures de bureau</option>
-                                <option>Réapprovisionnement</option>
-                                <option>Retour de matériel</option>
-                                <option>Prêt / mise à disposition</option>
-                                <option>Autre…</option>
-                            </select>
+                            <label for="bs-beneficiaire">Bénéficiaire (personnel)</label>
+                            <div class="personnel-search" data-personnel-search>
+                                <input type="text" class="form-control" id="bs-beneficiaire" name="bs-beneficiaire"
+                                    placeholder="Rechercher un personnel du magasin…" autocomplete="off"
+                                    data-personnel-input>
+                                <ul class="personnel-search__list" data-personnel-list role="listbox" hidden></ul>
+                            </div>
+                            <p class="text-muted2 mb-0 mt-1" style="font-size:0.78rem;" data-personnel-hint>
+                                Saisissez le nom d'un personnel du magasin sélectionné — plusieurs personnes peuvent
+                                porter le même nom.
+                            </p>
                         </div>
                     </div>
-                    <div class="col-md-6 col-lg-4">
-                        <div class="form-group">
-                            <label for="bs-workflow">Modèle de workflow</label>
-                            <select class="form-control" id="bs-workflow">
-                                <option selected>Standard — Initiateur → Responsable → Sécurité → Transit → Réception → Destinataire</option>
-                                <option>Simplifié — Initiateur → Responsable → Destinataire</option>
-                                <option>Avec retour — Standard + contrôle des retours</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="col-md-6 col-lg-4">
-                        <div class="form-group">
-                            <label for="bs-date-demande">Date de demande</label>
-                            <input type="date" class="form-control" id="bs-date-demande" value="2026-08-12">
-                        </div>
-                    </div>
-                    <div class="col-md-6 col-lg-4">
+                    <div class="form-grid-2__item">
                         <div class="form-group">
                             <label for="bs-date-souhaitee">Date de sortie souhaitée</label>
                             <input type="date" class="form-control" id="bs-date-souhaitee" value="2026-08-14">
                         </div>
                     </div>
-                    <div class="col-md-6 col-lg-4">
+                    <div class="form-grid-2__item">
                         <div class="form-group">
                             <label for="bs-commentaire">Commentaire (facultatif)</label>
-                            <input type="text" class="form-control" id="bs-commentaire" placeholder="Précisions utiles pour la validation…">
+                            <input type="text" class="form-control" id="bs-commentaire"
+                                placeholder="Précisions utiles pour la validation…">
                         </div>
                     </div>
                 </div>
@@ -106,15 +83,9 @@
 
         <!-- 2. Articles -->
         <div class="mock-card">
-            <div class="mock-card__head">
-                <h2 class="mock-card__title"><i class="fa-solid fa-boxes-stacked"></i> 2. Articles à sortir</h2>
-                <button class="btn-mock btn-mock--sm" type="button" data-add-product-line>
-                    <i class="fa-solid fa-plus"></i> Ajouter une ligne
-                </button>
-            </div>
             <div class="mock-card__body mock-card__body--flush">
                 <div class="table-responsive">
-                    <table class="table-mock" style="min-width: 1100px;">
+                    <table class="table-mock table-mock--products" style="min-width: 1100px;">
                         <thead>
                             <tr>
                                 <th>Type</th>
@@ -125,7 +96,12 @@
                                 <th>État</th>
                                 <th>À rendre</th>
                                 <th>Date de retour prévue</th>
-                                <th class="text-center">—</th>
+                                <th class="text-center">
+                                    <button class="btn-add-row" type="button" data-add-product-line
+                                        title="Ajouter une ligne" aria-label="Ajouter une ligne">
+                                        <i class="fa-solid fa-plus"></i>
+                                    </button>
+                                </th>
                             </tr>
                         </thead>
                         <tbody data-product-lines>
@@ -138,17 +114,20 @@
                                         <option>Fourniture</option>
                                     </select>
                                 </td>
-                                <td><input class="form-control form-control-sm" name="product-code[]" value="ART-102" placeholder="Ex. ART-001"></td>
-                                <td><input class="form-control form-control-sm" name="product-designation[]" value="Rame papier A4 80 g (paquet de 500)"></td>
+                                <td><input class="form-control form-control-sm" name="product-code[]" value="ART-102"
+                                        placeholder="Ex. ART-001"></td>
+                                <td><input class="form-control form-control-sm" name="product-designation[]"
+                                        value="Rame papier A4 80 g (paquet de 500)"></td>
                                 <td>
                                     <select class="form-control form-control-sm" name="product-unit[]">
-                                        <option>pce</option>
-                                        <option selected>rme</option>
-                                        <option>boîte</option>
-                                        <option>carton</option>
+                                        <option>Pièce</option>
+                                        <option selected>Rame</option>
+                                        <option>Boîte</option>
+                                        <option>Carton</option>
                                     </select>
                                 </td>
-                                <td><input class="form-control form-control-sm" name="product-quantity[]" type="number" min="1" value="10"></td>
+                                <td><input class="form-control form-control-sm" name="product-quantity[]" type="number"
+                                        min="1" value="10"></td>
                                 <td>
                                     <select class="form-control form-control-sm" name="product-state[]">
                                         <option selected>Neuf</option>
@@ -159,13 +138,15 @@
                                 </td>
                                 <td class="text-center">
                                     <div class="custom-control custom-checkbox">
-                                        <input class="custom-control-input" id="product-return-1" name="product-return[]" type="checkbox">
+                                        <input class="custom-control-input" id="product-return-1"
+                                            name="product-return[]" type="checkbox">
                                         <label class="custom-control-label" for="product-return-1">OUI</label>
                                     </div>
                                 </td>
-                                <td><input class="form-control form-control-sm return-date-input" name="product-return-date[]" type="date"></td>
+                                <td><input class="form-control form-control-sm return-date-input"
+                                        name="product-return-date[]" type="date"></td>
                                 <td class="text-center">
-                                    <button class="btn-mock btn-mock--danger btn-mock--icon" type="button" data-remove-product-line
+                                    <button class="btn-remove-row" type="button" data-remove-product-line
                                         aria-label="Supprimer cette ligne" title="Supprimer cette ligne">
                                         <i class="fa-solid fa-xmark"></i>
                                     </button>
@@ -180,17 +161,20 @@
                                         <option>Fourniture</option>
                                     </select>
                                 </td>
-                                <td><input class="form-control form-control-sm" name="product-code[]" value="MAT-011"></td>
-                                <td><input class="form-control form-control-sm" name="product-designation[]" value="Écran 24&quot; Dell P2422H"></td>
+                                <td><input class="form-control form-control-sm" name="product-code[]" value="MAT-011">
+                                </td>
+                                <td><input class="form-control form-control-sm" name="product-designation[]"
+                                        value="Écran 24&quot; Dell P2422H"></td>
                                 <td>
                                     <select class="form-control form-control-sm" name="product-unit[]">
-                                        <option selected>pce</option>
-                                        <option>rme</option>
-                                        <option>boîte</option>
-                                        <option>carton</option>
+                                        <option selected>Pièce</option>
+                                        <option>Rame</option>
+                                        <option>Boîte</option>
+                                        <option>Carton</option>
                                     </select>
                                 </td>
-                                <td><input class="form-control form-control-sm" name="product-quantity[]" type="number" min="1" value="2"></td>
+                                <td><input class="form-control form-control-sm" name="product-quantity[]" type="number"
+                                        min="1" value="2"></td>
                                 <td>
                                     <select class="form-control form-control-sm" name="product-state[]">
                                         <option>Neuf</option>
@@ -201,13 +185,15 @@
                                 </td>
                                 <td class="text-center">
                                     <div class="custom-control custom-checkbox">
-                                        <input class="custom-control-input" id="product-return-2" name="product-return[]" type="checkbox" checked>
+                                        <input class="custom-control-input" id="product-return-2"
+                                            name="product-return[]" type="checkbox" checked>
                                         <label class="custom-control-label" for="product-return-2">OUI</label>
                                     </div>
                                 </td>
-                                <td><input class="form-control form-control-sm return-date-input is-visible" name="product-return-date[]" type="date" value="2026-09-12"></td>
+                                <td><input class="form-control form-control-sm return-date-input is-visible"
+                                        name="product-return-date[]" type="date" value="2026-09-12"></td>
                                 <td class="text-center">
-                                    <button class="btn-mock btn-mock--danger btn-mock--icon" type="button" data-remove-product-line
+                                    <button class="btn-remove-row" type="button" data-remove-product-line
                                         aria-label="Supprimer cette ligne" title="Supprimer cette ligne">
                                         <i class="fa-solid fa-xmark"></i>
                                     </button>
@@ -231,16 +217,18 @@
                     </select>
                 </td>
                 <td><input class="form-control form-control-sm" name="product-code[]" placeholder="Ex. ART-001"></td>
-                <td><input class="form-control form-control-sm" name="product-designation[]" placeholder="Nom du produit"></td>
+                <td><input class="form-control form-control-sm" name="product-designation[]"
+                        placeholder="Nom du produit"></td>
                 <td>
                     <select class="form-control form-control-sm" name="product-unit[]">
-                        <option>pce</option>
-                        <option>rme</option>
-                        <option>boîte</option>
-                        <option>carton</option>
+                        <option>Pièce</option>
+                        <option>Rame</option>
+                        <option>Boîte</option>
+                        <option>Carton</option>
                     </select>
                 </td>
-                <td><input class="form-control form-control-sm" name="product-quantity[]" type="number" min="1" value="1"></td>
+                <td><input class="form-control form-control-sm" name="product-quantity[]" type="number" min="1"
+                        value="1"></td>
                 <td>
                     <select class="form-control form-control-sm" name="product-state[]">
                         <option>Neuf</option>
@@ -251,13 +239,15 @@
                 </td>
                 <td class="text-center">
                     <div class="custom-control custom-checkbox">
-                        <input class="custom-control-input" id="product-return-__INDEX__" name="product-return[]" type="checkbox">
+                        <input class="custom-control-input" id="product-return-__INDEX__" name="product-return[]"
+                            type="checkbox">
                         <label class="custom-control-label" for="product-return-__INDEX__">OUI</label>
                     </div>
                 </td>
-                <td><input class="form-control form-control-sm return-date-input" name="product-return-date[]" type="date"></td>
+                <td><input class="form-control form-control-sm return-date-input" name="product-return-date[]"
+                        type="date"></td>
                 <td class="text-center">
-                    <button class="btn-mock btn-mock--danger btn-mock--icon" type="button" data-remove-product-line
+                    <button class="btn-remove-row" type="button" data-remove-product-line
                         aria-label="Supprimer cette ligne" title="Supprimer cette ligne">
                         <i class="fa-solid fa-xmark"></i>
                     </button>
@@ -265,59 +255,9 @@
             </tr>
         </template>
 
-        <!-- 3. Règles du workflow -->
-        <div class="mock-card">
-            <div class="mock-card__head">
-                <h2 class="mock-card__title"><i class="fa-solid fa-route"></i> 3. Circuit de validation</h2>
-                <span class="chip chip--active"><i class="fa-solid fa-bolt"></i> Workflow standard</span>
-            </div>
-            <div class="mock-card__body">
-                <div class="workflow-steps-wrap">
-                    <div class="workflow-steps">
-                        <div class="workflow-step workflow-step--done">
-                            <div class="workflow-step__dot"><i class="fa-solid fa-user"></i></div>
-                            <div class="workflow-step__label">Initiateur</div>
-                            <div class="workflow-step__actor">Rakotobe Hery</div>
-                        </div>
-                        <div class="workflow-step workflow-step--done">
-                            <div class="workflow-step__dot"><i class="fa-solid fa-user-check"></i></div>
-                            <div class="workflow-step__label">Responsable</div>
-                            <div class="workflow-step__actor">Razafindratsima V.</div>
-                        </div>
-                        <div class="workflow-step workflow-step--done">
-                            <div class="workflow-step__dot"><i class="fa-solid fa-shield-halved"></i></div>
-                            <div class="workflow-step__label">Sécurité</div>
-                            <div class="workflow-step__actor">Andrianarivo T.</div>
-                        </div>
-                        <div class="workflow-step workflow-step--done">
-                            <div class="workflow-step__dot"><i class="fa-solid fa-truck"></i></div>
-                            <div class="workflow-step__label">Transit</div>
-                            <div class="workflow-step__actor">Rabemananjara S.</div>
-                        </div>
-                        <div class="workflow-step workflow-step--done">
-                            <div class="workflow-step__dot"><i class="fa-solid fa-box-open"></i></div>
-                            <div class="workflow-step__label">Réception</div>
-                            <div class="workflow-step__actor">Randria Jean</div>
-                        </div>
-                        <div class="workflow-step">
-                            <div class="workflow-step__dot"><i class="fa-solid fa-flag-checkered"></i></div>
-                            <div class="workflow-step__label">Destinataire</div>
-                            <div class="workflow-step__actor">Rasoanirina M.</div>
-                        </div>
-                    </div>
-                </div>
-                <p class="cell-muted mt-3 mb-0" style="font-size:0.8rem;">
-                    <i class="fa-solid fa-circle-info text-teal"></i>
-                    Les étapes validées sont figées. La modification du BS est possible tant que le workflow n'a pas
-                    démarré ; l'annulation reste possible selon l'étape courante et les droits du rôle.
-                </p>
-            </div>
-        </div>
-
         <!-- Actions -->
-        <div class="d-flex justify-content-center gap-2 flex-wrap" style="gap:10px; margin-bottom: 28px;">
-            <button class="btn-mock btn-mock--outline" type="button"><i class="fa-solid fa-floppy-disk"></i> Enregistrer en brouillon</button>
-            <button class="btn-mock" type="submit"><i class="fa-solid fa-paper-plane"></i> Soumettre pour validation</button>
+        <div class="d-flex justify-content-center" style="margin-bottom: 28px;">
+            <button class="btn-mock" type="submit"><i class="fa-solid fa-paper-plane"></i> Valider</button>
         </div>
     </form>
 </section>

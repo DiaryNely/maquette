@@ -9,7 +9,8 @@ async function chargerMenus() {
 
     await Promise.all(Array.from(emplacements, async emplacement => {
         const fichier = emplacement.dataset.menu;
-        const reponse = await fetch(fichier);
+        // cache-busting : le navigateur garde parfois menu.html en cache
+        const reponse = await fetch(fichier + '?v=4');
         if (!reponse.ok) throw new Error(`Impossible de charger ${fichier}`);
         emplacement.outerHTML = await reponse.text();
     }));

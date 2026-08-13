@@ -8,8 +8,7 @@
             <p>Détail du motif, du délai de résolution et historique complet (créateur, actions, résolution, clôture).</p>
         </div>
         <div class="mock-page-head__actions">
-            <a href="index.html?page=anomalies" class="btn-mock btn-mock--outline"><i class="fa-solid fa-arrow-left"></i> Retour aux anomalies</a>
-            <button class="btn-mock btn-mock--outline"><i class="fa-solid fa-print"></i> PDF</button>
+            <button type="button" class="btn-mock btn-mock--outline" data-go-back><i class="fa-solid fa-arrow-left"></i> Retour</button>
         </div>
     </div>
 
@@ -62,11 +61,13 @@
 
             <!-- Historique complet -->
             <div class="mock-card">
-                <div class="mock-card__head">
-                    <h2 class="mock-card__title"><i class="fa-solid fa-clock-rotate-left"></i> Historique complet</h2>
-                </div>
                 <div class="mock-card__body">
-                    <ul class="timeline">
+                    <details class="history-dropdown">
+                        <summary>
+                            <span class="history-dropdown__title"><i class="fa-solid fa-clock-rotate-left text-teal"></i> Historique complet</span>
+                            <i class="fa-solid fa-chevron-down history-dropdown__chevron" aria-hidden="true"></i>
+                        </summary>
+                        <ul class="timeline mt-3">
                         <li class="timeline-item timeline-item--done">
                             <div class="timeline-item__title">Clôture <span class="badge-status badge--cloture">Clôturée</span></div>
                             <div class="timeline-item__meta">Andrianarivo Tovo (Sécurité) · 15/08/2026 à 17:20</div>
@@ -87,7 +88,8 @@
                             <div class="timeline-item__meta">Rabemananjara Solo (Transit) · 14/08/2026 à 12:58</div>
                             <div class="timeline-item__desc">Contrôle non conforme au magasin Barrière de sortie — progression du BS bloquée.</div>
                         </li>
-                    </ul>
+                        </ul>
+                    </details>
                 </div>
             </div>
         </div>
@@ -122,8 +124,8 @@
                 </div>
             </div>
 
-            <!-- Actions -->
-            <div class="mock-card">
+            <!-- Actions + Solution -->
+            <div class="mock-card" data-solution>
                 <div class="mock-card__head">
                     <h2 class="mock-card__title"><i class="fa-solid fa-bolt"></i> Actions</h2>
                     <span class="chip">Connecté : Sécurité</span>
@@ -134,33 +136,54 @@
                         <button class="btn-mock btn-mock--outline"><i class="fa-solid fa-comment"></i> Ajouter une action</button>
                         <button class="btn-mock btn-mock--outline"><i class="fa-solid fa-user-plus"></i> Transférer</button>
                     </div>
+
+                    <hr class="hr-soft">
+                    <div class="d-flex align-items-center justify-content-between" style="margin-bottom:10px;">
+                        <h3 style="font-size:0.9rem; font-weight:700; color:var(--m-ink); margin:0;">
+                            <i class="fa-solid fa-lightbulb text-teal"></i> Solution
+                        </h3>
+                        <span class="badge-status badge--valide" data-solution-badge>Résolue</span>
+                    </div>
+                    <div class="solution-block">
+                        <div class="solution-block__icon"><i class="fa-solid fa-wrench"></i></div>
+                        <div class="solution-block__content">
+                            <p class="solution-block__text mb-1" data-solution-text>Étiquette recollée et réimprimée, référence vérifiée par lecture du QR.</p>
+                            <div class="solution-block__meta" data-solution-meta>
+                                <span><i class="fa-solid fa-user"></i> Rabemananjara Solo (Transit)</span>
+                                <span><i class="fa-solid fa-clock-rotate-left"></i> 15/08/2026 à 09:05</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Proposition de solution -->
+                    <form data-solution-form class="is-hidden" style="margin-top:12px;">
+                        <label class="mb-0 d-block">
+                            <span style="font-size:0.8rem; color:var(--m-muted); display:block; margin-bottom:4px;">Proposer une solution</span>
+                            <textarea class="form-control" rows="4" data-solution-input
+                                style="width:100%; resize:vertical;"
+                                placeholder="Décrivez la solution que vous proposez…"></textarea>
+                        </label>
+                        <div class="d-flex flex-wrap" style="gap:8px; margin-top:8px;">
+                            <button class="btn-mock" type="submit"><i class="fa-solid fa-paper-plane"></i> Proposer la solution</button>
+                            <button class="btn-mock btn-mock--outline" type="button" data-solution-cancel>Annuler</button>
+                        </div>
+                    </form>
+
+                    <div class="d-flex justify-content-between align-items-center flex-wrap" style="gap:8px; margin-top:12px;" data-solution-toggle-row>
+                        <p class="mb-0" style="font-size:0.8rem; color:var(--m-muted);" data-solution-note>
+                            <i class="fa-solid fa-circle-check text-teal"></i> Solution validée et clôturée par Andrianarivo Tovo (Sécurité) le 15/08/2026 à 17:20.
+                        </p>
+                        <button class="btn-mock" type="button" data-solution-toggle>
+                            <i class="fa-solid fa-plus"></i> Proposer une solution
+                        </button>
+                    </div>
+
                     <hr class="hr-soft">
                     <p class="mb-0" style="font-size:0.82rem; color:var(--m-muted);">
                         <i class="fa-solid fa-circle-info text-teal"></i>
                         Chaque action est horodatée et rattachée à son auteur. La résolution puis la clôture sont
                         tracées dans l'historique ci-contre.
                     </p>
-                </div>
-            </div>
-
-            <!-- Notifications liées -->
-            <div class="mock-card">
-                <div class="mock-card__head">
-                    <h2 class="mock-card__title"><i class="fa-solid fa-bell"></i> Notifications émises</h2>
-                    <a href="index.html?page=notifications" class="link-soft">Voir tout</a>
-                </div>
-                <div class="mock-card__body">
-                    <ul class="list-unstyled mb-0" style="font-size:0.82rem;">
-                        <li class="d-flex align-items-center py-1" style="gap:8px;">
-                            <i class="fa-solid fa-envelope-open-text text-teal"></i> Anomalie créée → Responsable magasin + Transit
-                        </li>
-                        <li class="d-flex align-items-center py-1" style="gap:8px;">
-                            <i class="fa-solid fa-envelope-open-text text-amber"></i> Alerte retard (si délai dépassé) → Administrateur
-                        </li>
-                        <li class="d-flex align-items-center py-1" style="gap:8px;">
-                            <i class="fa-solid fa-envelope-open-text text-teal"></i> Anomalie résolue → Initiateur + Sécurité
-                        </li>
-                    </ul>
                 </div>
             </div>
         </div>
