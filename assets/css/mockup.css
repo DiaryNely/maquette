@@ -261,6 +261,39 @@
     margin-bottom: 24px;
 }
 
+/* Statistiques compactes — une ligne discrète sous le titre */
+.stats-strip {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px 22px;
+    padding: 10px 16px;
+    margin-bottom: 22px;
+    background: var(--m-bg-soft);
+    border: 1px solid var(--m-line);
+    border-radius: var(--m-radius);
+    font-size: 0.8rem;
+    color: var(--m-muted);
+}
+
+.stats-strip span {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    white-space: nowrap;
+}
+
+.stats-strip i {
+    color: var(--m-primary);
+    font-size: 0.75rem;
+    opacity: 0.85;
+}
+
+.stats-strip strong {
+    color: var(--m-ink);
+    font-weight: 700;
+}
+
 .kpi-card {
     display: flex;
     align-items: center;
@@ -321,17 +354,44 @@
 
 .filter-bar .form-control,
 .filter-bar select.form-control {
-    width: auto;
-    min-width: 170px;
+    flex: 1 1 170px;
+    min-width: 150px;
     font-size: 0.85rem;
     border-color: var(--m-line);
     border-radius: 4px;
 }
 
+.filter-bar input[type="date"].form-control {
+    flex: 1 1 140px;
+    min-width: 130px;
+}
+
 .filter-bar .search-input {
-    flex: 1;
-    min-width: 220px;
-    max-width: 340px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    flex: 2 1 260px;
+    min-width: 200px;
+    max-width: 420px;
+}
+
+/* loupe intégrée dans le champ de recherche */
+.filter-bar .search-input > i {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 0.8rem;
+    color: var(--m-faint);
+    pointer-events: none;
+    z-index: 1;
+}
+
+.filter-bar .search-input .form-control {
+    flex: 1 1 auto;
+    width: 100%;
+    min-width: 0;
+    padding-left: 34px;
 }
 
 .filter-bar .filter-spacer {
@@ -361,12 +421,16 @@
     margin-bottom: 0;
 }
 
+.table-mock thead {
+    background: var(--m-primary);
+}
+
 .table-mock thead th {
-    background: var(--m-bg-table);
-    color: var(--m-ink);
+    background: transparent;
+    color: #fff;
     font-weight: 600;
     padding: 11px 14px;
-    border-bottom: 1px solid var(--m-line);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.22);
     text-align: left;
     white-space: nowrap;
     font-size: 0.78rem;
@@ -1421,6 +1485,17 @@
 /* ==============================
    RESPONSIVE
    ============================== */
+@media (max-width: 1100px) {
+    .filter-bar .form-control,
+    .filter-bar select.form-control {
+        min-width: 140px;
+    }
+
+    .filter-bar input[type="date"].form-control {
+        min-width: 128px;
+    }
+}
+
 @media (max-width: 768px) {
     main {
         padding: 16px 12px 28px;
@@ -1435,15 +1510,39 @@
         align-items: flex-start;
     }
 
+    .filter-bar {
+        align-items: stretch;
+        gap: 8px;
+    }
+
     .filter-bar .form-control,
     .filter-bar select.form-control {
-        width: 100%;
+        flex: 1 1 100%;
+        width: auto;
         min-width: 0;
         max-width: none;
     }
 
     .filter-bar .search-input {
         max-width: none;
+    }
+
+    .filter-bar input[type="date"].form-control {
+        flex: 1 1 100%;
+        min-width: 0;
+    }
+
+    .filter-bar .btn-mock--outline {
+        flex: 1 1 auto;
+        justify-content: center;
+    }
+
+    .filter-bar .filter-spacer {
+        display: none;
+    }
+
+    .filter-bar .btn-export {
+        flex-shrink: 0;
     }
 
     .kpi-grid {

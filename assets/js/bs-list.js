@@ -7,7 +7,8 @@
                           connectée ;
      - « BS à recevoir »: bons dont la destination est ce magasin,
                           avec un filtre « à rendre ou non ».
-   Le choix de la personne connectée redistribue les deux listes.
+   La personne connectée est fixe en maquette (PEOPLE[0]) — elle
+   viendra de la vraie session utilisateur dans la version réelle.
    ============================================================ */
 (function () {
     'use strict';
@@ -72,12 +73,16 @@
         return html;
     }
 
-    function rowHtml(b, withExp) {
+    /* Chaque ligne affiche le nom de l'initiateur ainsi que les
+       magasins initiateur et bénéficiaire du bon. */
+    function rowHtml(b) {
         return '<tr>' +
             '<td><a class="cell-link" href="index.html?page=bs-detail">' + escapeHtml(b.bs) + '</a></td>' +
             '<td>' + escapeHtml(b.date) + '</td>' +
-            '<td>' + escapeHtml(withExp ? b.initiateur : b.beneficiaire) + '</td>' +
-            '<td class="cell-muted">' + escapeHtml(b.origine) + ' → ' + escapeHtml(b.destination) + '</td>' +
+            '<td>' + escapeHtml(b.initiateur) + '</td>' +
+            '<td class="cell-muted"><i class="fa-solid fa-store text-muted2"></i> ' + escapeHtml(b.origine) + '</td>' +
+            '<td>' + escapeHtml(b.beneficiaire) + '</td>' +
+            '<td class="cell-muted"><i class="fa-solid fa-store text-muted2"></i> ' + escapeHtml(b.destination) + '</td>' +
             '<td>' + badgeRetour(b.retour) + '</td>' +
             '<td>' + escapeHtml(b.motif) + '</td>' +
             '<td>' + badgeStatut(b.statut) + '</td>' +
@@ -96,11 +101,9 @@
             var msg = tab === 'envoyes'
                 ? 'Aucun BS envoyé par <strong>' + escapeHtml(store) + '</strong>'
                 : 'Aucun BS à recevoir pour <strong>' + escapeHtml(store) + '</strong>';
-            tbody.innerHTML = '<tr><td colspan="8" class="cell-muted text-center py-3">' + msg + '.</td></tr>';
+            tbody.innerHTML = '<tr><td colspan="10" class="cell-muted text-center py-3">' + msg + '.</td></tr>';
         } else {
-            tbody.innerHTML = rows.map(function (b) {
-                return rowHtml(b, tab === 'recevoir');
-            }).join('');
+            tbody.innerHTML = rows.map(rowHtml).join('');
         }
 
         var res = root.querySelector('[data-bslist-results][data-tab="' + tab + '"]');
@@ -113,14 +116,9 @@
         if (count) count.textContent = total;
     }
 
-    function currentPerson() {
-        var sel = document.querySelector('[data-bslist-user]');
-        var name = sel ? sel.value : PEOPLE[0].name;
-        for (var i = 0; i < PEOPLE.length; i++) {
-            if (PEOPLE[i].name === name) return PEOPLE[i];
-        }
-        return PEOPLE[0];
-    }
+    /* Personne connectée : fixe en maquette ; remplacée par la
+       session utilisateur dans la version réelle. */
+    function currentPerson() { return PEOPLE[0]; }
 
     function currentStore() { return currentPerson().store; }
 
@@ -157,23 +155,9 @@
         if (chip) chip.textContent = 'Mon magasin : ' + store;
     }
 
-    function fillSelect(select, options, selected) {
-        if (!select) return;
-        select.innerHTML = options.map(function (o) {
-            return '<option value="' + escapeHtml(o) + '"' + (o === selected ? ' selected' : '') + '>' + escapeHtml(o) + '</option>';
-        }).join('');
-    }
-
     function boot() {
         var root = document.querySelector('[data-bslist]');
         if (!root) return false;
-
-        var userSel = root.querySelector('[data-bslist-user]');
-        if (userSel && !userSel.getAttribute('data-bound')) {
-            userSel.setAttribute('data-bound', '1');
-            fillSelect(userSel, PEOPLE.map(function (p) { return p.name; }), PEOPLE[0].name);
-            userSel.addEventListener('change', apply);
-        }
 
         root.querySelectorAll('[data-bslist-panel]').forEach(function (panel) {
             if (panel.getAttribute('data-bound')) return;

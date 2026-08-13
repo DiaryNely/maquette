@@ -7,60 +7,9 @@
             <p>Suivi de bout en bout : création, workflow de validation, transit, retours et clôture.</p>
         </div>
         <div class="mock-page-head__actions">
-            <div class="input-group" style="width:auto;">
-                <div class="input-group-prepend">
-                    <span class="input-group-text"><i class="fa-solid fa-user"></i></span>
-                </div>
-                <select class="form-control" data-bslist-user aria-label="Personne connectée"></select>
-            </div>
             <a href="index.html?page=bs-create" class="btn-mock">
                 <i class="fa-solid fa-plus"></i> Nouveau bon de sortie
             </a>
-        </div>
-    </div>
-
-    <div class="alert-mock alert-mock--info mb-3">
-        <i class="fa-solid fa-circle-info"></i>
-        <span>Connecté : <strong>voir le sélecteur ci-dessus</strong> — la liste est filtrée par magasin.
-            <span data-bslist-store class="cell-muted">Mon magasin : Magasin central</span></span>
-    </div>
-
-    <!-- Indicateurs -->
-    <div class="kpi-grid">
-        <div class="kpi-card">
-            <div class="kpi-card__icon kpi-card__icon--slate"><i class="fa-solid fa-file-lines"></i></div>
-            <div>
-                <div class="kpi-card__value">128</div>
-                <div class="kpi-card__label">BS au total (ce mois)</div>
-            </div>
-        </div>
-        <div class="kpi-card">
-            <div class="kpi-card__icon kpi-card__icon--amber"><i class="fa-solid fa-route"></i></div>
-            <div>
-                <div class="kpi-card__value">24</div>
-                <div class="kpi-card__label">En cours de circuit</div>
-            </div>
-        </div>
-        <div class="kpi-card">
-            <div class="kpi-card__icon kpi-card__icon--teal"><i class="fa-solid fa-circle-check"></i></div>
-            <div>
-                <div class="kpi-card__value">86</div>
-                <div class="kpi-card__label">Validés / clôturés</div>
-            </div>
-        </div>
-        <div class="kpi-card">
-            <div class="kpi-card__icon kpi-card__icon--red"><i class="fa-solid fa-circle-xmark"></i></div>
-            <div>
-                <div class="kpi-card__value">9</div>
-                <div class="kpi-card__label">Refusés ou annulés</div>
-            </div>
-        </div>
-        <div class="kpi-card">
-            <div class="kpi-card__icon kpi-card__icon--blue"><i class="fa-solid fa-boxes-stacked"></i></div>
-            <div>
-                <div class="kpi-card__value">14</div>
-                <div class="kpi-card__label">Retours de matériel en attente</div>
-            </div>
         </div>
     </div>
 
@@ -79,10 +28,8 @@
     <!-- ============ BS ENVOYÉS ============ -->
     <div class="mock-panel is-active" data-mock-panel="envoyes" data-bslist-panel>
         <div class="filter-bar">
-            <div class="input-group search-input">
-                <div class="input-group-prepend">
-                    <span class="input-group-text"><i class="fa-solid fa-magnifying-glass"></i></span>
-                </div>
+            <div class="search-input">
+                <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
                 <input type="text" class="form-control" data-bslist-search placeholder="Rechercher un BS, un bénéficiaire, un motif…">
             </div>
             <select class="form-control" data-bslist-statut>
@@ -113,8 +60,10 @@
                     <tr>
                         <th>N° BS</th>
                         <th>Date</th>
+                        <th>Initiateur</th>
+                        <th>Magasin initiateur</th>
                         <th>Bénéficiaire</th>
-                        <th>Parcours</th>
+                        <th>Magasin bénéficiaire</th>
                         <th>Retour attendu</th>
                         <th>Motif</th>
                         <th>Statut</th>
@@ -142,11 +91,9 @@
     <!-- ============ BS À RECEVOIR ============ -->
     <div class="mock-panel" data-mock-panel="recevoir" data-bslist-panel>
         <div class="filter-bar">
-            <div class="input-group search-input">
-                <div class="input-group-prepend">
-                    <span class="input-group-text"><i class="fa-solid fa-magnifying-glass"></i></span>
-                </div>
-                <input type="text" class="form-control" data-bslist-search placeholder="Rechercher un BS, un expéditeur, un motif…">
+            <div class="search-input">
+                <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
+                <input type="text" class="form-control" data-bslist-search placeholder="Rechercher un BS, un initiateur, un motif…">
             </div>
             <select class="form-control" data-bslist-statut>
                 <option value="" selected>Tous les statuts</option>
@@ -176,8 +123,10 @@
                     <tr>
                         <th>N° BS</th>
                         <th>Date</th>
-                        <th>Expéditeur</th>
-                        <th>Parcours</th>
+                        <th>Initiateur</th>
+                        <th>Magasin initiateur</th>
+                        <th>Bénéficiaire</th>
+                        <th>Magasin bénéficiaire</th>
                         <th>Retour attendu</th>
                         <th>Motif</th>
                         <th>Statut</th>
