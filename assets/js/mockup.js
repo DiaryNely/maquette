@@ -18,7 +18,9 @@
         var menu = document.querySelector('.floating-menu-content');
         if (!menu) return false;
 
-        var page = new URLSearchParams(location.search).get('page') || 'bs-list';
+        // le nom de page peut être préfixé par le rôle simulé (ex. « lambda/bs-list »)
+        var raw = new URLSearchParams(location.search).get('page') || 'bs-list';
+        var page = raw.split('/').pop();
         var matched = false;
         var links = menu.querySelectorAll('.floating-menu-link[data-page]');
         for (var i = 0; i < links.length; i++) {
@@ -242,7 +244,10 @@
                 item.classList.add('is-hidden');
             }
         }
-        location.href = item.getAttribute('data-notif-href');
+        // reste dans le portail du rôle simulé (préfixe lambda/transit/admin)
+        var href = item.getAttribute('data-notif-href');
+        var name = href ? new URLSearchParams(href.split('?')[1] || '').get('page') : null;
+        location.href = (window.S2M && window.S2M.route && name) ? window.S2M.route(name) : href;
     });
 
     /* tout marquer comme lu */

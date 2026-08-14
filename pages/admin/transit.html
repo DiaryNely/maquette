@@ -1,0 +1,81 @@
+<section class="page-transit">
+    <div data-menu="menu.html"></div>
+
+    <div class="mock-page-head">
+        <div class="mock-page-head__title">
+            <h1><i class="fa-solid fa-route text-teal"></i> Transits &amp; parcours</h1>
+            <p>Consultation en lecture seule : la liste des transits de tous les bons de sortie, et le détail des
+                passages de chaque bon. L'administrateur ne scanne pas : le scan et le contrôle sont réservés au
+                personnel de transit.</p>
+        </div>
+    </div>
+
+    <!-- Liste des transits de tous les BS -->
+    <div class="mock-card">
+        <div class="mock-card__head">
+            <h2 class="mock-card__title"><i class="fa-solid fa-truck-fast"></i> Transits par bon de sortie</h2>
+            <span class="chip" id="transit-bs-count">— bons suivis</span>
+        </div>
+        <div class="mock-card__body">
+            <div class="filter-bar mb-2">
+                <div class="search-input">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    <input type="text" class="form-control" data-transits-search
+                        placeholder="Filtrer par numéro de bon de sortie…">
+                </div>
+                <div class="filter-spacer"></div>
+                <button class="btn-mock btn-mock--outline btn-mock--sm" type="button" data-transits-search-clear>
+                    <i class="fa-solid fa-rotate"></i> Réinitialiser
+                </button>
+            </div>
+            <div class="table-mock-wrap">
+                <table class="table-mock" data-bs-summary>
+                    <thead>
+                        <tr>
+                            <th>Bon de sortie</th>
+                            <th>Dernier passage</th>
+                            <th>Passages</th>
+                            <th>Conformité</th>
+                            <th>Anomalie</th>
+                            <th class="cell-actions">Parcours</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+            <p class="cell-muted mt-2 mb-0" style="font-size:0.8rem;">
+                <i class="fa-solid fa-circle-info text-teal"></i>
+                Cliquez sur « Voir le parcours » pour afficher le détail des passages du bon ci-dessous.
+            </p>
+        </div>
+    </div>
+
+    <!-- Détail : parcours d'un BS (vide tant qu'aucun bon n'est sélectionné) -->
+    <div class="mock-card">
+        <div class="mock-card__head">
+            <h2 class="mock-card__title"><i class="fa-solid fa-location-dot"></i> Parcours construit — <span class="mono" data-parcours-title>—</span></h2>
+            <span class="chip" data-parcours-count>—</span>
+        </div>
+        <div class="mock-card__body mock-card__body--flush">
+            <table class="table-mock" data-transits-bs data-count-el="[data-parcours-count]">
+                <thead>
+                    <tr>
+                        <th>Passage</th>
+                        <th>Magasin</th>
+                        <th>Agent</th>
+                        <th>Date / heure</th>
+                        <th>Résultat</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+        <div class="mock-card__body" style="border-top:1px solid var(--m-line-soft);">
+            <p class="mb-0" style="font-size:0.82rem; color:var(--m-muted);">
+                <i class="fa-solid fa-circle-info text-teal"></i>
+                Chaque scan du QR par le personnel de transit ajoute un passage au parcours de ce BS. L'ordre
+                des passages correspond à la chronologie des scans, sans itinéraire prédéfini.
+            </p>
+        </div>
+    </div>
+</section>

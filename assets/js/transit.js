@@ -192,16 +192,108 @@
         }).join('');
     }
 
-    /* Table des passages d'un BS (ordre chronologique), numérotés */
+    /* Table récapitulative des transits groupés par BS (vue admin) :
+       une ligne par bon de sortie, avec son dernier passage, le nombre de
+       passages, la conformité et l'anomalie éventuelle. Un clic sur un BS
+       affiche le détail de son parcours dans la table data-transits-bs. */
+    function renderBsSummary(container) {
+        if (!container) return;
+        var tbody = container.querySelector('tbody') || container;
+        var list = load().slice();
+
+        // groupement par BS, en gardant le dernier passage (le plus récent)
+        var groups = {};
+        list.forEach(function (t) {
+            (groups[t.bs] = groups[t.bs] || []).push(t);
+        });
+        var bsList = Object.keys(groups).map(function (bs) {
+            var passages = groups[bs].slice().sort(function (a, b) {
+                return (b.arrivee || '').localeCompare(a.arrivee || '');
+            });
+            return {
+                bs: bs,
+                passages: passages.length,
+                dernier: passages[0],
+                anomalie: passages.some(function (p) { return p.anomalie; })
+                    ? passages.map(function (p) { return p.anomalie; }).filter(Boolean)[0]
+                    : null
+            };
+        });
+
+        if (allFilter) {
+            var q = normalize(allFilter);
+            bsList = bsList.filter(function (r) {
+                return normalize(r.bs).indexOf(q) !== -1 ||
+                    normalize(r.dernier.magasin).indexOf(q) !== -1;
+            });
+        }
+
+        bsList.sort(function (a, b) {
+            return (b.dernier.arrivee || '').localeCompare(a.dernier.arrivee || '');
+        });
+
+        var count = document.querySelector('[data-bs-count]');
+        if (!count) count = document.querySelector('#transit-bs-count');
+        if (count) {
+            count.textContent = bsList.length + (bsList.length > 1 ? ' bons suivis' : ' bon suivi');
+        }
+
+        if (!bsList.length) {
+            tbody.innerHTML = '<tr><td colspan="6" class="cell-muted text-center">' +
+                (allFilter ? 'Aucun bon de sortie ne correspond à la recherche <strong>' + escapeHtml(allFilter) + '</strong>.'
+                    : 'Aucun transit enregistré pour le moment.') +
+                '</td></tr>';
+            return;
+        }
+        tbody.innerHTML = bsList.map(function (r) {
+            return '<tr>' +
+                '<td class="mono cell-strong">' + escapeHtml(r.bs) + '</td>' +
+                '<td>' + escapeHtml(r.dernier.magasin) + '</td>' +
+                '<td>' + r.passages + '</td>' +
+                '<td>' + badge(r.dernier.resultat) + '</td>' +
+                '<td>' + (r.anomalie
+                    ? '<a class="cell-link" href="index.html?page=anomalie-detail">' + escapeHtml(r.anomalie) + '</a>'
+                    : '<span class="cell-muted">—</span>') + '</td>' +
+                '<td class="cell-actions"><button class="btn-mock btn-mock--outline btn-mock--sm" type="button" data-bs-select="' + escapeHtml(r.bs) + '"><i class="fa-solid fa-route"></i> Voir le parcours</button></td>' +
+                '</tr>';
+        }).join('');
+    }
+
+    /* Affiche le détail du parcours d'un BS dans la table data-transits-bs */
+    function selectBsDetail(bs) {
+        var title = document.querySelector('[data-parcours-title]');
+        if (title) title.textContent = bs;
+        document.querySelectorAll('[data-transits-bs]').forEach(function (el) {
+            el.setAttribute('data-bs', bs);
+            renderBsTable(el);
+        });
+        var card = document.querySelector('[data-transits-bs]');
+        if (card) {
+            var block = card.closest('.mock-card');
+            if (block) block.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+    }
+
+    /* Table des passages d'un BS (ordre chronologique), numérotés.
+       Sans data-bs (aucun bon sélectionné), la table reste vide. */
     function renderBsTable(container) {
         if (!container) return;
         var bs = container.getAttribute('data-bs') || '';
         var tbody = container.querySelector('tbody') || container;
-        var list = forBs(bs);
-        list.sort(function (a, b) { return (a.arrivee || '').localeCompare(b.arrivee || ''); });
 
         var count = container.getAttribute('data-count-el') ?
             document.querySelector(container.getAttribute('data-count-el')) : null;
+
+        if (!bs) {
+            if (count) count.textContent = '—';
+            tbody.innerHTML = '<tr><td colspan="5" class="cell-muted text-center">' +
+                'Sélectionnez un bon de sortie dans la liste ci-dessus pour afficher son parcours.</td></tr>';
+            return;
+        }
+
+        var list = forBs(bs);
+        list.sort(function (a, b) { return (a.arrivee || '').localeCompare(b.arrivee || ''); });
+
         if (count) {
             count.textContent = list.length + (list.length > 1 ? ' passages enregistrés' : ' passage enregistré');
         }
@@ -517,6 +609,10 @@
             renderAllTable(el);
             found = true;
         });
+        document.querySelectorAll('[data-bs-summary]').forEach(function (el) {
+            renderBsSummary(el);
+            found = true;
+        });
         document.querySelectorAll('[data-transits-bs]').forEach(function (el) {
             renderBsTable(el);
             found = true;
@@ -534,12 +630,13 @@
             kpiPending.textContent = load().filter(function (t) { return t.resultat === 'a-controle'; }).length;
         }
 
-        /* Filtre du dropdown Transits par numéro de BS */
+        /* Filtre de recherche par numéro de BS (liste par BS + dropdown Transits) */
         var search = document.querySelector('[data-transits-search]');
         if (search) {
             search.addEventListener('input', function () {
                 allFilter = search.value.trim();
                 document.querySelectorAll('[data-transits-table]').forEach(renderAllTable);
+                document.querySelectorAll('[data-bs-summary]').forEach(renderBsSummary);
             });
             var clear = document.querySelector('[data-transits-search-clear]');
             if (clear) {
@@ -547,9 +644,19 @@
                     search.value = '';
                     allFilter = '';
                     document.querySelectorAll('[data-transits-table]').forEach(renderAllTable);
+                    document.querySelectorAll('[data-bs-summary]').forEach(renderBsSummary);
                 });
             }
         }
+
+        /* Clic sur « Voir le parcours » (liste admin) → détail du BS */
+        document.querySelectorAll('[data-bs-summary]').forEach(function (el) {
+            el.addEventListener('click', function (event) {
+                var btn = event.target.closest('[data-bs-select]');
+                if (!btn) return;
+                selectBsDetail(btn.getAttribute('data-bs-select'));
+            });
+        });
 
         initScan();
         return found;

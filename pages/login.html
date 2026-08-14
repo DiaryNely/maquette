@@ -1,0 +1,76 @@
+<section class="page-login">
+    <div class="mock-page-head">
+        <div class="mock-page-head__title">
+            <h1><i class="fa-solid fa-right-to-bracket text-teal"></i> Simulation des rôles</h1>
+            <p>Maquette statique : choisissez un utilisateur pour simuler ses droits d'accès. Le visuel reste identique
+                — seuls les menus et les pages accessibles changent selon le rôle.</p>
+        </div>
+    </div>
+
+    <div class="role-grid">
+        <!-- Personnel -->
+        <div class="role-card">
+            <div class="role-card__head">
+                <div class="kpi-card__icon kpi-card__icon--blue"><i class="fa-solid fa-user"></i></div>
+                <div>
+                    <div class="role-card__title">Personnel</div>
+                    <div class="role-card__user">Rakotobe Hery · Magasin central</div>
+                </div>
+            </div>
+            <ul class="role-card__perms">
+                <li><i class="fa-solid fa-circle-check"></i> Créer un bon de sortie</li>
+                <li><i class="fa-solid fa-circle-check"></i> Voir ses BS envoyés et reçus, avec tous les détails</li>
+                <li><i class="fa-solid fa-circle-check"></i> Consulter ses notifications</li>
+            </ul>
+            <a class="btn-mock" href="index.html?page=lambda/bs-list"><i class="fa-solid fa-right-to-bracket"></i> Se connecter en tant que Personnel</a>
+        </div>
+
+        <!-- Scan & Transit -->
+        <div class="role-card">
+            <div class="role-card__head">
+                <div class="kpi-card__icon kpi-card__icon--amber"><i class="fa-solid fa-qrcode"></i></div>
+                <div>
+                    <div class="role-card__title">Scan &amp; Transit</div>
+                    <div class="role-card__user">Rabemananjara Solo · Plateforme logistique</div>
+                </div>
+            </div>
+            <ul class="role-card__perms">
+                <li><i class="fa-solid fa-ban text-red"></i> Ne peut pas créer de bon de sortie</li>
+                <li><i class="fa-solid fa-ban text-red"></i> Pas de liste des anomalies</li>
+                <li><i class="fa-solid fa-circle-check"></i> Scanner les bons de sortie</li>
+                <li><i class="fa-solid fa-circle-check"></i> Gérer le transit</li>
+                <li><i class="fa-solid fa-circle-check"></i> Consulter les détails des bons de sortie</li>
+                <li><i class="fa-solid fa-circle-check"></i> Créer et signaler une anomalie</li>
+                <li><i class="fa-solid fa-circle-check"></i> Voir le détail des anomalies liées à un bon</li>
+                <li><i class="fa-solid fa-circle-check"></i> Consulter ses notifications</li>
+            </ul>
+            <a class="btn-mock" href="index.html?page=transit/transit"><i class="fa-solid fa-right-to-bracket"></i> Se connecter en tant que Scan &amp; Transit</a>
+        </div>
+
+        <!-- Administrateur -->
+        <div class="role-card">
+            <div class="role-card__head">
+                <div class="kpi-card__icon kpi-card__icon--purple"><i class="fa-solid fa-user-shield"></i></div>
+                <div>
+                    <div class="role-card__title">Administrateur</div>
+                    <div class="role-card__user">Automat SI · Siège - Administration S2M</div>
+                </div>
+            </div>
+            <ul class="role-card__perms">
+                <li><i class="fa-solid fa-ban text-red"></i> Ne scanne pas — transits en consultation (lecture seule)</li>
+                <li><i class="fa-solid fa-circle-check"></i> Tout consulter</li>
+                <li><i class="fa-solid fa-circle-check"></i> Gérer l'ensemble des fonctionnalités</li>
+                <li><i class="fa-solid fa-circle-check"></i> Accéder aux configurations</li>
+                <li><i class="fa-solid fa-circle-check"></i> Gérer les paramètres et permissions</li>
+            </ul>
+            <a class="btn-mock" href="index.html?page=admin/bs-list"><i class="fa-solid fa-right-to-bracket"></i> Se connecter en tant qu'Administrateur</a>
+        </div>
+    </div>
+
+    <p class="mt-3 mb-0" style="font-size:0.82rem; color:var(--m-muted);">
+        <i class="fa-solid fa-circle-info text-teal"></i>
+        Les liens internes suivent automatiquement l'utilisateur simulé. Utilisez l'icône
+        « Se déconnecter » du bandeau pour revenir ici. La connexion réelle (identifiant / mot de passe)
+        sera implémentée avec le backend.
+    </p>
+</section>
