@@ -337,6 +337,51 @@
     margin-top: 3px;
 }
 
+/* KPI détaillé avec sous-statistiques (page rapports) */
+.page-rapports .kpi-card--stack {
+    flex-wrap: wrap;
+    gap: 0 14px;
+}
+
+.page-rapports .kpi-card--stack .kpi-card__main {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    min-width: 0;
+}
+
+.page-rapports .kpi-card__sub {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px 20px;
+    width: 100%;
+    padding-top: 10px;
+    margin-top: 8px;
+    border-top: 1px dashed var(--m-line);
+}
+
+.page-rapports .kpi-card__sub-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 0.76rem;
+    color: var(--m-muted);
+    white-space: nowrap;
+}
+
+.page-rapports .kpi-card__sub-item strong {
+    font-size: 0.9rem;
+    color: var(--m-ink);
+    margin-left: 2px;
+}
+
+.page-rapports .kpi-card__sub-item i {
+    color: var(--m-primary);
+    font-size: 0.72rem;
+    opacity: 0.85;
+}
+
 /* ==============================
    BARRE DE FILTRES
    ============================== */
@@ -1482,7 +1527,7 @@ body.modal-open {
     font-size: 0.66rem;
     font-weight: 700;
     letter-spacing: 0.03em;
-    color: var(--m-faint);
+    color: rgba(255, 255, 255, 0.92);
     text-transform: uppercase;
     line-height: 1.2;
 }

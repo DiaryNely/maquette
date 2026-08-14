@@ -18,12 +18,6 @@
 
     <!-- ============ 1. GESTION DES MENUS ============ -->
     <div class="mock-panel is-active" data-mock-panel="menus">
-        <div class="alert-mock alert-mock--info mb-3">
-            <i class="fa-solid fa-circle-info"></i>
-            <span>Choisissez, pour chaque <strong>personne / entité</strong> selon sa <strong>fonction</strong>, quelle partie de
-                l'application de gestion des bons de sortie elle peut voir. Cochez une case pour accorder l'accès à un menu.</span>
-        </div>
-
         <div class="filter-bar">
             <select class="form-control" data-menu-fonction>
                 <option value="" selected>Toutes les fonctions</option>
@@ -86,12 +80,6 @@
 
     <!-- ============ 2. DISTRIBUTION DES NOTIFICATIONS ============ -->
     <div class="mock-panel" data-mock-panel="notifs">
-        <div class="alert-mock alert-mock--info mb-3">
-            <i class="fa-solid fa-circle-info"></i>
-            <span>Définissez <strong>qui reçoit quoi</strong> : anomalies, envois / réceptions de bons, passages en transit et rapports.
-                Cochez les rôles destinataires, choisissez les canaux (e-mail, application, SMS) et activez chaque notification.</span>
-        </div>
-
         <div class="d-flex justify-content-between align-items-center flex-wrap mb-2" style="gap:10px;">
             <span class="cell-muted" style="font-size:0.8rem; font-weight:600; letter-spacing:0.04em; text-transform:uppercase;">Destinataires par rôle</span>
             <div class="d-flex align-items-center" style="gap:12px;">
@@ -106,19 +94,6 @@
                 <thead></thead>
                 <tbody data-notif-body></tbody>
             </table>
-        </div>
-
-        <div class="mt-3">
-            <div class="mock-card">
-                <div class="mock-card__head">
-                    <h2 class="mock-card__title"><i class="fa-solid fa-envelope"></i> Canaux disponibles</h2>
-                </div>
-                <div class="mock-card__body d-flex flex-wrap" style="gap:18px; font-size:0.85rem; color:var(--m-text);">
-                    <span><i class="fa-solid fa-envelope text-teal"></i> E-mail — notification envoyée sur la messagerie</span>
-                    <span><i class="fa-solid fa-bell text-teal"></i> Application — alerte dans le centre de notifications</span>
-                    <span><i class="fa-solid fa-mobile-screen text-teal"></i> SMS — message sur le téléphone portable</span>
-                </div>
-            </div>
         </div>
     </div>
 </section>

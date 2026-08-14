@@ -83,7 +83,7 @@ S2M-WEB est une application de gestion des **bons de sortie (BS)** pour une entr
 
 - **Événements notifiables :** anomalie déclarée / résolue, envoi d'un BS, réception d'un BS, passage en transit, retard, rapport périodique.
 - **Distribution configurable** (voir administration) : à qui envoyer chaque type d'événement.
-- **Canaux :** application (centre de notifications), e-mail, SMS selon la configuration.
+- **Pas de canal par notification** : pas de choix de canal par message ; la diffusion se fait dans l'application (centre de notifications) et par e-mail.
 - Centre de notifications : liste des notifications reçues, non-lues/consultées, lien vers l'objet concerné (BS, transit, anomalie).
 
 ## 8. Rapports et statistiques
@@ -106,7 +106,7 @@ S2M-WEB est une application de gestion des **bons de sortie (BS)** pour une entr
 - Enregistré en base : la configuration s'applique immédiatement aux sessions actives (à la prochaine navigation).
 
 ### 10.2 Distribution des notifications
-- Matrice : types d'événement × rôles/destinataires, avec canaux (application, e-mail, SMS) et activation/désactivation par type.
+- Matrice : types d'événement × rôles/destinataires, avec activation/désactivation par type (pas de canal configurable par notification).
 - Les envois réels respectent cette configuration.
 
 ---
@@ -119,7 +119,7 @@ S2M-WEB est une application de gestion des **bons de sortie (BS)** pour une entr
 - **Transits / passages** : numéro, BS, magasin, agent, date/heure d'arrivée, statut (à contrôler / conforme / à corriger), date de validation.
 - **Anomalies** : référence, BS/transit lié, type, description, pièces jointes, statut, historique.
 - **Notifications** : destinataire, type, canal, contenu, statut (non-lue/lue), objet lié.
-- **Configuration** : droits par fonction et par personne (matrice menus), distribution des notifications (types × rôles × canaux).
+- **Configuration** : droits par fonction et par personne (matrice menus), distribution des notifications (types × rôles).
 
 ---
 

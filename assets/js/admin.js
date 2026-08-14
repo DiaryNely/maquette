@@ -5,8 +5,8 @@
      1. Gestion des menus : matrice des accès (qui voit quelle
         partie de l'application), par fonction ou par matricule ;
      2. Distribution des notifications : types d'événement × rôles
-        destinataires, canaux (e-mail / application / SMS) et
-        activation.
+        destinataires, avec activation / désactivation par type
+        (pas de canal configurable par notification).
    ============================================================ */
 (function () {
     'use strict';
@@ -66,19 +66,13 @@
     var ROLE_KEYS = ['initiateur', 'responsable', 'securite', 'transit', 'reception', 'destinataire', 'admin'];
 
     var NOTIF_TYPES = [
-        { key: 'anom-declaree',   label: 'Anomalie déclarée',                    desc: 'alerte immédiate quand une anomalie est ouverte',              roles: ['responsable', 'transit', 'admin'],            channels: ['email', 'inapp', 'sms'] },
-        { key: 'anom-resolue',    label: 'Anomalie résolue',                     desc: 'retour à la normale après résolution',                        roles: ['initiateur', 'securite', 'admin'],            channels: ['email', 'inapp'] },
-        { key: 'envoi',           label: 'Envoi d\'un BS',                       desc: 'bon de sortie soumis ou parti d\'un magasin',                 roles: ['initiateur', 'admin'],                        channels: ['email', 'inapp'] },
-        { key: 'reception',       label: 'Réception d\'un BS',                   desc: 'bon arrivé et contrôlé chez le destinataire',                 roles: ['initiateur', 'destinataire', 'admin'],        channels: ['email', 'inapp'] },
-        { key: 'transit-passage', label: 'Passage en transit enregistré',        desc: 'scan du QR dans un magasin, nouveau passage du parcours',     roles: ['transit', 'responsable'],                     channels: ['email', 'inapp'] },
-        { key: 'retard',          label: 'Retard (anomalie / retour)',           desc: 'dépassement de délai de validation ou de retour',             roles: ['responsable', 'admin'],                       channels: ['email', 'inapp', 'sms'] },
-        { key: 'rapport',         label: 'Rapport périodique',                   desc: 'rapports & statistiques envoyés à échéance',                  roles: ['responsable', 'admin'],                       channels: ['email'] }
-    ];
-
-    var CHANNELS = [
-        { key: 'email', label: 'E-mail',   icon: 'fa-envelope' },
-        { key: 'inapp', label: 'Application', icon: 'fa-bell' },
-        { key: 'sms',   label: 'SMS',      icon: 'fa-mobile-screen' }
+        { key: 'anom-declaree',   label: 'Anomalie déclarée',                    desc: 'alerte immédiate quand une anomalie est ouverte',              roles: ['responsable', 'transit', 'admin'] },
+        { key: 'anom-resolue',    label: 'Anomalie résolue',                     desc: 'retour à la normale après résolution',                        roles: ['initiateur', 'securite', 'admin'] },
+        { key: 'envoi',           label: 'Envoi d\'un BS',                       desc: 'bon de sortie soumis ou parti d\'un magasin',                 roles: ['initiateur', 'admin'] },
+        { key: 'reception',       label: 'Réception d\'un BS',                   desc: 'bon arrivé et contrôlé chez le destinataire',                 roles: ['initiateur', 'destinataire', 'admin'] },
+        { key: 'transit-passage', label: 'Passage en transit enregistré',        desc: 'scan du QR dans un magasin, nouveau passage du parcours',     roles: ['transit', 'responsable'] },
+        { key: 'retard',          label: 'Retard (anomalie / retour)',           desc: 'dépassement de délai de validation ou de retour',             roles: ['responsable', 'admin'] },
+        { key: 'rapport',         label: 'Rapport périodique',                   desc: 'rapports & statistiques envoyés à échéance',                  roles: ['responsable', 'admin'] }
     ];
 
     function esc(s) {
@@ -129,22 +123,12 @@
         });
     }
 
-    function personCount(fkey) {
-        var n = 0;
-        for (var i = 0; i < ROWS.length; i++) {
-            if (ROWS[i].fonction === fkey) n++;
-        }
-        return n;
-    }
-
     function buildNotifState() {
         return NOTIF_TYPES.map(function (t) {
             var roles = {};
             ROLE_KEYS.forEach(function (k) { roles[k] = false; });
             (t.roles || []).forEach(function (k) { roles[k] = true; });
-            var channels = {};
-            CHANNELS.forEach(function (c) { channels[c.key] = t.channels.indexOf(c.key) !== -1; });
-            return { key: t.key, label: t.label, desc: t.desc, roles: roles, channels: channels, active: true };
+            return { key: t.key, label: t.label, desc: t.desc, roles: roles, active: true };
         });
     }
 
@@ -191,13 +175,11 @@
                     '</tr>';
             }).join('');
         } else {
-            /* vue « Par fonction » : une ligne par fonction, sans personnes individuelles */
-            thead.innerHTML = '<tr><th>FONCTION</th><th>PERSONNES</th>' + colAllCells + '</tr>';
+            /* vue « Par fonction » : une ligne par fonction, sans colonne personne */
+            thead.innerHTML = '<tr><th>FONCTION</th>' + colAllCells + '</tr>';
             tbody.innerHTML = fonctionState.map(function (f, i) {
-                var n = personCount(f.key);
                 return '<tr data-frow="' + i + '">' +
                     '<td class="fonction-cell">' + esc(f.label) + '</td>' +
-                    '<td class="cell-muted">' + n + (n > 1 ? ' personnes' : ' personne') + '</td>' +
                     MENU_COLS.map(function (c) {
                         return '<td class="matrix-cb"><input type="checkbox" data-fcb data-frow="' + i +
                             '" data-col="' + c.key + '"' + (f.cols[c.key] ? ' checked' : '') + '></td>';
@@ -251,24 +233,16 @@
                     '<input type="checkbox" data-ncol-all="' + k + '" title="Tout sélectionner">' +
                     '<br><span class="col-group-name">' + esc(roleLabel(k)) + '</span></th>';
             }).join('') +
-            '<th>Canaux</th>' +
             '<th class="text-center">Activé</th>' +
             '</tr>';
 
         tbody.innerHTML = notifState.map(function (t, i) {
-            var channels = CHANNELS.map(function (c) {
-                return '<label class="chan-chip" title="' + esc(c.label) + '">' +
-                    '<input type="checkbox" data-nchan data-row="' + i + '" data-channel="' + c.key + '"' +
-                    (t.channels[c.key] ? ' checked' : '') + '>' +
-                    '<i class="fa-solid ' + c.icon + '"></i></label>';
-            }).join('');
             return '<tr data-row="' + i + '">' +
                 '<td><strong>' + esc(t.label) + '</strong><br><span class="cell-muted" style="font-size:0.78rem;">' + esc(t.desc) + '</span></td>' +
                 ROLE_KEYS.map(function (k) {
                     return '<td class="matrix-cb"><input type="checkbox" data-nrole data-row="' + i +
                         '" data-role="' + k + '"' + (t.roles[k] ? ' checked' : '') + '></td>';
                 }).join('') +
-                '<td class="text-center" style="white-space:nowrap;">' + channels + '</td>' +
                 '<td class="text-center"><label class="switch mb-0">' +
                     '<input type="checkbox" data-nactive data-row="' + i + '"' + (t.active ? ' checked' : '') + '>' +
                     '<span class="switch__slider"></span></label></td>' +
@@ -416,10 +390,6 @@
         tbody.addEventListener('change', function (e) {
             var cb = e.target;
             var t = notifState[+cb.getAttribute('data-row')];
-            if (cb.hasAttribute('data-nchan')) {
-                t.channels[cb.getAttribute('data-channel')] = cb.checked;
-                updateNotifTag();
-            }
             if (cb.hasAttribute('data-nactive')) {
                 t.active = cb.checked;
                 updateNotifTag();
