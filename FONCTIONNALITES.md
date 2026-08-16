@@ -79,15 +79,21 @@ session utilisateur (ci-dessus) lors de l'implémentation du backend.
 ## 5. Gestion du transit
 
 - **Tableau des transits :** tous les passages enregistrés (BS, magasin, agent, date/heure, conformité), filtrables et consultables.
+- **Scan :** les détails du bon (informations, articles, quantités attendues) ne s'affichent **qu'après le scan** (clic sur « Scanner ») — aucun détail pré-affiché avant.
 - **Contrôle / validation du passage :** après le scan, l'agent contrôle la marchandise et valide :
   - **Conforme** (passage clôturé),
-  - **À corriger** / anomalie (redirection vers la déclaration d'anomalie).
+  - **À corriger** / anomalie (ouverture de la modale de déclaration d'anomalie).
+- **Contrôle des quantités :** pour chaque article, l'agent saisit la **quantité reçue** (champ non pré-rempli, positionné après la colonne « À rendre ») ; un écart (quantité vide ou différente de l'attendue) rend le passage **non conforme** et bloque le BS jusqu'à résolution de l'anomalie.
 - Le parcours d'un BS se construit au fil des passages validés, dans l'ordre chronologique des scans.
 - Aucun itinéraire planifié à l'avance : le transit n'existe qu'à partir du moment où un magasin scanne.
 
 ## 6. Anomalies
 
-- **Déclaration** : depuis un passage (transit) ou directement ; type d'anomalie, description, pièces jointes (photo), magasin concerné, lien vers le BS.
+- **Déclaration** : dans une **modale** (pas de page de création dédiée), ouverte depuis la page « Liste des anomalies » (« Nouvelle anomalie ») ou depuis un passage de transit (« Déclarer une anomalie ») :
+  - Le **bon de sortie concerné n'est pas choisi** : il est déterminé par le contexte (passage contrôlé) et affiché en lecture seule ; sans contexte, le champ reste vide.
+  - **Motif en saisie libre** avec suggestions (liste de motifs usuels), description détaillée, magasin/lieu du contrôle et date limite de résolution.
+  - Pièces jointes (photo) à prévoir côté backend.
+  - **Pas d'options de notification ni de suivi dans le formulaire** : la distribution des notifications est gérée par la configuration administrateur (§ 10.2).
 - **Suivi** : liste des anomalies (statuts), fiche détail avec historique.
 - **Résolution** : clôture de l'anomalie par la personne habilitée, notification aux intéressés.
 - Les anomalies remontent dans les rapports et déclenchent les notifications configurées.
