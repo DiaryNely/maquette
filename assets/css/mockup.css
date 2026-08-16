@@ -188,6 +188,13 @@
     transform: translateY(1px);
 }
 
+.btn-mock:disabled,
+.btn-mock[disabled] {
+    opacity: 0.45;
+    cursor: not-allowed;
+    transform: none;
+}
+
 .btn-mock--outline {
     background: #fff;
     color: var(--m-ink);
@@ -854,6 +861,204 @@
 }
 
 /* ==============================
+   CONCERTATION D'ANOMALIE (chatbox entre entités responsables)
+   Vraie chatbox : en-tête des participants, bulles de discussion,
+   saisie et décision (résolu / abandonner) en bas du fil.
+   ============================== */
+.concert-chat {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid var(--m-line);
+    border-radius: 10px;
+    overflow: hidden;
+    background: #fff;
+}
+
+/* --- En-tête du chat : participants + statut --- */
+.concert-chat__head {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    flex-wrap: wrap;
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--m-line-soft);
+    background: var(--m-bg-soft);
+}
+
+.concert-chat__participant {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 4px 10px 4px 5px;
+    border: 1px solid var(--m-line);
+    border-radius: 20px;
+    background: #fff;
+}
+
+.concert-chat__participant[data-party-voted="resolu"] {
+    border-color: var(--m-teal);
+    background: var(--m-teal-soft);
+}
+
+.concert-chat__participant[data-party-voted="abandon"] {
+    border-color: var(--m-red);
+    background: var(--m-red-soft);
+}
+
+.concert-chat__avatar {
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.7rem;
+    color: #fff;
+    flex-shrink: 0;
+}
+
+.concert-chat__avatar--transit  { background: var(--m-blue); }
+.concert-chat__avatar--securite { background: var(--m-teal); }
+.concert-chat__avatar--magasin  { background: var(--m-amber); }
+
+.concert-chat__pname {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--m-ink);
+}
+
+.concert-chat__dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--m-amber);
+}
+
+.concert-chat__dot.is-ok {
+    background: var(--m-teal);
+}
+
+.concert-chat__dot.is-ko {
+    background: var(--m-red);
+}
+
+.concert-chat__head-note {
+    margin-left: auto;
+    font-size: 0.72rem;
+    color: var(--m-faint);
+}
+
+/* --- Fil de discussion --- */
+.concert-chat__thread {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    max-height: 300px;
+    overflow-y: auto;
+    padding: 14px;
+    background: #f6f8fa;
+}
+
+.concert-chat__msg {
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+    max-width: 88%;
+}
+
+.concert-chat__msg--me {
+    align-self: flex-end;
+    flex-direction: row-reverse;
+}
+
+.concert-chat__content {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    min-width: 0;
+}
+
+.concert-chat__msg--me .concert-chat__content {
+    align-items: flex-end;
+}
+
+.concert-chat__meta {
+    font-size: 0.7rem;
+    color: var(--m-faint);
+    margin-bottom: 3px;
+}
+
+.concert-chat__bubble {
+    padding: 8px 12px;
+    border-radius: 12px;
+    font-size: 0.84rem;
+    line-height: 1.45;
+    color: var(--m-ink);
+    background: #fff;
+    border: 1px solid var(--m-line);
+    border-top-left-radius: 3px;
+}
+
+.concert-chat__msg--me .concert-chat__bubble {
+    background: var(--m-teal-soft);
+    border-color: var(--m-teal);
+    border-top-left-radius: 12px;
+    border-top-right-radius: 3px;
+}
+
+/* --- Zone de réponse : saisie + décision --- */
+.concert-chat__input {
+    padding: 12px 14px;
+    border-top: 1px solid var(--m-line-soft);
+    background: #fff;
+}
+
+.concert-chat__form {
+    display: flex;
+    gap: 8px;
+}
+
+.concert-chat__form .form-control {
+    flex: 1;
+    min-width: 0;
+}
+
+.concert-chat__form .btn-mock {
+    flex-shrink: 0;
+}
+
+.concert-chat__quick {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-top: 10px;
+}
+
+.concert-chat__quick-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.74rem;
+    color: var(--m-muted);
+}
+
+.concert-chat__quick-label i {
+    color: var(--m-teal);
+}
+
+@media (max-width: 480px) {
+    .concert-chat__form {
+        flex-direction: column;
+    }
+
+    .concert-chat__form .btn-mock {
+        width: 100%;
+        justify-content: center;
+    }
+}
+
+/* ==============================
    HISTORIQUE DES VALIDATIONS (dropdown)
    L'historique est replié par défaut : un clic sur l'en-tête
    ouvre la frise chronologique (élément <details> natif).
@@ -1055,6 +1260,13 @@
     border-radius: 12px;
     box-shadow: 0 18px 50px rgba(15, 23, 42, 0.35);
     animation: modal-mock-pop 0.18s ease-out;
+}
+
+/* variante large pour les formulaires (ex. déclaration d'anomalie) */
+.modal-mock__dialog--lg {
+    width: min(100%, 640px);
+    max-height: min(92vh, 720px);
+    overflow-y: auto;
 }
 
 @keyframes modal-mock-pop {
@@ -1875,107 +2087,62 @@ body.modal-open {
 }
 
 /* ==============================
-   SÉLECTEUR « MAGASIN » AU CENTRE DE LA ZONE BLANCHE,
-   AU-DESSUS DU LOGO DU MAGASIN (comme la v1)
+   MOYEN D'ACHEMINEMENT — recherche + ajout (création d'un BS)
    ============================== */
-.store-select {
+/* Le champ d'acheminement occupe une ligne complète dans la grille. */
+.form-grid-2__item--full {
+    grid-column: 1 / -1;
+}
+
+.ach-row {
     display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    padding: 0;
-    margin: 0 0 15px;
+    align-items: stretch;
+    gap: 10px;
 }
 
-/* Page de création : le sélecteur « Magasin » est le tout premier
-   élément du flux, collé en haut du cadre blanc (#contenu) —
-   à 3px de la bordure supérieure. Le bouton hamburger flotte
-   en haut à gauche (retiré du flux). */
-#contenu.page-bs-create {
-    padding-top: 3px;
+.ach-search {
+    position: relative;
+    flex: 1 1 auto;
+    min-width: 0;
 }
 
-#contenu.page-bs-create .floating-menu-wrapper {
-    position: absolute;
-    top: 8px;
-    left: 8px;
-    margin: 0;
+.ach-search .form-control {
+    width: 100%;
 }
 
-.store-select__label {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    font-size: 12px;
-    font-weight: 600;
-    color: var(--m-muted);
+.ach-row .btn-mock {
+    flex-shrink: 0;
     white-space: nowrap;
 }
 
-.store-select__label i {
-    color: var(--m-teal);
+/* Panneau « nouveau moyen » : encart discret sous la ligne de recherche */
+.ach-new {
+    padding: 14px 16px;
+    margin-top: 10px;
+    background: var(--m-bg-soft);
+    border: 1px dashed var(--m-line);
+    border-radius: 8px;
 }
 
-.store-select select {
-    width: 180px;
-    padding: 5px 8px;
-    border: 1px solid #cdd4dd;
-    border-radius: 4px;
-    background: #fff;
-    font-size: 12.5px;
-    color: var(--m-ink);
-    cursor: pointer;
-    outline: none;
-}
+@media (max-width: 480px) {
+    .ach-row {
+        flex-direction: column;
+    }
 
-.store-select select:focus {
-    border-color: var(--m-teal);
-    box-shadow: 0 0 0 2px rgba(14, 159, 110, 0.15);
-}
-
-/* ==============================
-   LOGO DU MAGASIN D'ORIGINE (dans le formulaire, comme la v1)
-   ============================== */
-.origin-logo {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 16px;
-    padding: 4px 0 18px;
-}
-
-.origin-logo img {
-    height: 58px;
-    max-width: 280px;
-    object-fit: contain;
-}
-
-.origin-logo__info {
-    font-size: 0.82rem;
-    color: var(--m-muted);
-    line-height: 1.7;
-}
-
-.origin-logo__info div {
-    display: flex;
-    align-items: center;
-    gap: 7px;
-}
-
-.origin-logo__info i {
-    color: var(--m-faint);
-    width: 14px;
-    text-align: center;
+    .ach-row .btn-mock {
+        width: 100%;
+        justify-content: center;
+    }
 }
 
 /* ==============================
-   GRILLE CENTRÉE 2 COLONNES (informations générales)
+   GRILLE 2 COLONNES (informations générales, acheminement) —
+   desktop-first : les champs occupent toute la largeur de la carte,
+   sans plafond étroit centré.
    ============================== */
 .form-grid-2 {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    max-width: 720px;
-    margin: 0 auto;
     gap: 14px 24px;
     align-items: start;
 }
@@ -1988,6 +2155,18 @@ body.modal-open {
 
 .form-grid-2 .form-group label {
     font-size: 0.78rem;
+}
+
+/* Les trois champs du nouveau moyen d'acheminement tiennent
+   sur une ligne en desktop. */
+[data-ach-new] .form-grid-2 {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+@media (max-width: 991px) {
+    [data-ach-new] .form-grid-2 {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
 }
 
 @media (max-width: 768px) {

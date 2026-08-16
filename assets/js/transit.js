@@ -46,6 +46,51 @@
         { id: 'TR-2026-0088', bs: 'BS-2026-0135', magasin: 'Barrière de sortie', agent: 'Andrianarivo Tovo', arrivee: '05/08/2026 à 08:50', resultat: 'conforme', note: '', anomalie: null }
     ];
 
+    /* Données de démo — détails des bons de sortie scannés (initiateur,
+       bénéficiaire, parcours et articles attendus). La quantité reçue est
+       saisie par l'agent pendant le contrôle. */
+    var DEFAULT_DETAIL = {
+        initiateur: 'Rakotobe Hery',
+        beneficiaire: 'Rasoanirina Miora',
+        parcours: 'Magasin central → Siège - Administration S2M',
+        retour: '2 articles (retour avant le 12/09/2026)',
+        articles: [
+            { code: 'ART-102', designation: 'Rame papier A4 80 g (paquet de 500)', qte: 10, etat: 'Neuf', rendre: false },
+            { code: 'MAT-011', designation: 'Écran 24\" Dell P2422H', qte: 2, etat: 'Bon état', rendre: true },
+            { code: 'MAT-008', designation: 'Ordinateur portable Dell Latitude 5440', qte: 1, etat: 'Neuf', rendre: true },
+            { code: 'FOU-031', designation: 'Boîte de stylos à bille bleu (12)', qte: 5, etat: 'Neuf', rendre: false }
+        ]
+    };
+
+    var BS_DETAILS = {
+        'BS-2026-0142': DEFAULT_DETAIL,
+        'BS-2026-0141': {
+            initiateur: 'Razafindratsima Vola',
+            beneficiaire: 'Rabeharisoa Andry',
+            parcours: 'Entrepôt S2M → Magasin central',
+            retour: 'Aucun article à rendre',
+            articles: [
+                { code: 'ART-110', designation: 'Carton de fournitures de bureau (lot)', qte: 8, etat: 'Neuf', rendre: false },
+                { code: 'FOU-040', designation: 'Boîte de classeurs A4 (24)', qte: 3, etat: 'Neuf', rendre: false }
+            ]
+        },
+        'BS-2026-0140': {
+            initiateur: 'Rakotobe Hery',
+            beneficiaire: 'Ranarivelo Tsiky',
+            parcours: 'Magasin central → Entrepôt S2M',
+            retour: '1 article (retour avant le 20/09/2026)',
+            articles: [
+                { code: 'MAT-020', designation: 'Écran 27\" Dell U2723QE', qte: 4, etat: 'Neuf', rendre: false },
+                { code: 'MAT-015', designation: 'Station d\'accueil USB-C Dell', qte: 3, etat: 'Neuf', rendre: true },
+                { code: 'ART-105', designation: 'Rame papier A3 80 g (paquet de 250)', qte: 6, etat: 'Neuf', rendre: false }
+            ]
+        }
+    };
+
+    function detailsOf(bs) {
+        return BS_DETAILS[bs] || DEFAULT_DETAIL;
+    }
+
     /* --- Persistance --- */
 
     function load() {
@@ -254,12 +299,14 @@
                 '<td>' + (r.anomalie
                     ? '<a class="cell-link" href="index.html?page=anomalie-detail">' + escapeHtml(r.anomalie) + '</a>'
                     : '<span class="cell-muted">—</span>') + '</td>' +
-                '<td class="cell-actions"><button class="btn-mock btn-mock--outline btn-mock--sm" type="button" data-bs-select="' + escapeHtml(r.bs) + '"><i class="fa-solid fa-route"></i> Voir le parcours</button></td>' +
+                '<td class="cell-actions"><button class="btn-mock btn-mock--outline btn-mock--sm" type="button" data-bs-select="' + escapeHtml(r.bs) + '" data-modal-open="parcours"><i class="fa-solid fa-route"></i> Voir le parcours</button></td>' +
                 '</tr>';
         }).join('');
     }
 
-    /* Affiche le détail du parcours d'un BS dans la table data-transits-bs */
+    /* Remplit le détail du parcours d'un BS dans la table de la modale
+       data-transits-bs. La modale est ouverte par le bouton « Voir le
+       parcours » (data-modal-open="parcours", géré par mockup.js). */
     function selectBsDetail(bs) {
         var title = document.querySelector('[data-parcours-title]');
         if (title) title.textContent = bs;
@@ -267,11 +314,6 @@
             el.setAttribute('data-bs', bs);
             renderBsTable(el);
         });
-        var card = document.querySelector('[data-transits-bs]');
-        if (card) {
-            var block = card.closest('.mock-card');
-            if (block) block.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }
     }
 
     /* Table des passages d'un BS (ordre chronologique), numérotés.
@@ -352,81 +394,118 @@
         }
     }
 
-    /* Carte « contrôle en cours » : premier passage à contrôler */
-    function renderControle(card) {
+    /* Carte « 2. Détails du bon » : remplit le titre, le badge, la grille
+       d'informations et la table des articles avec la saisie des quantités
+       reçues (contrôle des quantités par l'agent de transit). */
+    function renderDetails(bs) {
+        var card = document.querySelector('[data-detail-bs]');
         if (!card) return;
-        var list = load().filter(function (t) { return t.resultat === 'a-controle'; });
-        var empty = card.querySelector('[data-c-empty]');
-        var content = card.querySelector('[data-c-content]');
-        if (!list.length) {
-            if (empty) empty.classList.remove('is-hidden');
-            if (content) content.classList.add('is-hidden');
-            return;
-        }
+
+        // le détail n'apparaît qu'après un scan (état initial : placeholder)
+        var empty = document.querySelector('[data-detail-empty]');
         if (empty) empty.classList.add('is-hidden');
-        if (content) content.classList.remove('is-hidden');
+        var body = document.querySelector('[data-detail-body]');
+        if (body) body.classList.remove('is-hidden');
 
-        // nouvelle saisie : on masque la confirmation précédente
-        var okPrev = card.querySelector('[data-c-ok]');
-        if (okPrev) okPrev.classList.add('is-hidden');
+        var d = detailsOf(bs);
 
-        var t = list[0];
+        var bsEl = card;
+        bsEl.textContent = bs;
+
+        var badgeEl = document.querySelector('[data-detail-badge]');
+        if (badgeEl) {
+            var t = find(bs, 'Plateforme logistique');
+            badgeEl.innerHTML = t ? badge(t.resultat) : '<span class="badge-status badge--encours">En cours</span>';
+        }
+
         var map = {
-            '[data-c-bs]': t.bs,
-            '[data-c-magasin]': t.magasin,
-            '[data-c-agent]': t.agent,
-            '[data-c-date]': t.arrivee
+            '[data-d-initiateur]': d.initiateur,
+            '[data-d-beneficiaire]': d.beneficiaire,
+            '[data-d-parcours]': d.parcours,
+            '[data-d-workflow]': 'Étape courante : Transit',
+            '[data-d-rendre]': d.retour
         };
         for (var sel in map) {
             if (!Object.prototype.hasOwnProperty.call(map, sel)) continue;
-            var el = card.querySelector(sel);
+            var el = document.querySelector(sel);
             if (el) el.textContent = map[sel];
         }
-        var badgeEl = card.querySelector('[data-c-badge]');
-        if (badgeEl) badgeEl.innerHTML = badge(t.resultat);
 
-        var anom = card.querySelector('[data-c-anomalie]');
-        if (anom) {
-            anom.setAttribute('href', 'index.html?page=anomalie-create&bs=' +
-                encodeURIComponent(t.bs) + '&magasin=' + encodeURIComponent(t.magasin));
+        var total = 0;
+        d.articles.forEach(function (a) { total += a.qte; });
+        var artEl = document.querySelector('[data-d-articles]');
+        if (artEl) {
+            artEl.textContent = total + ' pièces / ' + d.articles.length + ' lignes';
         }
 
-        var form = card.querySelector('[data-controle-form]');
-        if (form) {
-            // remplacement propre du handler à chaque rendu
-            if (form._txHandler) form.removeEventListener('submit', form._txHandler);
-            form._txHandler = function (e) {
-                e.preventDefault();
-                var resultat = form.querySelector('#transit-controle').value;
-                var note = form.querySelector('#transit-note').value;
-                var updated = validate(t.id,
-                    resultat.indexOf('Non conforme') === 0 ? 'non-conforme' : 'conforme',
-                    note);
-                if (!updated) return;
-                var ok = card.querySelector('[data-c-ok]');
-                if (ok) {
-                    ok.classList.remove('is-hidden');
-                    var span = ok.querySelector('span');
-                    var agent = escapeHtml(t.agent);
-                    if (resultat.indexOf('Non conforme') === 0) {
-                        ok.className = 'alert-mock alert-mock--danger mb-3';
-                        span.innerHTML = 'Contrôle <strong>non conforme</strong> signalé par <strong>' + agent +
-                            '</strong> — le BS est bloqué jusqu\'à résolution de l\'anomalie.';
-                    } else {
-                        ok.className = 'alert-mock alert-mock--success mb-3';
-                        span.innerHTML = 'Passage validé par <strong>' + agent +
-                            '</strong> — le matériel a bien transité dans ce secteur, le contrôle est enregistré.';
-                    }
-                }
-                // refresh des listes, du KPI, puis passage au contrôle suivant
-                document.querySelectorAll('[data-transits-table]').forEach(renderAllTable);
-                document.querySelectorAll('[data-transits-bs]').forEach(renderBsTable);
-                document.querySelectorAll('[data-bs-parcours]').forEach(renderParcours);
-                refreshKpi();
-                renderControle(card);
-            };
-            form.addEventListener('submit', form._txHandler);
+        var tbody = document.querySelector('[data-articles-body]');
+        if (tbody) {
+            tbody.innerHTML = d.articles.map(function (a) {
+                return '<tr>' +
+                    '<td class="mono">' + escapeHtml(a.code) + '</td>' +
+                    '<td>' + escapeHtml(a.designation) + '</td>' +
+                    '<td>' + a.qte + '</td>' +
+                    '<td>' + escapeHtml(a.etat) + '</td>' +
+                    '<td>' + (a.rendre
+                        ? '<span class="badge-status badge--info">Oui</span>'
+                        : '<span class="cell-muted">—</span>') + '</td>' +
+                    '<td><input type="number" class="form-control form-control-sm" style="width:84px;" min="0" data-qty data-expected="' + a.qte + '" data-code="' + escapeHtml(a.code) + '"></td>' +
+                    '</tr>';
+            }).join('');
         }
+    }
+
+    /* Vérifie les quantités saisies : si toutes correspondent aux quantités
+       attendues, le passage est conforme ; sinon il est non conforme et le
+       BS reste bloqué (invitation à déclarer une anomalie). */
+    function confirmPassage(t, panel) {
+        var mismatches = [];
+        document.querySelectorAll('[data-qty]').forEach(function (input) {
+            var expected = parseInt(input.getAttribute('data-expected'), 10);
+            var received = parseInt(input.value, 10);
+            if (isNaN(received) || received !== expected) {
+                mismatches.push({
+                    code: input.getAttribute('data-code'),
+                    expected: expected,
+                    received: isNaN(received) ? 0 : received
+                });
+            }
+        });
+
+        var conforme = mismatches.length === 0;
+        var updated = validate(t.id, conforme ? 'conforme' : 'non-conforme', '');
+        if (!updated) return;
+
+        var res = panel.querySelector('[data-confirm-result]');
+        if (res) {
+            if (conforme) {
+                res.className = 'alert-mock alert-mock--success';
+                res.innerHTML = '<i class="fa-solid fa-circle-check"></i>' +
+                    '<span>Passage <strong>conforme</strong> — toutes les quantités reçues correspondent au bon de sortie.</span>';
+            } else {
+                res.className = 'alert-mock alert-mock--danger';
+                res.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i>' +
+                    '<span>Contrôle <strong>non conforme</strong> — écart de quantité sur : ' +
+                    mismatches.map(function (m) {
+                        return '<strong>' + escapeHtml(m.code) + '</strong> (attendu ' + m.expected + ', reçu ' + m.received + ')';
+                    }).join(', ') +
+                    '. Déclarez une anomalie pour poursuivre.</span>';
+            }
+        }
+
+        // le bouton de confirmation est désactivé après validation
+        var btn = panel.querySelector('[data-confirm-passage]');
+        if (btn) {
+            btn.disabled = true;
+            btn.classList.add('btn-mock--outline');
+            btn.innerHTML = '<i class="fa-solid ' + (conforme ? 'fa-circle-check' : 'fa-circle-xmark') + '"></i> ' +
+                (conforme ? 'Passage confirmé' : 'Passage bloqué');
+        }
+
+        // rafraîchit le badge, les listes et le KPI
+        renderDetails(t.bs);
+        refreshKpi();
+        document.querySelectorAll('[data-transits-table]').forEach(renderAllTable);
     }
 
     function fillSelect(select, options, selected) {
@@ -559,8 +638,15 @@
         var magSel = form.querySelector('[data-scan-magasin]');
         var personRoot = form.querySelector('[data-scan-personnel]');
 
-        fillSelect(magSel, MAGASINS, magSel.getAttribute('data-default') || 'Plateforme logistique');
-        var agentInput = initPersonnelSearch(personRoot, magSel, 'Rabemananjara Solo');
+        /* Magasin et agent ne sont plus choisis dans la page : on utilise
+           ceux de l'utilisateur connecté (rôle Scan & Transit). Les champs
+           restent optionnels pour d'éventuelles variantes de la page. */
+        var magasin = 'Plateforme logistique';
+        var agent = 'Rabemananjara Solo';
+        if (magSel) {
+            fillSelect(magSel, MAGASINS, magSel.getAttribute('data-default') || 'Plateforme logistique');
+            var agentInput = initPersonnelSearch(personRoot, magSel, agent);
+        }
 
         form.addEventListener('submit', function (e) {
             e.preventDefault();
@@ -569,36 +655,42 @@
                 showAlert(panel, 'Saisissez la référence du BS à scanner (ex. BS-2026-0142).', 'danger');
                 return;
             }
-            var agent = agentInput ? agentInput.value.trim() : '';
-            if (!agent) agent = 'Rabemananjara Solo';
-            var r = create(bs, magSel.value, agent);
+            if (magSel) magasin = magSel.value;
+            if (agentInput && agentInput.value.trim()) agent = agentInput.value.trim();
+            var r = create(bs, magasin, agent);
             renderScanPanel(panel, r);
             refreshKpi();
-            document.querySelectorAll('[data-controle-card]').forEach(renderControle);
-            // le parcours affiché suit le dernier BS scanné (au lieu de rester sur BS-2026-0142)
-            document.querySelectorAll('[data-transits-bs]').forEach(function (el) {
-                el.setAttribute('data-bs', bs);
-                renderBsTable(el);
-            });
-            var parcoursTitle = document.querySelector('[data-parcours-title]');
-            if (parcoursTitle) parcoursTitle.textContent = bs;
+            document.querySelectorAll('[data-transits-table]').forEach(renderAllTable);
         });
     }
 
     function renderScanPanel(panel, r) {
         var t = r.transit;
+        // la carte détail affiche les informations et les articles du BS scanné
+        renderDetails(t.bs);
         panel.innerHTML =
             '<div class="alert-mock ' + (r.created ? 'alert-mock--success' : 'alert-mock--info') + ' mb-3">' +
                 '<i class="fa-solid ' + (r.created ? 'fa-circle-check' : 'fa-circle-info') + '"></i>' +
                 '<span>' + (r.created
-                    ? 'Transit <strong>' + escapeHtml(t.id) + '</strong> créé au magasin <strong>' + escapeHtml(t.magasin) + '</strong> — le parcours du BS s\'enrichit d\'un passage.'
-                    : 'Un transit existe déjà pour ce BS à ce magasin : <strong>' + escapeHtml(t.id) + '</strong>. Vous pouvez contrôler ou valider son passage.') +
+                    ? 'Transit <strong>' + escapeHtml(t.id) + '</strong> créé au magasin <strong>' + escapeHtml(t.magasin) + '</strong> — vérifiez les quantités reçues puis confirmez le passage.'
+                    : 'Un transit existe déjà pour ce BS à ce magasin : <strong>' + escapeHtml(t.id) + '</strong>. Vérifiez les quantités reçues puis confirmez le passage.') +
                 '</span></div>' +
-            '<p class="cell-muted mb-0" style="font-size:0.82rem;">' +
+            '<div class="d-flex flex-wrap" style="gap:10px;">' +
+                '<button class="btn-mock" type="button" data-confirm-passage><i class="fa-solid fa-circle-check"></i> Confirmer le passage</button>' +
+                '<button class="btn-mock btn-mock--danger" type="button" data-modal-open="anomalie" data-bs="' + escapeHtml(t.bs) + '" data-magasin="' + escapeHtml(t.magasin) + '"><i class="fa-solid fa-triangle-exclamation"></i> Déclarer une anomalie</button>' +
+            '</div>' +
+            '<div data-confirm-result class="mt-3"></div>' +
+            '<p class="cell-muted mt-3 mb-0" style="font-size:0.82rem;">' +
                 '<i class="fa-solid fa-circle-info text-teal"></i> ' +
-                'Ce passage est en attente de contrôle : effectuez la validation ou signalez une anomalie dans la carte ' +
-                '<strong>« Contrôle en cours »</strong> ci-dessous (premier passage en attente).' +
+                'Chaque passage est horodaté et rattaché à l\'agent. Un écart de quantité rend le passage non conforme et bloque le BS jusqu\'à résolution de l\'anomalie.' +
             '</p>';
+
+        var btn = panel.querySelector('[data-confirm-passage]');
+        if (btn) {
+            btn.addEventListener('click', function () {
+                confirmPassage(t, panel);
+            });
+        }
     }
 
     /* --- Boot --- */
@@ -619,10 +711,6 @@
         });
         document.querySelectorAll('[data-bs-parcours]').forEach(function (el) {
             renderParcours(el);
-            found = true;
-        });
-        document.querySelectorAll('[data-controle-card]').forEach(function (el) {
-            renderControle(el);
             found = true;
         });
         var kpiPending = document.querySelector('[data-kpi-pending]');

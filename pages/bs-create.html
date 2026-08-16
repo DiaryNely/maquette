@@ -1,30 +1,10 @@
 <section>
     <div data-menu="menu.html"></div>
 
-    <!-- Sélecteur du magasin d'origine, au centre de la zone blanche,
-         au-dessus du logo du magasin (comme la v1). -->
-    <div class="store-select">
-        <span class="store-select__label"><i class="fa-solid fa-location-dot"></i> Magasin :</span>
-        <select id="bs-magasin-origine" aria-label="Magasin d'origine">
-            <option selected>Magasin central</option>
-            <option>Entrepôt S2M</option>
-            <option>Siège - Administration S2M</option>
-        </select>
-    </div>
-
-    <!-- Logo du magasin d'origine, affiché dans le formulaire (comme la v1) -->
-    <div class="origin-logo">
-        <img src="assets/img/Jumbo.svg" alt="Logo Magasin central" data-origin-logo-img>
-        <div class="origin-logo__info">
-            <div><i class="fa-solid fa-location-dot"></i> <span data-origin-logo-store>Magasin central</span></div>
-            <div><i class="fa-regular fa-calendar"></i> <span data-origin-logo-date></span></div>
-        </div>
-    </div>
-
     <div class="mock-page-head">
         <div class="mock-page-head__title">
             <h1><i class="fa-solid fa-plus text-teal"></i> Création d'un bon de sortie</h1>
-            <p>Formulaire de saisie : bénéficiaire, magasins origine/destination et articles à sortir.</p>
+            <p>Formulaire de saisie : bénéficiaire, magasin de destination, moyen d'acheminement et articles à sortir.</p>
         </div>
         <div class="mock-page-head__actions">
             <button type="button" class="btn-mock" data-go-back><i class="fa-solid fa-arrow-left"></i> Retour</button>
@@ -32,10 +12,10 @@
     </div>
 
     <form>
-        <!-- 1. Informations générales -->
+        <!-- 1. Informations générales & acheminement -->
         <div class="mock-card">
             <div class="mock-card__head">
-                <h2 class="mock-card__title"><i class="fa-solid fa-user-tie"></i> 1. Informations générales</h2>
+                <h2 class="mock-card__title"><i class="fa-solid fa-user-tie"></i> 1. Informations générales &amp; acheminement</h2>
             </div>
             <div class="mock-card__body mock-card__body--compact">
                 <div class="form-grid-2">
@@ -75,6 +55,66 @@
                             <label for="bs-commentaire">Commentaire (facultatif)</label>
                             <input type="text" class="form-control" id="bs-commentaire"
                                 placeholder="Précisions utiles pour la validation…">
+                        </div>
+                    </div>
+
+                    <!-- Moyen d'acheminement : recherche + suggestions, bouton Ajouter -->
+                    <div class="form-grid-2__item form-grid-2__item--full">
+                        <div class="form-group">
+                            <label for="bs-acheminement">Moyen d'acheminement</label>
+                            <div class="ach-row">
+                                <div class="ach-search" data-ach-search>
+                                    <input type="text" class="form-control" id="bs-acheminement"
+                                        placeholder="Rechercher un moyen d'acheminement…" autocomplete="off"
+                                        data-ach-input>
+                                    <ul class="personnel-search__list" data-ach-list role="listbox" hidden></ul>
+                                </div>
+                                <button class="btn-mock" type="button" data-ach-add
+                                    title="Ajouter un nouveau moyen d'acheminement">
+                                    <i class="fa-solid fa-plus"></i> Ajouter
+                                </button>
+                            </div>
+                            <p class="text-muted2 mb-0 mt-1" style="font-size:0.78rem;" data-ach-hint>
+                                Saisissez un nom, un contact ou un moyen de transport pour filtrer les moyens
+                                enregistrés, ou cliquez sur « Ajouter » pour en créer un nouveau.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Panneau : nouveau moyen d'acheminement -->
+                    <div class="form-grid-2__item form-grid-2__item--full" data-ach-new hidden>
+                        <div class="ach-new">
+                            <div class="form-grid-2">
+                                <div class="form-grid-2__item">
+                                    <div class="form-group">
+                                        <label for="ach-nom-complet">Nom complet</label>
+                                        <input type="text" class="form-control" id="ach-nom-complet"
+                                            placeholder="Nom du transporteur ou de la société">
+                                    </div>
+                                </div>
+                                <div class="form-grid-2__item">
+                                    <div class="form-group">
+                                        <label for="ach-contact">Contact</label>
+                                        <input type="text" class="form-control" id="ach-contact"
+                                            placeholder="Téléphone ou e-mail">
+                                    </div>
+                                </div>
+                                <div class="form-grid-2__item">
+                                    <div class="form-group">
+                                        <label for="ach-transport">Moyen de transport</label>
+                                        <input type="text" class="form-control" id="ach-transport"
+                                            placeholder="Ex. Camion S2M, Moto…">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="d-flex flex-wrap" style="gap:10px; margin-top:14px;">
+                                <button class="btn-mock btn-mock--sm" type="button" data-ach-save>
+                                    <i class="fa-solid fa-check"></i> Enregistrer le moyen
+                                </button>
+                                <button class="btn-mock btn-mock--outline btn-mock--sm" type="button" data-ach-cancel>
+                                    Annuler
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>

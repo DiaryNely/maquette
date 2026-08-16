@@ -37,8 +37,7 @@ La maquette statique simule trois rôles, accessibles depuis la page « Simulati
 `pages/admin/`) et son menu restreint :
 
 1. **Personnel** (`lambda`) — crée un BS, voit ses BS envoyés/reçus avec leurs détails, consulte ses notifications.
-2. **Scan & Transit** (`transit`) — ne peut pas créer de BS ; scanne les BS, gère le transit, consulte les détails, crée/signale une anomalie et voit le **détail des anomalies liées à un BS** (pas de liste des anomalies), consulte ses notifications.
-3. **Administrateur** (`admin`) — tout consulter, gérer l'ensemble des fonctionnalités et les configurations (paramètres, permissions) ; ne scanne pas : les transits sont en consultation (lecture seule).
+2. **Scan & Transit** (`transit`) — ne peut pas créer de BS ; scanne les BS, gère le transit, consulte les détails, crée/signale une anomalie et voit le **détail des anomalies liées à un BS** (pas de liste des anomalies), consulte ses notifications. 3. **Administrateur** (`admin`) — tout consulter, gérer l'ensemble des fonctionnalités et les configurations (paramètres, permissions) ; ne scanne pas : il assure le **suivi des bons de sortie** (lecture seule, pas de scan ni de contrôle).
 
 Le rôle simulé est porté par le préfixe de l'URL (`?page=lambda/…`, `?page=transit/…`, `?page=admin/…`) ;
 tous les liens internes suivent automatiquement ce préfixe. Cette simulation sera remplacée par la vraie

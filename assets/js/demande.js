@@ -185,52 +185,148 @@ document.addEventListener('change', function (event) {
 })();
 
 /* ============================================================
-   MAGASIN D'ORIGINE — logo du magasin affiché dans le formulaire
-   Le sélecteur « Changer de magasin » (en haut de page, comme
-   dans la v1) détermine le magasin d'origine du BS ; à chaque
-   changement, le logo du magasin affiché dans le formulaire
-   (comme dans la v1 : logo + magasin + date) est mis à jour.
-   Le logo de l'application (en-tête) reste inchangé.
+   MOYEN D'ACHEMINEMENT — accompagnement du bon de sortie
+   Recherche avec suggestions : on saisit un nom, un contact ou
+   un moyen de transport, et les moyens enregistrés dans le
+   système sont proposés. Le bouton « Ajouter » ouvre un panneau
+   pour créer un nouveau moyen (nom complet, contact, moyen de
+   transport), qui s'ajoute ensuite aux suggestions.
+   (Non lié à une autre page : le moyen sélectionné apparaît
+   dans la création et le détail du bon de sortie.)
    ============================================================ */
 (function () {
     'use strict';
 
-    /* Logo par magasin — à ajuster selon les visuels disponibles
-       dans assets/img/. */
-    const ORIGIN_LOGOS = {
-        'Magasin central': 'assets/img/Jumbo.svg',
-        'Entrepôt S2M': 'assets/img/Score.jpg',
-        'Siège - Administration S2M': 'assets/img/supermaki.jpg',
-    };
+    /* Moyens de démo — dans la version réelle, ils viendront de
+       la base de données (gérés côté administration). */
+    const ACH = [
+        { nom: 'Rakoto Andry',        contact: '034 12 345 67', transport: 'Camion S2M' },
+        { nom: 'Trans Express SARL',  contact: '020 22 33 44',  transport: 'Camion frigorifique' },
+        { nom: 'Rabemananjara Solo',  contact: '032 55 44 33',  transport: 'Moto' },
+        { nom: 'Rasoarimalala Njaka', contact: '033 98 76 54',  transport: 'Fourgonnette' }
+    ];
 
-    function formatDate(d) {
-        const dd = String(d.getDate()).padStart(2, '0');
-        const mm = String(d.getMonth() + 1).padStart(2, '0');
-        return dd + '/' + mm + '/' + d.getFullYear();
+    function escapeHtml(s) {
+        return String(s == null ? '' : s)
+            .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
     }
 
-    function applyLogo(store) {
-        const img = document.querySelector('[data-origin-logo-img]');
-        if (!img) return;
-        img.src = ORIGIN_LOGOS[store] || 'assets/img/s2mweb_v3_1.png';
-        img.alt = 'Logo ' + store;
-        const storeEl = document.querySelector('[data-origin-logo-store]');
-        if (storeEl) storeEl.textContent = store;
-        const dateEl = document.querySelector('[data-origin-logo-date]');
-        if (dateEl) dateEl.textContent = formatDate(new Date());
+    function normalize(s) {
+        return String(s).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+    }
+
+    function labelOf(a) {
+        return a.nom + ' — ' + a.transport + ' · ' + a.contact;
     }
 
     function boot() {
-        const select = document.getElementById('bs-magasin-origine');
-        if (!select) return false;
+        const root = document.querySelector('[data-ach-search]');
+        const fresh = document.querySelector('[data-ach-new]');
+        if (!root || !fresh) return false;
 
-        /* marque la page pour le CSS spécifique (sélecteur collé
-           en haut du cadre blanc, bouton hamburger en absolu) */
-        const contenu = document.getElementById('contenu');
-        if (contenu) contenu.classList.add('page-bs-create');
+        const input = root.querySelector('[data-ach-input]');
+        const list = root.querySelector('[data-ach-list]');
+        const hint = document.querySelector('[data-ach-hint]');
+        if (!input || !list || !hint) return false;
 
-        select.addEventListener('change', () => applyLogo(select.value));
-        applyLogo(select.value);
+        const addBtn = document.querySelector('[data-ach-add]');
+        const saveBtn = document.querySelector('[data-ach-save]');
+        const cancelBtn = document.querySelector('[data-ach-cancel]');
+
+        let results = [];
+
+        function render(query) {
+            const q = normalize(query);
+            results = ACH.filter(function (a) {
+                return !q || normalize(a.nom + ' ' + a.contact + ' ' + a.transport).indexOf(q) !== -1;
+            });
+            if (!results.length) {
+                list.innerHTML = '<li class="personnel-search__empty">' +
+                    'Aucun moyen ne correspond — cliquez sur « Ajouter » pour en créer un nouveau.</li>';
+                list.hidden = false;
+                return;
+            }
+            list.innerHTML = results.map(function (a) {
+                return '<li class="personnel-search__item" role="option" tabindex="-1">' +
+                    '<span><strong>' + escapeHtml(a.nom) + '</strong> <span class="text-muted2">· ' + escapeHtml(a.transport) + '</span></span>' +
+                    '<span class="text-muted2" style="white-space:nowrap;">' + escapeHtml(a.contact) + '</span>' +
+                    '</li>';
+            }).join('');
+            list.hidden = false;
+        }
+
+        function choose(a) {
+            input.value = labelOf(a);
+            list.hidden = true;
+            hint.innerHTML = '<i class="fa-solid fa-circle-check text-teal"></i> ' +
+                escapeHtml(a.nom) + ' — ' + escapeHtml(a.transport) + ' · ' + escapeHtml(a.contact);
+        }
+
+        input.addEventListener('focus', function () { render(input.value); });
+        input.addEventListener('input', function () { render(input.value); });
+        input.addEventListener('keydown', function (event) {
+            if (event.key === 'Escape') { list.hidden = true; return; }
+            const items = list.querySelectorAll('.personnel-search__item');
+            if (!items.length) return;
+            const idx = Array.prototype.indexOf.call(items, document.activeElement);
+            if (event.key === 'ArrowDown') {
+                event.preventDefault();
+                items[(idx + 1) % items.length].focus();
+            } else if (event.key === 'ArrowUp') {
+                event.preventDefault();
+                items[(idx - 1 + items.length) % items.length].focus();
+            } else if (event.key === 'Enter') {
+                event.preventDefault();
+                const active = document.activeElement;
+                if (active && active.classList.contains('personnel-search__item')) {
+                    choose(results[Array.prototype.indexOf.call(items, active)]);
+                }
+            }
+        });
+        list.addEventListener('click', function (event) {
+            const item = event.target.closest('.personnel-search__item');
+            if (!item) return;
+            choose(results[Array.prototype.indexOf.call(list.querySelectorAll('.personnel-search__item'), item)]);
+        });
+        document.addEventListener('click', function (event) {
+            if (list.hidden) return;
+            if (!event.target.closest('[data-ach-search]')) list.hidden = true;
+        });
+
+        /* Panneau « nouveau moyen » : ouverture, enregistrement, annulation */
+        if (addBtn) {
+            addBtn.addEventListener('click', function () {
+                fresh.hidden = false;
+                fresh.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            });
+        }
+        if (cancelBtn) {
+            cancelBtn.addEventListener('click', function () { fresh.hidden = true; });
+        }
+        if (saveBtn) {
+            saveBtn.addEventListener('click', function () {
+                const nom = document.getElementById('ach-nom-complet');
+                const contact = document.getElementById('ach-contact');
+                const transport = document.getElementById('ach-transport');
+                if (!nom || !contact || !transport) return;
+                if (!nom.value.trim() || !contact.value.trim()) {
+                    hint.innerHTML = '<i class="fa-solid fa-circle-exclamation"></i> ' +
+                        'Renseignez au minimum le nom complet et le contact du nouveau moyen.';
+                    return;
+                }
+                const created = {
+                    nom: nom.value.trim(),
+                    contact: contact.value.trim(),
+                    transport: transport.value
+                };
+                ACH.unshift(created);
+                choose(created);
+                nom.value = '';
+                contact.value = '';
+                fresh.hidden = true;
+            });
+        }
         return true;
     }
 

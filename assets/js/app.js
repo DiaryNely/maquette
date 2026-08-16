@@ -28,7 +28,7 @@ const USERS = {
 /* Pages accessibles par rôle simulé (null = tout, rôle administrateur) */
 const ROLE_PAGES = {
     lambda:  ['bs-list', 'bs-create', 'bs-detail', 'notifications', 'anomalie-detail'],
-    transit: ['transit', 'bs-detail', 'anomalie-create', 'anomalie-detail', 'notifications'],
+    transit: ['transit', 'bs-detail', 'anomalie-detail', 'notifications'],
     admin:   null
 };
 
@@ -71,7 +71,7 @@ async function chargerMenus() {
 
     await Promise.all(Array.from(emplacements, async emplacement => {
         // cache-busting : le navigateur garde parfois menu.html en cache
-        const reponse = await fetch(fichier + '?v=4');
+        const reponse = await fetch(fichier + '?v=5');
         if (!reponse.ok) return;
         emplacement.outerHTML = await reponse.text();
     }));
@@ -93,11 +93,13 @@ async function chargerPage() {
     }
 
     // on tente d'abord la page du dossier du rôle, puis la page partagée
+    // (cache-busting : le navigateur garde parfois les pages en cache)
+    const stamp = '?v=' + Date.now();
     let fichier = role ? `pages/${role}/${name}.html` : `pages/${name}.html`;
-    let reponse = await fetch(fichier);
+    let reponse = await fetch(fichier + stamp);
     if (!reponse.ok && role) {
         fichier = `pages/${name}.html`;
-        reponse = await fetch(fichier);
+        reponse = await fetch(fichier + stamp);
     }
     if (!reponse.ok) throw new Error('Page introuvable');
 

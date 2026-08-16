@@ -46,32 +46,47 @@
         return true;
     }
 
-    /* Pré-remplissage du formulaire d'anomalie depuis l'URL (bs / point) */
-    function prefillAnomalieForm() {
-        var bsSelect = document.querySelector('#ano-bs');
-        if (!bsSelect) return;
+    /* Pré-remplissage du formulaire d'anomalie au moment de l'ouverture de la
+       modale : le bouton d'ouverture peut porter data-bs / data-magasin
+       (déclenché depuis un scan de transit par exemple). Le formulaire est
+       réinitialisé à chaque ouverture. */
+    function prefillAnomalieForm(opener) {
+        var form = document.querySelector('[data-anomalie-form]');
+        if (!form) return;
 
-        var params = new URLSearchParams(location.search);
-        var bs = params.get('bs');
-        var point = params.get('magasin') || params.get('point');
+        // retour à l'état initial si une anomalie a déjà été créée
+        var success = document.querySelector('[data-anomalie-success]');
+        if (success) success.classList.add('is-hidden');
+        form.classList.remove('is-hidden');
+        form.reset();
 
-        if (bs) {
-            for (var i = 0; i < bsSelect.options.length; i++) {
-                if (bsSelect.options[i].value === bs) bsSelect.value = bs;
+        // le BS n'est pas choisi : il est déterminé par le contexte (contrôle en cours)
+        var bs = opener && opener.getAttribute('data-bs');
+        var bsField = form.querySelector('#ano-bs');
+        if (bs && bsField) bsField.value = bs;
+
+        var point = opener && (opener.getAttribute('data-magasin') || opener.getAttribute('data-point'));
+        if (point) setSelectValue(form.querySelector('#ano-point'), point, point);
+    }
+
+    /* Sélectionne la valeur d'un select, en ajoutant l'option si absente */
+    function setSelectValue(select, value, label) {
+        if (!select) return;
+        for (var i = 0; i < select.options.length; i++) {
+            if (select.options[i].value === value) {
+                select.value = value;
+                return;
             }
         }
-        var pointSelect = document.querySelector('#ano-point');
-        if (point && pointSelect) {
-            for (var j = 0; j < pointSelect.options.length; j++) {
-                if (pointSelect.options[j].value === point) pointSelect.value = point;
-            }
-        }
+        var opt = document.createElement('option');
+        opt.value = value;
+        opt.textContent = label;
+        select.appendChild(opt);
+        select.value = value;
     }
 
     function boot() {
-        var done = markActive();
-        if (done) prefillAnomalieForm();
-        return done;
+        return markActive();
     }
 
     if (!boot()) {
@@ -160,6 +175,8 @@
                 // le contenu de la modale peut arriver après le boot :
                 // on (re)rend le QR au moment de l'ouverture
                 if (window.S2M && window.S2M.qr) window.S2M.qr.renderAll();
+                // la modale d'anomalie est pré-remplie (BS / magasin) et réinitialisée
+                if (target === 'anomalie') prefillAnomalieForm(opener);
                 modal.hidden = false;
                 document.body.classList.add('modal-open');
             }
@@ -274,51 +291,174 @@
         }
     });
 
-    /* --- 8. Anomalie : proposer une solution --- */
-    document.addEventListener('click', function (event) {
-        var toggle = event.target.closest('[data-solution-toggle]');
-        if (!toggle) return;
-        var card = toggle.closest('[data-solution]');
-        if (!card) return;
-        card.querySelector('[data-solution-toggle-row]').classList.add('is-hidden');
-        var form = card.querySelector('[data-solution-form]');
-        form.classList.remove('is-hidden');
-        var input = card.querySelector('[data-solution-input]');
-        if (input) input.focus();
-    });
+    /* --- 8. Anomalie : concertation des entités responsables ---
+       Chatbox entre les entités responsables. Chaque entité déclare
+       « résolu » ou « abandonner » (data-party-vote) : le bouton fait
+       répondre la prochaine entité encore en attente. Le chat permet
+       d'échanger (data-chat-form). Le choix final (data-concert-final)
+       ne s'active que lorsque toutes les entités ont voté à l'unanimité. */
+    var PARTY_LABELS = {
+        transit: 'Transit',
+        securite: 'Sécurité',
+        magasin: 'Magasin'
+    };
+    var PARTY_ICONS = {
+        transit: 'fa-solid fa-truck',
+        securite: 'fa-solid fa-shield-halved',
+        magasin: 'fa-solid fa-store'
+    };
+    var PARTY_AVATAR = {
+        transit: 'concert-chat__avatar--transit',
+        securite: 'concert-chat__avatar--securite',
+        magasin: 'concert-chat__avatar--magasin'
+    };
+
+    /* Trouve la prochaine entité en attente de décision */
+    function nextAwaitingParty(card) {
+        var parties = card.querySelectorAll('[data-party]');
+        for (var i = 0; i < parties.length; i++) {
+            if (!parties[i].getAttribute('data-party-voted')) return parties[i];
+        }
+        return null;
+    }
 
     document.addEventListener('click', function (event) {
-        var cancel = event.target.closest('[data-solution-cancel]');
-        if (!cancel) return;
-        var card = cancel.closest('[data-solution]');
+        var vote = event.target.closest('[data-party-vote]');
+        if (!vote) return;
+        var card = document.querySelector('[data-concert]');
         if (!card) return;
-        card.querySelector('[data-solution-form]').classList.add('is-hidden');
-        card.querySelector('[data-solution-toggle-row]').classList.remove('is-hidden');
+
+        var decision = vote.getAttribute('data-party-vote'); // 'resolu' | 'abandon'
+        var party = nextAwaitingParty(card);
+        if (!party) return;
+
+        var key = party.getAttribute('data-party');
+        var partyName = PARTY_LABELS[key] || 'Entité';
+
+        // marque la position de cette entité (pastille dans l'en-tête du chat)
+        party.setAttribute('data-party-voted', decision);
+        var dot = party.querySelector('[data-party-status]');
+        if (dot) {
+            dot.className = 'concert-chat__dot ' + (decision === 'resolu' ? 'is-ok' : 'is-ko');
+            dot.title = decision === 'resolu' ? 'Résolu' : 'Abandon';
+        }
+
+        // message dans la chatbox (bulle de l'entité qui vient de répondre)
+        var chat = card.querySelector('[data-chat]');
+        if (chat) {
+            var msg = document.createElement('div');
+            msg.className = 'concert-chat__msg';
+            msg.innerHTML =
+                '<span class="concert-chat__avatar ' + (PARTY_AVATAR[key] || '') + '"><i class="' + (PARTY_ICONS[key] || 'fa-solid fa-user') + '"></i></span>' +
+                '<div class="concert-chat__content">' +
+                    '<div class="concert-chat__meta">' + escapeHtml(partyName) + ' · à l\'instant</div>' +
+                    '<div class="concert-chat__bubble">' +
+                        (decision === 'resolu'
+                            ? 'Je déclare le problème <strong>résolu</strong>.'
+                            : 'Je décide d\'<strong>abandonner</strong> cette anomalie.') +
+                    '</div>' +
+                '</div>';
+            chat.appendChild(msg);
+            chat.scrollTop = chat.scrollHeight;
+        }
+
+        updateConcertDecision(card);
     });
 
     document.addEventListener('submit', function (event) {
-        var form = event.target.closest('[data-solution-form]');
+        var form = event.target.closest('[data-chat-form]');
         if (!form) return;
         event.preventDefault();
-        var card = form.closest('[data-solution]');
+        var card = form.closest('[data-concert]');
         if (!card) return;
-        var input = form.querySelector('[data-solution-input]');
+        var input = form.querySelector('[data-chat-input]');
         var text = (input.value || '').trim();
         if (!text) { input.focus(); return; }
 
-        var textEl = card.querySelector('[data-solution-text]');
-        if (textEl) textEl.textContent = text;
-        var metaEl = card.querySelector('[data-solution-meta]');
-        if (metaEl) {
-            metaEl.innerHTML = '<span><i class="fa-solid fa-user"></i> Vous (Sécurité)</span>' +
-                '<span><i class="fa-solid fa-clock-rotate-left"></i> à l\'instant — en attente de validation</span>';
+        var chat = card.querySelector('[data-chat]');
+        if (chat) {
+            var msg = document.createElement('div');
+            msg.className = 'concert-chat__msg concert-chat__msg--me';
+            msg.innerHTML =
+                '<div class="concert-chat__content">' +
+                    '<div class="concert-chat__meta">Vous (Sécurité) · à l\'instant</div>' +
+                    '<div class="concert-chat__bubble">' + escapeHtml(text) + '</div>' +
+                '</div>' +
+                '<span class="concert-chat__avatar concert-chat__avatar--securite"><i class="fa-solid fa-shield-halved"></i></span>';
+            chat.appendChild(msg);
+            chat.scrollTop = chat.scrollHeight;
         }
-        form.classList.add('is-hidden');
-        var row = card.querySelector('[data-solution-toggle-row]');
-        if (row) row.classList.remove('is-hidden');
-        var note = card.querySelector('[data-solution-note]');
-        if (note) {
-            note.innerHTML = '<i class="fa-solid fa-circle-info text-teal"></i> Proposition enregistrée — en attente de validation par le responsable.';
+        input.value = '';
+    });
+
+    document.addEventListener('click', function (event) {
+        var final = event.target.closest('[data-concert-final]');
+        if (!final) return;
+        var card = final.closest('[data-concert]');
+        if (!card) return;
+        var decision = final.getAttribute('data-concert-final'); // 'resolu' | 'abandon'
+
+        var result = card.querySelector('[data-concert-result]');
+        if (result) {
+            result.classList.remove('is-hidden');
+            var span = result.querySelector('span');
+            if (decision === 'resolu') {
+                result.className = 'alert-mock alert-mock--success mb-0 mt-3';
+                result.querySelector('i').className = 'fa-solid fa-circle-check';
+                span.innerHTML = 'Anomalie <strong>déclarée résolue</strong> à l\'unanimité des entités responsables.';
+            } else {
+                result.className = 'alert-mock alert-mock--danger mb-0 mt-3';
+                result.querySelector('i').className = 'fa-solid fa-flag';
+                span.innerHTML = 'Anomalie <strong>abandonnée</strong> par décision unanime des entités responsables.';
+            }
+        }
+
+        // désactive les deux boutons finaux
+        card.querySelectorAll('[data-concert-final]').forEach(function (b) { b.disabled = true; });
+
+        // met à jour le badge de l'anomalie (en-tête de page)
+        var badge = document.querySelector('[data-anomalie-badge]');
+        if (badge) {
+            if (decision === 'resolu') {
+                badge.className = 'badge-status badge--valide';
+                badge.textContent = 'Résolue';
+            } else {
+                badge.className = 'badge-status badge--annule';
+                badge.textContent = 'Abandonnée';
+            }
         }
     });
+
+    /* Active le choix final quand toutes les entités ont voté à l'unanimité */
+    function updateConcertDecision(card) {
+        var parties = card.querySelectorAll('[data-party]');
+        var total = parties.length;
+        if (!total) return;
+        var resolu = 0, abandon = 0;
+        parties.forEach(function (p) {
+            var v = p.getAttribute('data-party-voted');
+            if (v === 'resolu') resolu++;
+            else if (v === 'abandon') abandon++;
+        });
+        var done = (resolu + abandon) === total;
+        var btnResolu = card.querySelector('[data-concert-final="resolu"]');
+        var btnAbandon = card.querySelector('[data-concert-final="abandon"]');
+        if (!btnResolu || !btnAbandon) return;
+        if (done && resolu === total) {
+            btnResolu.disabled = false;
+            btnAbandon.disabled = true;
+        } else if (done && abandon === total) {
+            btnResolu.disabled = true;
+            btnAbandon.disabled = false;
+        } else {
+            btnResolu.disabled = true;
+            btnAbandon.disabled = true;
+        }
+    }
+
+    function escapeHtml(s) {
+        return String(s == null ? '' : s)
+            .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+    }
 })();

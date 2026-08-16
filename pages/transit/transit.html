@@ -4,8 +4,8 @@
     <div class="mock-page-head">
         <div class="mock-page-head__title">
             <h1><i class="fa-solid fa-qrcode text-teal"></i> Scan &amp; Gestion du transit</h1>
-            <p>Scannez le bon de sortie qui passe par votre secteur, contrôlez le matériel, puis validez le passage
-                ou déclarez une anomalie — chaque contrôle est enregistré avec l'identité de l'agent.</p>
+            <p>Scannez le bon de sortie qui passe par votre secteur, vérifiez les quantités reçues de chaque article,
+                puis confirmez le passage ou déclarez une anomalie — chaque contrôle est enregistré avec l'identité de l'agent.</p>
         </div>
     </div>
     <div class="row">
@@ -26,33 +26,11 @@
                     </div>
                     <hr class="hr-soft">
                     <form data-scan-form>
-                        <div class="row g-2">
-                            <div class="col-sm-6">
-                                <div class="form-group mb-2">
-                                    <label for="scan-magasin">Magasin où je me trouve</label>
-                                    <select class="form-control" id="scan-magasin" data-scan-magasin data-default="Plateforme logistique"></select>
-                                </div>
-                            </div>
-                            <div class="col-sm-6">
-                                <div class="form-group mb-2">
-                                    <label for="scan-agent">Agent connecté (personnel)</label>
-                                    <div class="personnel-search" data-scan-personnel>
-                                        <input type="text" class="form-control" id="scan-agent"
-                                            placeholder="Rechercher un agent du magasin…" autocomplete="off"
-                                            spellcheck="false" data-scan-agent>
-                                        <ul class="personnel-search__list" data-scan-personnel-list role="listbox" hidden></ul>
-                                    </div>
-                                    <p class="text-muted2 mb-0 mt-1" style="font-size:0.72rem;" data-scan-personnel-hint>
-                                        Plusieurs personnes peuvent porter le même nom — choisissez dans les suggestions.
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
                         <div class="form-group mb-0">
                             <label for="scan-manual">Ou saisir la référence du BS</label>
                             <div class="input-group">
                                 <input type="text" class="form-control" id="scan-manual" data-scan-bs
-                                    placeholder="Ex. BS-2026-0142" value="BS-2026-0142">
+                                    placeholder="Ex. BS-2026-0142">
                                 <div class="input-group-append">
                                     <button class="btn-mock" type="submit"><i class="fa-solid fa-qrcode"></i> Scanner</button>
                                 </div>
@@ -64,43 +42,54 @@
             </div>
         </div>
 
-        <!-- Étape 2 : détails du bon + contrôle -->
+        <!-- Étape 2 : détails du bon + contrôle des quantités -->
         <div class="col-lg-7">
             <div class="mock-card">
                 <div class="mock-card__head">
-                    <h2 class="mock-card__title"><i class="fa-solid fa-file-lines text-teal"></i> 2. Détails du bon — <span class="mono">BS-2026-0142</span></h2>
-                    <span class="badge-status badge--encours">En cours</span>
+                    <h2 class="mock-card__title"><i class="fa-solid fa-file-lines text-teal"></i> 2. Détails du bon — <span class="mono" data-detail-bs>—</span></h2>
+                    <span class="badge-status badge--encours" data-detail-badge>En attente</span>
                 </div>
                 <div class="mock-card__body">
+                    <!-- État initial : le détail n'apparaît qu'après un scan -->
+                    <div class="text-center py-4" data-detail-empty>
+                        <i class="fa-solid fa-qrcode" style="font-size:2rem; color:var(--m-faint);"></i>
+                        <p class="mb-0 mt-2" style="color:var(--m-muted);">
+                            Scannez un bon de sortie (ou saisissez sa référence puis « Scanner »)
+                            pour afficher les détails du contrôle.
+                        </p>
+                    </div>
+
+                    <!-- Contenu affiché après le scan du BS -->
+                    <div data-detail-body class="is-hidden">
                     <div class="info-grid mb-3">
                         <div class="info-grid__item">
                             <label>Initiateur</label>
-                            <div class="value">Rakotobe Hery</div>
+                            <div class="value" data-d-initiateur>Rakotobe Hery</div>
                         </div>
                         <div class="info-grid__item">
                             <label>Bénéficiaire</label>
-                            <div class="value">Rasoanirina Miora</div>
+                            <div class="value" data-d-beneficiaire>Rasoanirina Miora</div>
                         </div>
                         <div class="info-grid__item">
                             <label>Parcours</label>
-                            <div class="value value--muted">Magasin central → Siège - Administration S2M</div>
+                            <div class="value value--muted" data-d-parcours>Magasin central → Siège - Administration S2M</div>
                         </div>
                         <div class="info-grid__item">
                             <label>Étape workflow</label>
-                            <div class="value value--muted">Étape courante : Transit</div>
+                            <div class="value value--muted" data-d-workflow>Étape courante : Transit</div>
                         </div>
                         <div class="info-grid__item">
                             <label>Articles</label>
-                            <div class="value">18 pièces / 4 lignes</div>
+                            <div class="value" data-d-articles>18 pièces / 4 lignes</div>
                         </div>
                         <div class="info-grid__item">
                             <label>Dont à rendre</label>
-                            <div class="value">2 articles (retour avant le 12/09/2026)</div>
+                            <div class="value" data-d-rendre>2 articles (retour avant le 12/09/2026)</div>
                         </div>
                     </div>
 
                     <h3 class="mb-2" style="font-size:0.9rem; font-weight:700; color:var(--m-ink);">
-                        <i class="fa-solid fa-boxes-stacked text-teal"></i> Articles du bon — à contrôler physiquement
+                        <i class="fa-solid fa-boxes-stacked text-teal"></i> Articles du bon — contrôlez les quantités reçues
                     </h3>
                     <div class="table-mock-wrap mb-3">
                         <table class="table-mock">
@@ -108,143 +97,20 @@
                                 <tr>
                                     <th>Code</th>
                                     <th>Désignation</th>
-                                    <th>Qté</th>
+                                    <th>Qté attendue</th>
                                     <th>État</th>
                                     <th>À rendre</th>
+                                    <th>Qté reçue</th>
                                 </tr>
                             </thead>
-                            <tbody>
-                                <tr>
-                                    <td class="mono">ART-102</td>
-                                    <td>Rame papier A4 80 g (paquet de 500)</td>
-                                    <td>10</td>
-                                    <td>Neuf</td>
-                                    <td class="cell-muted">—</td>
-                                </tr>
-                                <tr>
-                                    <td class="mono">MAT-011</td>
-                                    <td>Écran 24&quot; Dell P2422H</td>
-                                    <td>2</td>
-                                    <td>Bon état</td>
-                                    <td><span class="badge-status badge--info">Oui</span></td>
-                                </tr>
-                                <tr>
-                                    <td class="mono">MAT-008</td>
-                                    <td>Ordinateur portable Dell Latitude 5440</td>
-                                    <td>1</td>
-                                    <td>Neuf</td>
-                                    <td><span class="badge-status badge--info">Oui</span></td>
-                                </tr>
-                                <tr>
-                                    <td class="mono">FOU-031</td>
-                                    <td>Boîte de stylos à bille bleu (12)</td>
-                                    <td>5</td>
-                                    <td>Neuf</td>
-                                    <td class="cell-muted">—</td>
-                                </tr>
-                            </tbody>
+                            <tbody data-articles-body></tbody>
                         </table>
                     </div>
 
-                    <!-- Résultat du scan : transit créé + contrôle / anomalie -->
-                    <div data-scan-panel>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-
-
-    <div class="row">
-        <!-- Contrôle en cours -->
-        <div class="col-lg-5">
-            <div class="mock-card" data-controle-card>
-                <div class="mock-card__head">
-                    <h2 class="mock-card__title"><i class="fa-solid fa-clipboard-check"></i> Contrôle en cours</h2>
-                    <span class="chip chip--active">Magasin : <span data-c-magasin>—</span></span>
-                </div>
-                <div class="mock-card__body">
-                    <div class="alert-mock alert-mock--success is-hidden mb-3" data-c-empty>
-                        <i class="fa-solid fa-circle-check"></i>
-                        <span>Aucun contrôle en attente : tous les passages enregistrés sont conformes.</span>
-                    </div>
-                    <div data-c-content>
-                        <div class="info-grid mb-3">
-                            <div class="info-grid__item">
-                                <label>BS scanné</label>
-                                <div class="value mono" data-c-bs>—</div>
-                            </div>
-                            <div class="info-grid__item">
-                                <label>Arrivé au magasin</label>
-                                <div class="value value--muted" data-c-date>—</div>
-                            </div>
-                            <div class="info-grid__item">
-                                <label>Statut</label>
-                                <div class="value" data-c-badge>—</div>
-                            </div>
+                        <!-- Résultat du scan : confirmation du passage -->
+                        <div data-scan-panel>
                         </div>
-
-                        <form data-controle-form>
-                            <div class="form-group">
-                                <label for="transit-controle">Résultat du contrôle</label>
-                                <select class="form-control" id="transit-controle">
-                                    <option selected>Conforme — colis identifié, scellé et complet</option>
-                                    <option>Non conforme — anomalie détectée</option>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label for="transit-note">Note de contrôle (facultatif)</label>
-                                <textarea class="form-control" id="transit-note" rows="2" placeholder="État du colis, observations…"></textarea>
-                            </div>
-
-                            <div class="alert-mock alert-mock--success is-hidden mb-3" data-c-ok>
-                                <i class="fa-solid fa-circle-check"></i>
-                                <span>Passage validé — le contrôle a été enregistré.</span>
-                            </div>
-
-                            <div class="d-flex flex-wrap" style="gap:10px;">
-                                <button class="btn-mock" type="submit"><i class="fa-solid fa-circle-check"></i> Valider le passage</button>
-                                <a href="index.html?page=anomalie-create" data-c-anomalie class="btn-mock btn-mock--danger"><i class="fa-solid fa-triangle-exclamation"></i> Déclarer une anomalie</a>
-                            </div>
-                        </form>
-                        <p class="cell-muted mt-3 mb-0" style="font-size:0.8rem;">
-                            <i class="fa-solid fa-circle-info text-teal"></i>
-                            Chaque passage est horodaté et rattaché à l'agent ayant effectué le contrôle. Un contrôle
-                            non conforme bloque automatiquement la progression du BS jusqu'à résolution de l'anomalie.
-                        </p>
                     </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Parcours construit d'un BS -->
-        <div class="col-lg-7">
-            <div class="mock-card">
-                <div class="mock-card__head">
-                    <h2 class="mock-card__title"><i class="fa-solid fa-location-dot"></i> Parcours construit — <span class="mono" data-parcours-title>BS-2026-0142</span></h2>
-                    <span class="chip" id="transit-count-142">— passages enregistrés</span>
-                </div>
-                <div class="mock-card__body mock-card__body--flush">
-                    <table class="table-mock" data-transits-bs data-bs="BS-2026-0142" data-count-el="#transit-count-142">
-                        <thead>
-                            <tr>
-                                <th>Passage</th>
-                                <th>Magasin</th>
-                                <th>Agent</th>
-                                <th>Date / heure</th>
-                                <th>Résultat</th>
-                            </tr>
-                        </thead>
-                        <tbody></tbody>
-                    </table>
-                </div>
-                <div class="mock-card__body" style="border-top:1px solid var(--m-line-soft);">
-                    <p class="mb-0" style="font-size:0.82rem; color:var(--m-muted);">
-                        <i class="fa-solid fa-circle-info text-teal"></i>
-                        Chaque scan du QR dans un magasin ajoute un passage au parcours de ce BS. L'ordre
-                        des passages correspond à la chronologie des scans, sans itinéraire prédéfini.
-                    </p>
                 </div>
             </div>
         </div>
@@ -285,6 +151,97 @@
                 <tbody></tbody>
             </table>
             </details>
+        </div>
+    </div>
+
+    <!-- Modale : création d'une anomalie (déclenchée après un contrôle non conforme) -->
+    <div class="modal-mock" data-modal="anomalie" hidden>
+        <div class="modal-mock__backdrop" data-modal-close></div>
+        <div class="modal-mock__dialog modal-mock__dialog--lg" role="dialog" aria-modal="true" aria-label="Déclarer une anomalie">
+            <div class="modal-mock__head">
+                <h3 class="modal-mock__title"><i class="fa-solid fa-triangle-exclamation text-teal"></i> Déclarer une anomalie</h3>
+                <button class="modal-mock__close" type="button" data-modal-close aria-label="Fermer">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            <div class="modal-mock__body">
+                <form data-anomalie-form data-next-code="ANO-2026-020">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="ano-bs">Bon de sortie concerné</label>
+                                <input type="text" class="form-control" id="ano-bs" readonly
+                                    placeholder="Déterminé automatiquement (contrôle en cours)">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="ano-point">Magasin / lieu du contrôle</label>
+                                <select class="form-control" id="ano-point">
+                                    <option value="" selected disabled>Sélectionner un magasin</option>
+                                    <option value="Barrière de sortie">Barrière de sortie</option>
+                                    <option value="Plateforme logistique">Plateforme logistique</option>
+                                    <option value="Magasin central">Magasin central</option>
+                                    <option value="Entrepôt S2M">Entrepôt S2M</option>
+                                    <option value="Poste de contrôle">Poste de contrôle</option>
+                                    <option value="Siège - Administration S2M">Siège - Administration S2M</option>
+                                    <option value="securite">Poste de sécurité</option>
+                                    <option value="reception">Réception</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="ano-motif">Motif de l'anomalie</label>
+                                <input type="text" class="form-control" id="ano-motif" list="ano-motif-list"
+                                    placeholder="Sélectionner ou saisir un motif…">
+                                <datalist id="ano-motif-list">
+                                    <option value="Quantité manquante"></option>
+                                    <option value="Colis endommagé"></option>
+                                    <option value="Étiquette illisible"></option>
+                                    <option value="Emballage ouvert / scellé brisé"></option>
+                                    <option value="Retard de livraison"></option>
+                                    <option value="Identité non vérifiable"></option>
+                                    <option value="Autre…"></option>
+                                </datalist>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="ano-date-limite">Date limite de résolution</label>
+                                <input type="date" class="form-control" id="ano-date-limite" value="2026-08-16">
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="form-group mb-0">
+                                <label for="ano-description">Description détaillée</label>
+                                <textarea class="form-control" id="ano-description" rows="3"
+                                    placeholder="Constat précis au moment du contrôle : état du colis, quantité, référence…"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-end flex-wrap" style="gap:10px; margin-top:18px;">
+                        <button type="button" class="btn-mock btn-mock--outline" data-modal-close><i class="fa-solid fa-xmark"></i> Annuler</button>
+                        <button class="btn-mock" type="submit"><i class="fa-solid fa-triangle-exclamation"></i> Créer l'anomalie</button>
+                    </div>
+                </form>
+
+                <!-- Confirmation (affichée après soumission dans la modale) -->
+                <div class="text-center is-hidden" data-anomalie-success>
+                    <div class="confirm-icon"><i class="fa-solid fa-circle-check"></i></div>
+                    <h2 class="mb-1" style="font-size:1.15rem; font-weight:700; color:var(--m-ink);">
+                        Anomalie <span class="mono" data-anomalie-code>ANO-2026-020</span> créée
+                    </h2>
+                    <p style="color:var(--m-muted); margin-bottom:0;">
+                        La progression du bon <strong data-anomalie-bs>BS-2026-0142</strong> est bloquée jusqu'à
+                        résolution. Le délai et l'historique de l'anomalie sont tracés.
+                    </p>
+                    <div class="d-flex justify-content-center flex-wrap mt-4" style="gap:10px;">
+                        <a href="index.html?page=anomalie-detail" class="btn-mock"><i class="fa-solid fa-eye"></i> Voir l'anomalie</a>
+                        <button type="button" class="btn-mock btn-mock--outline" data-modal-close><i class="fa-solid fa-arrow-left"></i> Fermer</button>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </section>

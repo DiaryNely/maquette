@@ -4,7 +4,7 @@
     <div class="mock-page-head">
         <div class="mock-page-head__title">
             <h1><i class="fa-solid fa-triangle-exclamation text-teal"></i> Anomalie <span class="mono">ANO-2026-018</span>
-                <span class="badge-status badge--valide">Résolue</span></h1>
+                <span class="badge-status badge--valide" data-anomalie-badge>Résolue</span></h1>
             <p>Détail du motif, du délai de résolution et historique complet (créateur, actions, résolution, clôture).</p>
         </div>
         <div class="mock-page-head__actions">
@@ -124,66 +124,77 @@
                 </div>
             </div>
 
-            <!-- Actions + Solution -->
-            <div class="mock-card" data-solution>
+            <!-- Concertation : chatbox entre les entités responsables -->
+            <div class="mock-card" data-concert>
                 <div class="mock-card__head">
-                    <h2 class="mock-card__title"><i class="fa-solid fa-bolt"></i> Actions</h2>
+                    <h2 class="mock-card__title"><i class="fa-solid fa-comments"></i> Concertation des responsables</h2>
                     <span class="chip">Connecté : Sécurité</span>
                 </div>
                 <div class="mock-card__body">
-                    <div class="d-flex flex-wrap" style="gap:10px;">
-                        <button class="btn-mock"><i class="fa-solid fa-check"></i> Marquer résolue</button>
-                        <button class="btn-mock btn-mock--outline"><i class="fa-solid fa-comment"></i> Ajouter une action</button>
-                        <button class="btn-mock btn-mock--outline"><i class="fa-solid fa-user-plus"></i> Transférer</button>
-                    </div>
+                    <div class="concert-chat">
+                        <!-- En-tête du chat : participants + statut -->
+                        <div class="concert-chat__head">
+                            <div class="concert-chat__participant" data-party="transit">
+                                <span class="concert-chat__avatar concert-chat__avatar--transit"><i class="fa-solid fa-truck"></i></span>
+                                <span class="concert-chat__pname">Transit</span>
+                                <span class="concert-chat__dot" data-party-status title="En attente"></span>
+                            </div>
+                            <div class="concert-chat__participant" data-party="securite">
+                                <span class="concert-chat__avatar concert-chat__avatar--securite"><i class="fa-solid fa-shield-halved"></i></span>
+                                <span class="concert-chat__pname">Sécurité</span>
+                                <span class="concert-chat__dot" data-party-status title="En attente"></span>
+                            </div>
+                            <div class="concert-chat__participant" data-party="magasin">
+                                <span class="concert-chat__avatar concert-chat__avatar--magasin"><i class="fa-solid fa-store"></i></span>
+                                <span class="concert-chat__pname">Magasin</span>
+                                <span class="concert-chat__dot" data-party-status title="En attente"></span>
+                            </div>
+                            <span class="concert-chat__head-note">Décision unanime requise</span>
+                        </div>
 
-                    <hr class="hr-soft">
-                    <div class="d-flex align-items-center justify-content-between" style="margin-bottom:10px;">
-                        <h3 style="font-size:0.9rem; font-weight:700; color:var(--m-ink); margin:0;">
-                            <i class="fa-solid fa-lightbulb text-teal"></i> Solution
-                        </h3>
-                        <span class="badge-status badge--valide" data-solution-badge>Résolue</span>
-                    </div>
-                    <div class="solution-block">
-                        <div class="solution-block__icon"><i class="fa-solid fa-wrench"></i></div>
-                        <div class="solution-block__content">
-                            <p class="solution-block__text mb-1" data-solution-text>Étiquette recollée et réimprimée, référence vérifiée par lecture du QR.</p>
-                            <div class="solution-block__meta" data-solution-meta>
-                                <span><i class="fa-solid fa-user"></i> Rabemananjara Solo (Transit)</span>
-                                <span><i class="fa-solid fa-clock-rotate-left"></i> 15/08/2026 à 09:05</span>
+                        <!-- Fil de discussion -->
+                        <div class="concert-chat__thread" data-chat>
+                            <div class="concert-chat__msg">
+                                <span class="concert-chat__avatar concert-chat__avatar--transit"><i class="fa-solid fa-truck"></i></span>
+                                <div class="concert-chat__content">
+                                    <div class="concert-chat__meta">Rabemananjara Solo (Transit) · 15/08/2026 à 09:05</div>
+                                    <div class="concert-chat__bubble">Étiquette recollée et réimprimée, référence vérifiée par lecture du QR. Le colis est prêt.</div>
+                                </div>
+                            </div>
+                            <div class="concert-chat__msg">
+                                <span class="concert-chat__avatar concert-chat__avatar--securite"><i class="fa-solid fa-shield-halved"></i></span>
+                                <div class="concert-chat__content">
+                                    <div class="concert-chat__meta">Andrianarivo Tovo (Sécurité) · 15/08/2026 à 09:12</div>
+                                    <div class="concert-chat__bubble">Je confirme de mon côté : le code BS reste parfaitement lisible après recoupe.</div>
+                                </div>
+                            </div>
+                            <div class="concert-chat__msg">
+                                <span class="concert-chat__avatar concert-chat__avatar--magasin"><i class="fa-solid fa-store"></i></span>
+                                <div class="concert-chat__content">
+                                    <div class="concert-chat__meta">Rakotobe Hery (Magasin) · 15/08/2026 à 09:20</div>
+                                    <div class="concert-chat__bubble">Pas d'incidence sur le chargement côté magasin — bon à poursuivre.</div>
+                                </div>
                             </div>
                         </div>
-                    </div>
 
-                    <!-- Proposition de solution -->
-                    <form data-solution-form class="is-hidden" style="margin-top:12px;">
-                        <label class="mb-0 d-block">
-                            <span style="font-size:0.8rem; color:var(--m-muted); display:block; margin-bottom:4px;">Proposer une solution</span>
-                            <textarea class="form-control" rows="4" data-solution-input
-                                style="width:100%; resize:vertical;"
-                                placeholder="Décrivez la solution que vous proposez…"></textarea>
-                        </label>
-                        <div class="d-flex flex-wrap" style="gap:8px; margin-top:8px;">
-                            <button class="btn-mock" type="submit"><i class="fa-solid fa-paper-plane"></i> Proposer la solution</button>
-                            <button class="btn-mock btn-mock--outline" type="button" data-solution-cancel>Annuler</button>
+                        <!-- Zone de réponse : saisie + décision de chaque entité -->
+                        <div class="concert-chat__input">
+                            <form class="concert-chat__form" data-chat-form>
+                                <input type="text" class="form-control" data-chat-input placeholder="Écrire un message…">
+                                <button class="btn-mock" type="submit"><i class="fa-solid fa-paper-plane"></i> Envoyer</button>
+                            </form>
                         </div>
-                    </form>
-
-                    <div class="d-flex justify-content-between align-items-center flex-wrap" style="gap:8px; margin-top:12px;" data-solution-toggle-row>
-                        <p class="mb-0" style="font-size:0.8rem; color:var(--m-muted);" data-solution-note>
-                            <i class="fa-solid fa-circle-check text-teal"></i> Solution validée et clôturée par Andrianarivo Tovo (Sécurité) le 15/08/2026 à 17:20.
-                        </p>
-                        <button class="btn-mock" type="button" data-solution-toggle>
-                            <i class="fa-solid fa-plus"></i> Proposer une solution
-                        </button>
                     </div>
 
                     <hr class="hr-soft">
-                    <p class="mb-0" style="font-size:0.82rem; color:var(--m-muted);">
-                        <i class="fa-solid fa-circle-info text-teal"></i>
-                        Chaque action est horodatée et rattachée à son auteur. La résolution puis la clôture sont
-                        tracées dans l'historique ci-contre.
-                    </p>
+                    <div class="d-flex flex-wrap" style="gap:10px;">
+                        <button class="btn-mock" type="button" data-concert-final="resolu" ><i class="fa-solid fa-circle-check"></i> Déclarer résolue</button>
+                        <button class="btn-mock btn-mock--danger" type="button" data-concert-final="abandon" ><i class="fa-solid fa-flag"></i> Abandonner</button>
+                    </div>
+                    <div class="alert-mock alert-mock--success is-hidden mb-0 mt-3" data-concert-result>
+                        <i class="fa-solid fa-circle-check"></i>
+                        <span></span>
+                    </div>
                 </div>
             </div>
         </div>
