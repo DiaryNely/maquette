@@ -71,7 +71,7 @@ document.addEventListener('change', function (event) {
     function escapeHtml(s) {
         return String(s == null ? '' : s)
             .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
-            .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+            .replace(/\"/g, '&quot;').replace(/'/g, '&#39;');
     }
 
     function normalize(s) {
@@ -81,7 +81,7 @@ document.addEventListener('change', function (event) {
     function boot() {
         const root = document.querySelector('[data-personnel-search]');
         const storeSelect = document.getElementById('bs-magasin-destination');
-        if (!root || !storeSelect) return false;
+        if (!root || !storeSelect) return true;
 
         const input = root.querySelector('[data-personnel-input]');
         const list = root.querySelector('[data-personnel-list]');
@@ -209,7 +209,7 @@ document.addEventListener('change', function (event) {
     function escapeHtml(s) {
         return String(s == null ? '' : s)
             .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
-            .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+            .replace(/\"/g, '&quot;').replace(/'/g, '&#39;');
     }
 
     function normalize(s) {
@@ -327,6 +327,231 @@ document.addEventListener('change', function (event) {
                 fresh.hidden = true;
             });
         }
+        return true;
+    }
+
+    if (!boot()) {
+        const timer = setInterval(function () {
+            if (boot()) clearInterval(timer);
+        }, 100);
+        setTimeout(function () { clearInterval(timer); }, 4000);
+    }
+})();
+
+/* ============================================================
+   DESTINATION PAR LIGNE — chaque ligne d'article peut avoir
+   son propre magasin destinataire ET son propre personnel
+   destinataire (bénéficiaire). Le bon ne porte pas de destination
+   principale : chaque ligne est autonome. Le champ bénéficiaire
+   est une recherche avec suggestions (composant personnel-search)
+   filtrée par le magasin choisi sur la ligne ; la valeur retenue
+   est le simple nom de la personne, jamais une concaténation.
+   Un bandeau récapitule la répartition pour la validation.
+   ============================================================ */
+(function () {
+    'use strict';
+
+    function boot() {
+        const root = document.querySelector('[data-product-lines]');
+        const banner = document.querySelector('[data-multi-dest-banner]');
+        const text = banner ? banner.querySelector('[data-multi-dest-text]') : null;
+        if (!root || !banner || !text) return false;
+
+        const PERSONNEL = (window.S2M && window.S2M.personnel) || [];
+
+        function escapeHtml(s) {
+            return String(s == null ? '' : s)
+                .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+                .replace(/\"/g, '&quot;').replace(/'/g, '&#39;');
+        }
+
+        function normalize(s) {
+            return String(s).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+        }
+
+        function storeOf(line) {
+            const sel = line.querySelector('select[name="product-destination[]"]');
+            return sel && sel.value ? sel.value : '';
+        }
+
+        function placeholderFor(line) {
+            const store = storeOf(line);
+            return store ? 'Personnel de « ' + store + ' »' : 'Choisissez d\'abord un magasin';
+        }
+
+        function peopleOf(store, query) {
+            const q = normalize(query);
+            return PERSONNEL.filter(function (p) {
+                if (store && p.magasin !== store) return false;
+                return !q || normalize(p.nom + ' ' + p.matricule + ' ' + p.role).indexOf(q) !== -1;
+            });
+        }
+
+        /* Affiche les suggestions de la ligne sous le champ, au-dessus
+           de tout conteneur défilant (position fixe par rapport au
+           viewport). La valeur sélectionnée reste le simple nom. */
+        function renderList(input, query) {
+            const line = input.closest('.product-line');
+            const list = line.querySelector('[data-personnel-list]');
+            const store = storeOf(line);
+
+            if (!store) {
+                list.innerHTML = '<li class="personnel-search__empty">' +
+                    'Choisissez d\'abord un magasin de destination.</li>';
+                list.hidden = false;
+                return;
+            }
+
+            const results = peopleOf(store, query);
+            list._results = results;
+
+            if (!results.length) {
+                list.innerHTML = '<li class="personnel-search__empty">' +
+                    'Aucun personnel trouvé pour <strong>' + escapeHtml(store) + '</strong>.</li>';
+            } else {
+                list.innerHTML = results.map(function (p) {
+                    return '<li class="personnel-search__item" role="option" tabindex="-1">' +
+                        '<span><strong>' + escapeHtml(p.nom) + '</strong> <span class="text-muted2">· ' + escapeHtml(p.role) + '</span></span>' +
+                        '<span class="text-muted2" style="white-space:nowrap;">' + escapeHtml(p.matricule) + ' · ' + escapeHtml(p.magasin) + '</span>' +
+                        '</li>';
+                }).join('');
+            }
+
+            const rect = input.getBoundingClientRect();
+            list.style.position = 'fixed';
+            list.style.top = (rect.bottom + 4) + 'px';
+            list.style.left = rect.left + 'px';
+            list.style.right = 'auto';
+            list.hidden = false;
+        }
+
+        function choose(input, p) {
+            input.value = p.nom;
+            const list = input.closest('.personnel-search').querySelector('[data-personnel-list]');
+            list.hidden = true;
+            refresh();
+        }
+
+        function refresh() {
+            const byDest = {};
+            let assigned = 0;
+            let beneficiaries = 0;
+            root.querySelectorAll('.product-line').forEach(function (line) {
+                const sel = line.querySelector('select[name="product-destination[]"]');
+                const ben = line.querySelector('input[name="product-beneficiary[]"]');
+                const dest = sel && sel.value;
+                if (dest) {
+                    assigned += 1;
+                    byDest[dest] = (byDest[dest] || 0) + 1;
+                }
+                const custom = ben && ben.value.trim();
+                if (custom) beneficiaries += 1;
+            });
+
+            const parts = [];
+            if (assigned > 0) {
+                const list = Object.keys(byDest)
+                    .map(function (d) { return byDest[d] + ' × ' + d; })
+                    .join(', ');
+                parts.push(assigned + ' article' + (assigned > 1 ? 's' : '') +
+                    ' réparti' + (assigned > 1 ? 's' : '') + ' entre : ' + list);
+            }
+            if (beneficiaries > 0) {
+                parts.push(beneficiaries + ' bénéficiaire' + (beneficiaries > 1 ? 's' : '') + ' renseigné' + (beneficiaries > 1 ? 's' : ''));
+            }
+
+            if (parts.length) {
+                text.textContent = parts.join('. ') + '.';
+                banner.hidden = false;
+            } else {
+                banner.hidden = true;
+            }
+        }
+
+        /* Délégation sur l'ensemble des lignes, y compris les nouvelles */
+        root.addEventListener('focusin', function (event) {
+            if (!event.target.matches('input[name="product-beneficiary[]"]')) return;
+            event.target.placeholder = placeholderFor(event.target.closest('.product-line'));
+            renderList(event.target, '');
+        });
+
+        root.addEventListener('input', function (event) {
+            if (!event.target.matches('input[name="product-beneficiary[]"]')) return;
+            renderList(event.target, event.target.value);
+            refresh();
+        });
+
+        root.addEventListener('keydown', function (event) {
+            const input = event.target.closest('input[name="product-beneficiary[]"]');
+            const item = event.target.closest('.personnel-search__item');
+            if (!input && !item) return;
+            const line = (input || item).closest('.product-line');
+            const list = line.querySelector('[data-personnel-list]');
+            if (event.key === 'Escape') {
+                list.hidden = true;
+                return;
+            }
+            const items = list.querySelectorAll('.personnel-search__item');
+            if (!items.length) return;
+            const results = list._results || [];
+            if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
+                event.preventDefault();
+                const idx = Array.prototype.indexOf.call(items, document.activeElement);
+                const next = event.key === 'ArrowDown'
+                    ? (idx + 1) % items.length
+                    : (idx - 1 + items.length) % items.length;
+                items[next].focus();
+            } else if (event.key === 'Enter') {
+                const active = document.activeElement;
+                if (active && active.classList.contains('personnel-search__item')) {
+                    event.preventDefault();
+                    const idx = Array.prototype.indexOf.call(items, active);
+                    choose(input || line.querySelector('input[name="product-beneficiary[]"]'), results[idx]);
+                }
+            }
+        });
+
+        root.addEventListener('click', function (event) {
+            const item = event.target.closest('.personnel-search__item');
+            if (!item) return;
+            const line = item.closest('.product-line');
+            const list = line.querySelector('[data-personnel-list]');
+            const results = list._results || [];
+            const idx = Array.prototype.indexOf.call(list.querySelectorAll('.personnel-search__item'), item);
+            choose(line.querySelector('input[name="product-beneficiary[]"]'), results[idx]);
+        });
+
+        /* Changement de magasin sur une ligne : le bénéficiaire est
+           réinitialisé (les suggestions dépendent du magasin) */
+        root.addEventListener('change', function (event) {
+            if (!event.target.matches('select[name="product-destination[]"]')) return;
+            const line = event.target.closest('.product-line');
+            const ben = line.querySelector('input[name="product-beneficiary[]"]');
+            if (ben) {
+                ben.value = '';
+                ben.placeholder = placeholderFor(line);
+                const list = line.querySelector('[data-personnel-list]');
+                if (list) list.hidden = true;
+            }
+            refresh();
+        });
+
+        document.addEventListener('click', function (event) {
+            if (event.target.closest('[data-personnel-input]')) return;
+            root.querySelectorAll('[data-personnel-list]').forEach(function (list) {
+                if (!list.hidden) list.hidden = true;
+            });
+        });
+
+        /* Après ajout / suppression d'une ligne (gérés ailleurs dans ce fichier) */
+        document.addEventListener('click', function (event) {
+            if (event.target.closest('[data-add-product-line]') ||
+                event.target.closest('[data-remove-product-line]')) {
+                setTimeout(refresh, 0);
+            }
+        });
+
+        refresh();
         return true;
     }
 

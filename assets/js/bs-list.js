@@ -47,10 +47,11 @@
         'Brouillon': 'badge--brouillon',
         'Soumis':    'badge--soumis',
         'En cours':  'badge--encours',
-        'Validé':    'badge--valide',
-        'Refusé':    'badge--refuse',
-        'Annulé':    'badge--annule',
-        'Clôturé':   'badge--cloture'
+        'Validé':      'badge--valide',
+        'Refusé':      'badge--refuse',
+        'Annulé':      'badge--annule',
+        'Clôturé':     'badge--cloture',
+        'Réceptionné': 'badge--info'
     };
 
     function badgeStatut(s) {
@@ -64,29 +65,38 @@
             : '<span class="badge-status badge--valide">Sans retour</span>';
     }
 
-    function actions(b) {
+    function actions(b, tab) {
         var html = '<a class="btn-mock btn-mock--outline btn-mock--sm" href="index.html?page=bs-detail" title="Voir le détail"><i class="fa-solid fa-eye"></i></a>';
         if (b.statut === 'Brouillon') {
             html += '<a class="btn-mock btn-mock--outline btn-mock--sm" href="index.html?page=bs-create" title="Modifier"><i class="fa-solid fa-pen"></i></a>' +
                     '<button class="btn-mock btn-mock--danger btn-mock--sm" type="button" title="Annuler ce brouillon"><i class="fa-solid fa-xmark"></i></button>';
+        }
+        /* Réception : uniquement sur les BS à recevoir, réservée au personnel
+           (l'administrateur suit en lecture seule). */
+        if (tab === 'recevoir' && currentRole() !== 'admin') {
+            if (window.S2M && window.S2M.receptions && S2M.receptions.isReceptionne(b.bs)) {
+                html = '<button class="btn-mock btn-mock--outline btn-mock--sm" type="button" disabled title="Réception déjà signalée"><i class="fa-solid fa-box-open"></i> Réceptionné</button>' + html;
+            } else {
+                html = '<button class="btn-mock btn-mock--outline btn-mock--sm" type="button" data-reception-signal="' + escapeHtml(b.bs) + '" data-modal-open="reception" title="Signaler la réception de ce bon"><i class="fa-solid fa-box-open"></i> Réceptionner</button>' + html;
+            }
         }
         return html;
     }
 
     /* Chaque ligne affiche le nom de l'initiateur ainsi que les
        magasins initiateur et bénéficiaire du bon. */
-    function rowHtml(b) {
+    function rowHtml(b, tab) {
         return '<tr>' +
             '<td><a class="cell-link" href="index.html?page=bs-detail">' + escapeHtml(b.bs) + '</a></td>' +
             '<td>' + escapeHtml(b.date) + '</td>' +
             '<td>' + escapeHtml(b.initiateur) + '</td>' +
-            '<td class="cell-muted"><i class="fa-solid fa-store text-muted2"></i> ' + escapeHtml(b.origine) + '</td>' +
+            '<td class="cell-muted">' + escapeHtml(b.origine) + '</td>' +
             '<td>' + escapeHtml(b.beneficiaire) + '</td>' +
-            '<td class="cell-muted"><i class="fa-solid fa-store text-muted2"></i> ' + escapeHtml(b.destination) + '</td>' +
+            '<td class="cell-muted">' + escapeHtml(b.destination) + '</td>' +
             '<td>' + badgeRetour(b.retour) + '</td>' +
             '<td>' + escapeHtml(b.motif) + '</td>' +
             '<td>' + badgeStatut(b.statut) + '</td>' +
-            '<td class="cell-actions">' + actions(b) + '</td>' +
+            '<td class="cell-actions">' + actions(b, tab) + '</td>' +
         '</tr>';
     }
 
@@ -97,20 +107,21 @@
         if (!tbody) return;
 
         var store = currentStore();
+        var admin = currentRole() === 'admin';
         if (!rows.length) {
             var msg = tab === 'envoyes'
-                ? 'Aucun BS envoyé par <strong>' + escapeHtml(store) + '</strong>'
-                : 'Aucun BS à recevoir pour <strong>' + escapeHtml(store) + '</strong>';
+                ? (admin ? 'Aucun BS envoyé.' : 'Aucun BS envoyé par <strong>' + escapeHtml(store) + '</strong>')
+                : (admin ? 'Aucun BS à recevoir.' : 'Aucun BS à recevoir pour <strong>' + escapeHtml(store) + '</strong>');
             tbody.innerHTML = '<tr><td colspan="10" class="cell-muted text-center py-3">' + msg + '.</td></tr>';
         } else {
-            tbody.innerHTML = rows.map(rowHtml).join('');
+            tbody.innerHTML = rows.map(function (b) { return rowHtml(b, tab); }).join('');
         }
 
         var res = root.querySelector('[data-bslist-results][data-tab="' + tab + '"]');
         if (res) {
             var nb = rows.length;
             res.textContent = nb + (nb > 1 ? ' résultat(s)' : ' résultat') +
-                ' / ' + total + (total > 1 ? ' bons' : ' bon') + ' pour ce magasin';
+                ' / ' + total + (total > 1 ? ' bons' : ' bon') + (admin ? ' au total' : ' pour ce magasin');
         }
         var count = root.querySelector('[data-bslist-count][data-tab="' + tab + '"]');
         if (count) count.textContent = total;
@@ -121,6 +132,11 @@
     function currentPerson() { return PEOPLE[0]; }
 
     function currentStore() { return currentPerson().store; }
+
+    function currentRole() {
+        var raw = new URLSearchParams(location.search).get('page') || '';
+        return raw.split('/')[0] || null;
+    }
 
     function filterList(list, tab) {
         var root = document.querySelector('[data-bslist]');
@@ -140,10 +156,33 @@
         });
     }
 
+    /* Un BS dont la réception a été signalée (localStorage, module
+       reception.js) passe au statut « Réceptionné » dans la liste. */
     function apply() {
         var root = document.querySelector('[data-bslist]');
         if (!root) return;
         var store = currentStore();
+
+        if (window.S2M && window.S2M.receptions) {
+            BS.forEach(function (b) {
+                if (S2M.receptions.isReceptionne(b.bs)) b.statut = 'Réceptionné';
+            });
+        }
+
+        var admin = currentRole() === 'admin';
+
+        /* L'administrateur consulte une liste unique de tous les BS (tous
+           magasins) : les onglets « envoyés / à recevoir » sont masqués. */
+        if (admin) {
+            var tabs = root.querySelector('.mock-tabs');
+            if (tabs) tabs.classList.add('is-hidden');
+            var envPanel = root.querySelector('[data-mock-panel="envoyes"]');
+            if (envPanel) envPanel.classList.add('is-active');
+            var recPanel = root.querySelector('[data-mock-panel="recevoir"]');
+            if (recPanel) recPanel.classList.remove('is-active');
+            renderPanel('envoyes', filterList(BS, 'envoyes'), BS.length);
+            return;
+        }
 
         var env = BS.filter(function (b) { return b.origine === store; });
         var rec = BS.filter(function (b) { return b.destination === store; });
@@ -188,4 +227,11 @@
         }, 100);
         setTimeout(function () { clearInterval(timer); }, 4000);
     }
+
+    /* Données partagées : le module réception (et la liste) consomment
+       la même liste de BS et le magasin de l'utilisateur connecté. */
+    window.S2M = window.S2M || {};
+    window.S2M.bsList = BS;
+    window.S2M.currentStore = currentStore;
+    window.S2M.bsListRefresh = apply;
 })();

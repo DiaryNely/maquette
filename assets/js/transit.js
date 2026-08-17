@@ -91,6 +91,27 @@
         return BS_DETAILS[bs] || DEFAULT_DETAIL;
     }
 
+    /* Trajet connu de chaque bon suivi : magasin initiateur → magasin
+       destinataire. Sert à la colonne « Trajet » de la vue admin. */
+    var BS_PARCOURS = {
+        'BS-2026-0142': 'Magasin central → Siège - Administration S2M',
+        'BS-2026-0141': 'Entrepôt S2M → Magasin central',
+        'BS-2026-0140': 'Magasin central → Entrepôt S2M',
+        'BS-2026-0139': 'Magasin central → Siège - Administration S2M',
+        'BS-2026-0135': 'Magasin central → Entrepôt S2M'
+    };
+
+    /* « Magasin central → Entrepôt S2M » à partir du parcours ; accepte
+       les flèches « → » et « -> » pour être tolérant sur les données. */
+    function trajetOf(bs) {
+        var s = BS_PARCOURS[bs] || detailsOf(bs).parcours || '';
+        var parts = String(s).split(/\s*(?:→|->|>)\s*/);
+        if (parts.length >= 2 && parts[0] && parts[1]) {
+            return parts[0] + ' → ' + parts[1];
+        }
+        return s || '—';
+    }
+
     /* --- Persistance --- */
 
     function load() {
@@ -238,9 +259,10 @@
     }
 
     /* Table récapitulative des transits groupés par BS (vue admin) :
-       une ligne par bon de sortie, avec son dernier passage, le nombre de
-       passages, la conformité et l'anomalie éventuelle. Un clic sur un BS
-       affiche le détail de son parcours dans la table data-transits-bs. */
+       une ligne par bon de sortie, avec son dernier passage, son trajet
+       (magasin initiateur → magasin destinataire), la conformité et
+       l'anomalie éventuelle. Un clic sur un BS affiche le détail de son
+       parcours dans la table data-transits-bs. */
     function renderBsSummary(container) {
         if (!container) return;
         var tbody = container.querySelector('tbody') || container;
@@ -294,7 +316,7 @@
             return '<tr>' +
                 '<td class="mono cell-strong">' + escapeHtml(r.bs) + '</td>' +
                 '<td>' + escapeHtml(r.dernier.magasin) + '</td>' +
-                '<td>' + r.passages + '</td>' +
+                '<td>' + escapeHtml(trajetOf(r.bs)) + '</td>' +
                 '<td>' + badge(r.dernier.resultat) + '</td>' +
                 '<td>' + (r.anomalie
                     ? '<a class="cell-link" href="index.html?page=anomalie-detail">' + escapeHtml(r.anomalie) + '</a>'
@@ -677,6 +699,7 @@
                 '</span></div>' +
             '<div class="d-flex flex-wrap" style="gap:10px;">' +
                 '<button class="btn-mock" type="button" data-confirm-passage><i class="fa-solid fa-circle-check"></i> Confirmer le passage</button>' +
+                receptionButtonHtml(t.bs) +
                 '<button class="btn-mock btn-mock--danger" type="button" data-modal-open="anomalie" data-bs="' + escapeHtml(t.bs) + '" data-magasin="' + escapeHtml(t.magasin) + '"><i class="fa-solid fa-triangle-exclamation"></i> Déclarer une anomalie</button>' +
             '</div>' +
             '<div data-confirm-result class="mt-3"></div>' +
@@ -691,6 +714,18 @@
                 confirmPassage(t, panel);
             });
         }
+    }
+
+    /* Bouton « Signaler la réception » après le scan : l'agent de transit
+       déclare la réception du bon scanné (modale + persistance gérées par
+       le module reception.js). Désactivé si la réception est déjà faite. */
+    function receptionButtonHtml(bs) {
+        var modal = document.querySelector('[data-modal="reception"]');
+        if (!modal) return '';
+        var done = window.S2M && window.S2M.receptions && S2M.receptions.isReceptionne(bs);
+        return done
+            ? '<button class="btn-mock btn-mock--outline" type="button" disabled><i class="fa-solid fa-box-open"></i> Réception déjà signalée</button>'
+            : '<button class="btn-mock btn-mock--outline" type="button" data-reception-signal="' + escapeHtml(bs) + '" data-modal-open="reception"><i class="fa-solid fa-box-open"></i> Signaler la réception</button>';
     }
 
     /* --- Boot --- */

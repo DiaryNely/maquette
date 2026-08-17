@@ -585,6 +585,10 @@
     color: var(--m-blue);
     font-weight: 600;
     text-decoration: none;
+    /* les références (N° BS, N° anomalie) restent sur une seule ligne :
+       sans nowrap, la colonne étroite les coupe en plusieurs lignes
+       (ex. « BS-2026-0142 » devient « BS- » / « 2026- » / « 0142 ») */
+    white-space: nowrap;
 }
 
 .table-mock .cell-link:hover {
@@ -618,6 +622,39 @@
     justify-content: center;
     margin-right: 8px;
     vertical-align: middle;
+}
+
+/* --- Contenu tronqué cliquable ---
+   Règle d'affichage compacte : chaque cellule de tableau est réduite à
+   une seule ligne ; un contenu trop long est tronqué avec « … » qui
+   reste du texte normal mais cliquable. Un clic déplie le contenu
+   complet dans la ligne, un second clic le replie. Aucun bouton
+   supplémentaire : la classe .cell-trunc est posée automatiquement par
+   mockup.js sur les cellules textuelles des tableaux .table-mock. */
+.table-mock .cell-trunc {
+    display: inline-block;
+    max-width: 220px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    vertical-align: middle;
+    color: inherit;
+}
+
+/* uniquement cliquable quand le contenu déborde réellement */
+.table-mock .cell-trunc.is-trunc {
+    cursor: pointer;
+}
+
+.table-mock .cell-trunc.is-trunc:hover {
+    color: var(--m-blue);
+}
+
+/* état déplié : le texte complet s'affiche, enveloppé dans la cellule
+   sans jamais élargir la colonne (même largeur plafonnée qu'au repli) */
+.table-mock .cell-trunc.is-open {
+    white-space: normal;
+    overflow-wrap: anywhere;
 }
 
 /* ==============================
@@ -2296,6 +2333,13 @@ body.modal-open {
     padding: 10px;
     font-size: 0.8rem;
     color: var(--m-faint);
+}
+
+/* suggestions dans une cellule du tableau des articles : liste plus
+   large que la cellule pour afficher nom, matricule et magasin */
+.table-mock .personnel-search__list {
+    min-width: 380px;
+    max-width: calc(100vw - 16px);
 }
 
 /* ==============================

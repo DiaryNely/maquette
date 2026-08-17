@@ -461,4 +461,150 @@
             .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
             .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
     }
+    /* --- 9. Cellules tronquées cliquables ---
+       Règle d'affichage compacte : les cellules textuelles des tableaux
+       .table-mock sont réduites à une seule ligne ; un contenu trop long
+       est tronqué avec « … » (texte normal, cliquable). Un clic déplie le
+       contenu complet dans la cellule, un second clic le replie. Aucun
+       bouton supplémentaire : la troncature est posée automatiquement. */
+    var TRUNC_SKIP = 'input, select, textarea, button, a, label, img, svg, .badge-status, .chip, .switch, .form-control, .cell-actions, .avatar-mini, .btn-mock';
+
+    /* Cellule tronquable : pas de contenu interactif ou riche (liens,
+       badges, champs…), uniquement du texte éventuellement précédé
+       d'une icône. Les matrices de configuration (admin) sont exclues. */
+    function truncEligible(td) {
+        if (td.closest('.matrix-mock')) return false;
+        if (td.querySelector(TRUNC_SKIP)) return false;
+        var kids = td.querySelectorAll('*');
+        for (var i = 0; i < kids.length; i++) {
+            var tag = kids[i].tagName;
+            if (tag !== 'I' && tag !== 'SPAN') return false;
+        }
+        return true;
+    }
+
+    /* Enveloppe le contenu textuel d'une cellule dans un span tronquable.
+       Les icônes éventuelles sont conservées à l'intérieur du span. */
+    function wrapTruncCell(td) {
+        if (td.getAttribute('data-trunc') === '1') return;
+        td.setAttribute('data-trunc', '1');
+        if (!truncEligible(td)) return;
+
+        var hasText = false;
+        var nodes = Array.prototype.slice.call(td.childNodes);
+        for (var i = 0; i < nodes.length; i++) {
+            if (nodes[i].nodeType === 3 && nodes[i].textContent.trim()) {
+                hasText = true;
+                break;
+            }
+        }
+        if (!hasText) return;
+
+        var span = document.createElement('span');
+        span.className = 'cell-trunc';
+        for (var j = 0; j < nodes.length; j++) {
+            span.appendChild(nodes[j]);
+        }
+        td.appendChild(span);
+
+        if (span.scrollWidth > span.clientWidth) span.classList.add('is-trunc');
+    }
+
+    function scanTrunc(root) {
+        root = root || document;
+        var tables = root.querySelectorAll('table.table-mock');
+        for (var t = 0; t < tables.length; t++) {
+            var tds = tables[t].querySelectorAll('tbody td');
+            for (var i = 0; i < tds.length; i++) {
+                wrapTruncCell(tds[i]);
+            }
+        }
+        /* re-mesure des spans déjà en place : panneaux, modales et
+           dropdowns <details> cachés au premier passage deviennent
+           tronquables une fois affichés */
+        var spans = root.querySelectorAll('.cell-trunc:not(.is-open)');
+        for (var j = 0; j < spans.length; j++) {
+            spans[j].classList.toggle('is-trunc', spans[j].scrollWidth > spans[j].clientWidth);
+        }
+    }
+
+    /* les tableaux sont souvent rendus après le chargement de la page
+       (bs-list, transit, admin) : on scanne dès qu'une cellule apparaît */
+    var truncTimer = null;
+
+    function scheduleTrunc() {
+        if (truncTimer) return;
+        truncTimer = requestAnimationFrame(function () {
+            truncTimer = null;
+            scanTrunc(document);
+        });
+    }
+
+    var truncObserver = new MutationObserver(function (mutations) {
+        var relevant = false;
+        for (var m = 0; m < mutations.length && !relevant; m++) {
+            var added = mutations[m].addedNodes;
+            for (var i = 0; i < added.length; i++) {
+                var n = added[i];
+                if (n.nodeType !== 1) continue;
+                if (n.matches && n.matches('table.table-mock, tbody, tr, td')) {
+                    relevant = true;
+                    break;
+                }
+                if (n.querySelector && n.querySelector('td')) {
+                    relevant = true;
+                    break;
+                }
+            }
+        }
+        if (relevant) scheduleTrunc();
+    });
+    truncObserver.observe(document.body, { childList: true, subtree: true });
+
+    /* clic sur un contenu tronqué : déplier / replier dans la ligne */
+    document.addEventListener('click', function (event) {
+        var span = event.target.closest('.cell-trunc.is-trunc');
+        if (!span) return;
+        span.classList.toggle('is-open');
+    });
+
+    /* re-mesure quand un contenu caché devient visible : onglets, modales */
+    document.addEventListener('click', function (event) {
+        if (event.target.closest('[data-mock-tab]') || event.target.closest('[data-modal-open]')) {
+            scheduleTrunc();
+        }
+    });
+
+    /* dropdowns natifs <details> (historiques, transits enregistrés) */
+    document.addEventListener('toggle', function (event) {
+        if (event.target.matches && event.target.matches('details')) scheduleTrunc();
+    });
+
+    scanTrunc(document);
+    window.S2M = window.S2M || {};
+    window.S2M.refreshTrunc = scanTrunc;
+
+    /* --- 10. Vue par rôle : l'administrateur ne participe pas à la
+       concertation (chatbox entre les entités responsables) sur le détail
+       d'une anomalie — il se limite au suivi (informations, historique,
+       délai). La carte [data-concert] est masquée pour le rôle admin. */
+    function currentRole() {
+        var raw = new URLSearchParams(location.search).get('page') || '';
+        return raw.split('/')[0] || null;
+    }
+
+    function applyRoleViews() {
+        if (currentRole() !== 'admin') return;
+        document.querySelectorAll('[data-concert]').forEach(function (card) {
+            card.hidden = true;
+        });
+    }
+
+    /* la page arrive asynchrone (app.js) : on ré-applique dès qu'un
+       nœud est ajouté, puis à chaque mutation du contenu */
+    var roleObserver = new MutationObserver(function () {
+        applyRoleViews();
+    });
+    roleObserver.observe(document.body, { childList: true, subtree: true });
+    applyRoleViews();
 })();

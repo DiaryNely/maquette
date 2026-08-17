@@ -4,7 +4,7 @@
     <div class="mock-page-head">
         <div class="mock-page-head__title">
             <h1><i class="fa-solid fa-plus text-teal"></i> Création d'un bon de sortie</h1>
-            <p>Formulaire de saisie : bénéficiaire, magasin de destination, moyen d'acheminement et articles à sortir.</p>
+            <p>Créez un seul bon de sortie et répartissez les articles entre plusieurs magasins et bénéficiaires.</p>
         </div>
         <div class="mock-page-head__actions">
             <button type="button" class="btn-mock" data-go-back><i class="fa-solid fa-arrow-left"></i> Retour</button>
@@ -12,38 +12,13 @@
     </div>
 
     <form>
-        <!-- 1. Informations générales & acheminement -->
+        <!-- 1. Informations de l'opération -->
         <div class="mock-card">
             <div class="mock-card__head">
-                <h2 class="mock-card__title"><i class="fa-solid fa-user-tie"></i> 1. Informations générales &amp; acheminement</h2>
+                <h2 class="mock-card__title"><i class="fa-solid fa-file-lines"></i> 1. Informations de l'opération</h2>
             </div>
             <div class="mock-card__body mock-card__body--compact">
                 <div class="form-grid-2">
-                    <div class="form-grid-2__item">
-                        <div class="form-group">
-                            <label for="bs-magasin-destination">Magasin de destination</label>
-                            <select class="form-control" id="bs-magasin-destination">
-                                <option selected>Siège - Administration S2M</option>
-                                <option>Magasin central</option>
-                                <option>Entrepôt S2M</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="form-grid-2__item">
-                        <div class="form-group">
-                            <label for="bs-beneficiaire">Bénéficiaire (personnel)</label>
-                            <div class="personnel-search" data-personnel-search>
-                                <input type="text" class="form-control" id="bs-beneficiaire" name="bs-beneficiaire"
-                                    placeholder="Rechercher un personnel du magasin…" autocomplete="off"
-                                    data-personnel-input>
-                                <ul class="personnel-search__list" data-personnel-list role="listbox" hidden></ul>
-                            </div>
-                            <p class="text-muted2 mb-0 mt-1" style="font-size:0.78rem;" data-personnel-hint>
-                                Saisissez le nom d'un personnel du magasin sélectionné — plusieurs personnes peuvent
-                                porter le même nom.
-                            </p>
-                        </div>
-                    </div>
                     <div class="form-grid-2__item">
                         <div class="form-group">
                             <label for="bs-date-souhaitee">Date de sortie souhaitée</label>
@@ -121,19 +96,29 @@
             </div>
         </div>
 
-        <!-- 2. Articles -->
+        <!-- 2. Articles et destinataires -->
         <div class="mock-card">
+            <div class="mock-card__head">
+                <div>
+                    <h2 class="mock-card__title"><i class="fa-solid fa-boxes-stacked"></i> 2. Articles et destinataires</h2>
+                    <p class="mb-0 text-muted2" style="font-size:0.78rem;">Chaque ligne précise sa destination et son bénéficiaire. Un bon peut donc couvrir plusieurs magasins.</p>
+                </div>
+                <button class="btn-mock btn-mock--sm" type="button" data-add-product-line>
+                    <i class="fa-solid fa-plus"></i> Ajouter un article
+                </button>
+            </div>
             <div class="mock-card__body mock-card__body--flush">
                 <div class="table-responsive">
-                    <table class="table-mock table-mock--products" style="min-width: 1100px;">
+                    <table class="table-mock table-mock--products" style="min-width: 1350px;">
                         <thead>
                             <tr>
                                 <th>Type</th>
                                 <th>Code</th>
                                 <th>Désignation</th>
-                                <th>Unité</th>
                                 <th>Quantité</th>
                                 <th>État</th>
+                                <th>Destination</th>
+                                <th>Bénéficiaire</th>
                                 <th>À rendre</th>
                                 <th>Date de retour prévue</th>
                                 <th class="text-center">
@@ -159,14 +144,6 @@
                                         placeholder="Ex. ART-001"></td>
                                 <td><input class="form-control form-control-sm" name="product-designation[]"
                                         value="Rame papier A4 80 g (paquet de 500)"></td>
-                                <td>
-                                    <select class="form-control form-control-sm" name="product-unit[]">
-                                        <option>Pièce</option>
-                                        <option selected>Rame</option>
-                                        <option>Boîte</option>
-                                        <option>Carton</option>
-                                    </select>
-                                </td>
                                 <td><input class="form-control form-control-sm" name="product-quantity[]" type="number"
                                         min="1" value="10"></td>
                                 <td>
@@ -176,6 +153,22 @@
                                         <option>Usage</option>
                                         <option>À réformer</option>
                                     </select>
+                                </td>
+                                <td>
+                                    <select class="form-control form-control-sm" name="product-destination[]">
+                                        <option value="" selected>Non précisée</option>
+                                        <option>Siège - Administration S2M</option>
+                                        <option>Magasin central</option>
+                                        <option>Entrepôt S2M</option>
+                                    </select>
+                                </td>
+                                <td>
+                                    <div class="personnel-search" data-line-personnel>
+                                        <input type="text" class="form-control form-control-sm" name="product-beneficiary[]"
+                                            placeholder="Rechercher le bénéficiaire…" autocomplete="off"
+                                            spellcheck="false" data-personnel-input>
+                                        <ul class="personnel-search__list" data-personnel-list role="listbox" hidden></ul>
+                                    </div>
                                 </td>
                                 <td class="text-center">
                                     <div class="custom-control custom-checkbox">
@@ -207,14 +200,6 @@
                                 </td>
                                 <td><input class="form-control form-control-sm" name="product-designation[]"
                                         value="Écran 24&quot; Dell P2422H"></td>
-                                <td>
-                                    <select class="form-control form-control-sm" name="product-unit[]">
-                                        <option selected>Pièce</option>
-                                        <option>Rame</option>
-                                        <option>Boîte</option>
-                                        <option>Carton</option>
-                                    </select>
-                                </td>
                                 <td><input class="form-control form-control-sm" name="product-quantity[]" type="number"
                                         min="1" value="2"></td>
                                 <td>
@@ -224,6 +209,22 @@
                                         <option>Usage</option>
                                         <option>À réformer</option>
                                     </select>
+                                </td>
+                                <td>
+                                    <select class="form-control form-control-sm" name="product-destination[]">
+                                        <option value="">Non précisée</option>
+                                        <option>Siège - Administration S2M</option>
+                                        <option>Magasin central</option>
+                                        <option selected>Entrepôt S2M</option>
+                                    </select>
+                                </td>
+                                <td>
+                                    <div class="personnel-search" data-line-personnel>
+                                        <input type="text" class="form-control form-control-sm" name="product-beneficiary[]"
+                                            placeholder="Rechercher le bénéficiaire…" autocomplete="off"
+                                            spellcheck="false" data-personnel-input value="Ranarivelo Tsiky">
+                                        <ul class="personnel-search__list" data-personnel-list role="listbox" hidden></ul>
+                                    </div>
                                 </td>
                                 <td class="text-center">
                                     <div class="custom-control custom-checkbox">
@@ -252,7 +253,7 @@
             <tr class="product-line">
                 <td>
                     <select class="form-control form-control-sm" name="product-type[]">
-                        <option>Article</option>
+                        <option value="" selected>Article</option>
                         <option>Info</option>
                         <option>Immo</option>
                         <option>Fourniture</option>
@@ -261,14 +262,6 @@
                 <td><input class="form-control form-control-sm" name="product-code[]" placeholder="Ex. ART-001"></td>
                 <td><input class="form-control form-control-sm" name="product-designation[]"
                         placeholder="Nom du produit"></td>
-                <td>
-                    <select class="form-control form-control-sm" name="product-unit[]">
-                        <option>Pièce</option>
-                        <option>Rame</option>
-                        <option>Boîte</option>
-                        <option>Carton</option>
-                    </select>
-                </td>
                 <td><input class="form-control form-control-sm" name="product-quantity[]" type="number" min="1"
                         value="1"></td>
                 <td>
@@ -278,6 +271,22 @@
                         <option>Usage</option>
                         <option>À réformer</option>
                     </select>
+                </td>
+                <td>
+                    <select class="form-control form-control-sm" name="product-destination[]">
+                        <option value="" selected>Non précisée</option>
+                        <option>Siège - Administration S2M</option>
+                        <option>Magasin central</option>
+                        <option>Entrepôt S2M</option>
+                    </select>
+                </td>
+                <td>
+                    <div class="personnel-search" data-line-personnel>
+                        <input type="text" class="form-control form-control-sm" name="product-beneficiary[]"
+                            placeholder="Rechercher le bénéficiaire…" autocomplete="off"
+                            spellcheck="false" data-personnel-input>
+                        <ul class="personnel-search__list" data-personnel-list role="listbox" hidden></ul>
+                    </div>
                 </td>
                 <td class="text-center">
                     <div class="custom-control custom-checkbox">
@@ -296,7 +305,7 @@
                 </td>
             </tr>
         </template>
-
+        
         <!-- Actions -->
         <div class="d-flex justify-content-center" style="margin-bottom: 28px;">
             <button class="btn-mock" type="submit"><i class="fa-solid fa-paper-plane"></i> Valider</button>
