@@ -47,9 +47,10 @@
             </div>
             <select class="form-control" data-retours-statut-select>
                 <option value="tous" selected>Tous les statuts de suivi</option>
-                <option value="En attente">En attente</option>
-                <option value="En retard">En retard</option>
-                <option value="Retourné">Retourné</option>
+                <option value="En attente">En attente (Chez le bénéficiaire)</option>
+                <option value="En retard">En retard de renvoi</option>
+                <option value="Retourné (Expédié)">Retour expédié (À réceptionner)</option>
+                <option value="Réceptionné (Clôturé)">Réceptionné (Clôturé)</option>
             </select>
             <div class="filter-spacer"></div>
             <button class="btn-refresh" data-retours-reset title="Réinitialiser la recherche"><i class="fa-solid fa-rotate"></i></button>
@@ -88,6 +89,26 @@
                 <button class="pagination-arrow" type="button" aria-label="Page précédente" disabled>←</button>
                 <span class="pagination-current" aria-current="page">1</span>
                 <button class="pagination-arrow" type="button" aria-label="Page suivante" disabled>→</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modale de Confirmation de Retour / Réception -->
+    <div class="modal-mock" data-modal="confirm-retour" hidden>
+        <div class="modal-mock__backdrop" data-modal-close></div>
+        <div class="modal-mock__dialog" role="dialog" aria-modal="true" aria-label="Confirmation">
+            <div class="modal-mock__head">
+                <h3 class="modal-mock__title" data-confirm-modal-title>Confirmer l'action</h3>
+                <button class="modal-mock__close" type="button" data-modal-close aria-label="Fermer">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            <div class="modal-mock__body">
+                <p data-confirm-modal-message>Êtes-vous sûr de vouloir effectuer cette action ?</p>
+                <div class="d-flex justify-content-end flex-wrap" style="gap:10px; margin-top:18px;">
+                    <button type="button" class="btn-mock" data-modal-close><i class="fa-solid fa-xmark"></i> Annuler</button>
+                    <button class="btn-mock" type="button" data-confirm-modal-btn><i class="fa-solid fa-check"></i> Confirmer</button>
+                </div>
             </div>
         </div>
     </div>
