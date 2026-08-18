@@ -5,7 +5,8 @@
         <div class="mock-page-head__title">
             <h1><i class="fa-solid fa-qrcode text-teal"></i> Scan &amp; Gestion du transit</h1>
             <p>Scannez le bon de sortie qui passe par votre secteur, vérifiez les quantités reçues de chaque article,
-                puis confirmez le passage ou déclarez une anomalie — chaque contrôle est enregistré avec l'identité de l'agent.</p>
+                confirmez le passage et la réception article par article, ou déclarez une anomalie — chaque contrôle
+                est enregistré avec l'identité de l'agent.</p>
         </div>
     </div>
     <div class="row">
@@ -30,7 +31,7 @@
                             <label for="scan-manual">Ou saisir la référence du BS</label>
                             <div class="input-group">
                                 <input type="text" class="form-control" id="scan-manual" data-scan-bs
-                                    placeholder="Ex. BS-2026-0142">
+                                    placeholder="Ex. BS-2026-0142" value="BS-2026-0142">
                                 <div class="input-group-append">
                                     <button class="btn-mock" type="submit"><i class="fa-solid fa-qrcode"></i> Scanner</button>
                                 </div>
@@ -89,7 +90,7 @@
                     </div>
 
                     <h3 class="mb-2" style="font-size:0.9rem; font-weight:700; color:var(--m-ink);">
-                        <i class="fa-solid fa-boxes-stacked text-teal"></i> Articles du bon — contrôlez les quantités reçues
+                        <i class="fa-solid fa-boxes-stacked text-teal"></i> Articles du bon — contrôlez les quantités reçues et confirmez la réception
                     </h3>
                     <div class="table-mock-wrap mb-3">
                         <table class="table-mock">
@@ -100,7 +101,9 @@
                                     <th>Qté attendue</th>
                                     <th>État</th>
                                     <th>À rendre</th>
+                                    <th>À recevoir</th>
                                     <th>Qté reçue</th>
+                                    <th>Réception</th>
                                 </tr>
                             </thead>
                             <tbody data-articles-body></tbody>
@@ -117,71 +120,6 @@
     </div>
 
 
-    <!-- Modale : déclarer la réception du BS scanné -->
-    <div class="modal-mock" data-modal="reception" hidden>
-        <div class="modal-mock__backdrop" data-modal-close></div>
-        <div class="modal-mock__dialog modal-mock__dialog--lg" role="dialog" aria-modal="true" aria-label="Signaler la réception">
-            <div class="modal-mock__head">
-                <h3 class="modal-mock__title"><i class="fa-solid fa-box-open text-teal"></i> Signaler la réception</h3>
-                <button class="modal-mock__close" type="button" data-modal-close aria-label="Fermer">
-                    <i class="fa-solid fa-xmark"></i>
-                </button>
-            </div>
-            <div class="modal-mock__body">
-                <p>Confirmez-vous la <strong>réception complète</strong> du bon
-                    <span class="mono" data-modal-bs>—</span> au magasin
-                    <strong data-modal-parcours>—</strong> ?</p>
-                <div class="info-grid mt-3">
-                    <div class="info-grid__item">
-                        <label>Bénéficiaire</label>
-                        <div class="value" data-modal-beneficiaire>—</div>
-                    </div>
-                    <div class="info-grid__item">
-                        <label>Motif</label>
-                        <div class="value" data-modal-motif>—</div>
-                    </div>
-                    <div class="info-grid__item">
-                        <label>Articles attendus</label>
-                        <div class="value" data-modal-articles>—</div>
-                    </div>
-                    <div class="info-grid__item">
-                        <label>Retour attendu</label>
-                        <div class="value" data-modal-retour>—</div>
-                    </div>
-                </div>
-
-                <h3 class="mt-3 mb-2" style="font-size:0.9rem; font-weight:700; color:var(--m-ink);">
-                    <i class="fa-solid fa-boxes-stacked text-teal"></i> Articles — confirmez les quantités reçues
-                </h3>
-                <div class="table-mock-wrap mb-2">
-                    <table class="table-mock">
-                        <thead>
-                            <tr>
-                                <th>Code</th>
-                                <th>Désignation</th>
-                                <th>Qté attendue</th>
-                                <th>Qté reçue</th>
-                            </tr>
-                        </thead>
-                        <tbody data-modal-articles-body></tbody>
-                    </table>
-                </div>
-                <div class="alert-mock alert-mock--danger is-hidden mb-2" data-reception-error>
-                    <i class="fa-solid fa-circle-exclamation"></i>
-                    <span>Renseignez la quantité reçue pour chaque article avant de confirmer.</span>
-                </div>
-                <p class="mb-0 mt-3" style="font-size:0.82rem; color:var(--m-muted);">
-                    <i class="fa-solid fa-circle-info text-teal"></i>
-                    La réception est horodatée et rattachée à votre identité. Le suivi des articles à rendre
-                    démarre à partir de cette date.
-                </p>
-                <div class="d-flex justify-content-end flex-wrap" style="gap:10px; margin-top:18px;">
-                    <button type="button" class="btn-mock btn-mock--outline" data-modal-close><i class="fa-solid fa-xmark"></i> Annuler</button>
-                    <button class="btn-mock" type="button" data-reception-confirm><i class="fa-solid fa-box-open"></i> Confirmer la réception</button>
-                </div>
-            </div>
-        </div>
-    </div>
 
     <!-- Modale : création d'une anomalie (déclenchée après un contrôle non conforme) -->
     <div class="modal-mock" data-modal="anomalie" hidden>

@@ -407,10 +407,14 @@
     });
     bootObserver.observe(document.body, { childList: true, subtree: true });
 
-    /* API partagée : la liste des BS reflète le statut réceptionné */
+    /* API partagée : la liste des BS reflète le statut réceptionné. record et
+       receptionOf sont utilisés par la page Scan & Transit, qui enregistre la
+       réception directement depuis la table du détail (article par article). */
     window.S2M = window.S2M || {};
     window.S2M.receptions = {
         isReceptionne: isReceptionne,
+        receptionOf: receptionOf,
+        record: record,
         list: receptions
     };
 })();

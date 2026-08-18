@@ -1,14 +1,19 @@
-# S2M-WEB — Fonctionnalités à implémenter
+# S2M-WEB — Fonctionnalités à implémenter (module « Bons de sortie / Transit »)
 
 > Document de spécification de la version réelle (avec backend). La maquette statique actuelle
 > (`pages/`, `assets/js/`) sert de référence visuelle et de parcours ; ce document décrit **ce qui
 > doit être développé** pour en faire une application de production.
+>
+> **Contexte :** S2M-WEB est l'application mère (authentification, magasins, personnel, comptes).
+> Ce périmètre est un **nouveau module** développé comme une application distincte, puis **intégré
+> à S2M-WEB** (session, référentiels, navigation, permissions). La déclinaison technique détaillée
+> est dans `BACKEND.md`.
 
 ---
 
 ## 1. Vue d'ensemble
 
-S2M-WEB est une application de gestion des **bons de sortie (BS)** pour une entreprise multi-magasins.
+Le module développé gère les **bons de sortie (BS)** pour une entreprise multi-magasins.
 
 **Principe métier central :** le parcours d'un BS n'est jamais planifié à l'avance. Le bon circule
 physiquement entre les magasins ; chaque magasin qui le reçoit **scanne le QR** à son arrivée, et ce
@@ -197,17 +202,22 @@ magasin), ou saisie manuelle de la référence du BS + bouton « Scanner ».
 **Étape 2 — Détails du bon** : les informations et les articles du bon ne s'affichent **qu'après le
 scan** (aucun détail pré-affiché). Après scan : initiateur, bénéficiaire, parcours
 (initiateur → destinataire), étape workflow, nombre d'articles/pièces, dont à rendre ; table des
-articles avec **quantité attendue** par ligne.
+articles avec **quantité attendue** par ligne. Chaque ligne indique si l'article **doit être
+réceptionné** (« À recevoir »), porte un champ **quantité reçue** et une case **« Reçu »** pour
+confirmer sa réception.
 
-**Contrôle / validation du passage** :
-- Pour chaque article, l'agent saisit la **quantité reçue** (champ non pré-rempli).
-- **« Confirmer le passage »** : si toutes les quantités reçues correspondent aux quantités
-  attendues → passage **« Conforme »** (clôturé) ; sinon → passage **« Non conforme »** avec la liste
-  des écarts (code, attendu, reçu) et le BS reste **bloqué** jusqu'à résolution de l'anomalie.
+**Deux validations distinctes et nécessaires (non redondantes)** :
+- **« Confirmer le passage »** : contrôle que le BS a bien franchi l'étape de transit. Si toutes
+  les quantités reçues correspondent aux quantités attendues → passage **« Conforme »** (clôturé) ;
+  sinon → passage **« Non conforme »** avec la liste des écarts (code, attendu, reçu) et le BS reste
+  **bloqué** jusqu'à résolution de l'anomalie.
+- **« Confirmer la réception »** : enregistre la réception **article par article** avec la
+  **quantité réellement reçue** de chaque ligne confirmée (case « Reçu »). Toutes les lignes
+  « À recevoir » doivent être confirmées avec leur quantité avant de considérer la réception
+  terminée ; une ligne non confirmée ou une quantité manquante bloque la validation (message dans
+  le panneau). « Réception déjà signalée » (désactivé) si déjà fait.
 - **« Déclarer une anomalie »** : ouvre la modale de déclaration (le BS concerné est déterminé par
   le contexte et affiché en lecture seule).
-- **« Signaler la réception »** : l'agent de transit peut déclarer la réception du BS scanné
-  (modale, voir § 6) ; « Réception déjà signalée » (désactivé) si déjà fait.
 
 **Parcours construit du BS** : table des passages du bon (numérotés, magasin, agent, date/heure,
 résultat), construite au fil des scans. **Historique des transits** (dépliable) : tous les passages
@@ -234,9 +244,14 @@ redondance avec la liste des BS) :
 - **Personnel (lambda)** : l'onglet **« BS à recevoir »** de la liste des BS porte, sur chaque bon
   reçu, une action **« Réceptionner »** (bouton de la ligne) ; une fois la réception signalée, le
   bouton devient « Réceptionné » (désactivé) et le statut du bon passe à **« Réceptionné »**.
-- **Scan & Transit** : après le scan d'un BS, l'agent dispose du bouton **« Signaler la réception »**
-  dans le panneau de contrôle (à côté de « Confirmer le passage » et « Déclarer une anomalie ») ;
-  « Réception déjà signalée » si le bon est déjà réceptionné.
+- **Scan & Transit** : après le scan d'un BS, l'agent dispose du bouton **« Confirmer la
+  réception »** dans le panneau de contrôle (à côté de « Confirmer le passage » et « Déclarer une
+  anomalie »). La réception s'effectue **dans la table du détail du transit**, article par article :
+  l'agent renseigne la **quantité réellement reçue** de chaque ligne « À recevoir » puis coche la
+  case **« Reçu »** ; le bouton enregistre alors la réception avec ces quantités par ligne. C'est
+  une validation distincte du « passage » (contrôle des quantités) : les deux sont nécessaires et
+  non redondantes — la réception identifie précisément quels articles ont été réellement reçus.
+  « Réception déjà signalée » (désactivé) si le bon est déjà réceptionné.
 - **Fiche détail d'un BS** : carte « Réception de la marchandise » avec le bouton « Signaler la
   réception » (masqué pour l'admin, qui suit en lecture seule).
 - **Administrateur** : lecture seule — aucun bouton de signalement (liste des BS unique, carte du

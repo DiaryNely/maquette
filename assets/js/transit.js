@@ -417,8 +417,10 @@
     }
 
     /* Carte « 2. Détails du bon » : remplit le titre, le badge, la grille
-       d'informations et la table des articles avec la saisie des quantités
-       reçues (contrôle des quantités par l'agent de transit). */
+       d'informations et la table des articles. Chaque ligne indique si
+       l'article doit être réceptionné (« À recevoir »), porte la saisie de la
+       quantité réellement reçue et une case « Reçu » pour confirmer sa
+       réception — deux validations distinctes (passage / réception). */
     function renderDetails(bs) {
         var card = document.querySelector('[data-detail-bs]');
         if (!card) return;
@@ -463,17 +465,40 @@
         var tbody = document.querySelector('[data-articles-body]');
         if (tbody) {
             tbody.innerHTML = d.articles.map(function (a) {
+                var aRecevoir = a.aRecevoir !== false;
                 return '<tr>' +
                     '<td class="mono">' + escapeHtml(a.code) + '</td>' +
                     '<td>' + escapeHtml(a.designation) + '</td>' +
                     '<td>' + a.qte + '</td>' +
                     '<td>' + escapeHtml(a.etat) + '</td>' +
                     '<td>' + (a.rendre
-                        ? '<span class="badge-status badge--info">Oui</span>'
-                        : '<span class="cell-muted">—</span>') + '</td>' +
+                        ? '<i class="fa-solid fa-check text-teal"></i>'
+                        : '<i class="fa-solid fa-xmark text-red"></i>') + '</td>' +
+                    '<td>' + (aRecevoir
+                        ? '<i class="fa-solid fa-check text-teal"></i>'
+                        : '<i class="fa-solid fa-xmark text-red"></i>') + '</td>' +
                     '<td><input type="number" class="form-control form-control-sm" style="width:84px;" min="0" data-qty data-expected="' + a.qte + '" data-code="' + escapeHtml(a.code) + '"></td>' +
+                    '<td>' + (aRecevoir
+                        ? '<div class="custom-control custom-checkbox mb-0" style="white-space:nowrap;">' +
+                            '<input type="checkbox" class="custom-control-input" id="receive-ok-' + escapeHtml(a.code) + '" data-receive-ok data-code="' + escapeHtml(a.code) + '">' +
+                            '<label class="custom-control-label" for="receive-ok-' + escapeHtml(a.code) + '">Reçu</label>' +
+                          '</div>'
+                        : '<span class="cell-muted">—</span>') + '</td>' +
                     '</tr>';
             }).join('');
+
+            /* Cocher « Reçu » exige une quantité reçue valide sur la ligne :
+               sinon on décoche et on demande la saisie. */
+            tbody.querySelectorAll('[data-receive-ok]').forEach(function (cb) {
+                cb.addEventListener('change', function () {
+                    if (!cb.checked) return;
+                    var qty = cb.closest('tr').querySelector('[data-qty]');
+                    if (qty && (qty.value.trim() === '' || isNaN(parseInt(qty.value, 10)))) {
+                        cb.checked = false;
+                        qty.focus();
+                    }
+                });
+            });
         }
     }
 
@@ -524,10 +549,84 @@
                 (conforme ? 'Passage confirmé' : 'Passage bloqué');
         }
 
-        // rafraîchit le badge, les listes et le KPI
-        renderDetails(t.bs);
+        // rafraîchit le badge (sans réinitialiser la table : les quantités
+        // saisies et les confirmations de réception par ligne sont conservées)
+        var badgeEl = document.querySelector('[data-detail-badge]');
+        if (badgeEl) badgeEl.innerHTML = badge(updated.resultat);
         refreshKpi();
         document.querySelectorAll('[data-transits-table]').forEach(renderAllTable);
+    }
+
+    /* « Confirmer la réception » : validation distincte du passage. Pour
+       chaque article confirmé (case « Reçu »), la quantité réellement reçue
+       est enregistrée ; la réception n'est terminée que lorsque chaque ligne
+       à recevoir est confirmée avec sa quantité. */
+    function confirmReception(t, panel) {
+        var receptions = window.S2M && window.S2M.receptions;
+        if (!receptions || receptions.isReceptionne(t.bs)) return;
+
+        var notConfirmed = [];
+        var badQty = [];
+        var lignes = [];
+
+        document.querySelectorAll('[data-articles-body] [data-receive-ok]').forEach(function (cb) {
+            var tr = cb.closest('tr');
+            var input = tr.querySelector('[data-qty]');
+            var code = cb.getAttribute('data-code');
+            var attendu = parseInt(input.getAttribute('data-expected'), 10);
+            if (!cb.checked) {
+                notConfirmed.push(code);
+                lignes.push({ code: code, attendu: attendu, recu: 0 });
+                return;
+            }
+            var recu = parseInt(input.value, 10);
+            if (isNaN(recu) || recu < 0) {
+                badQty.push(code);
+                lignes.push({ code: code, attendu: attendu, recu: isNaN(recu) ? 0 : recu });
+                return;
+            }
+            lignes.push({ code: code, attendu: attendu, recu: recu });
+        });
+
+        if (notConfirmed.length || badQty.length) {
+            var parts = [];
+            if (notConfirmed.length) parts.push('confirmez la réception de chaque article (case « Reçu »)');
+            if (badQty.length) parts.push('renseignez la quantité reçue pour ' + badQty.map(escapeHtml).join(', '));
+            var res = panel.querySelector('[data-confirm-result]');
+            if (res) {
+                res.className = 'alert-mock alert-mock--danger';
+                res.innerHTML = '<i class="fa-solid fa-circle-exclamation"></i>' +
+                    '<span>' + escapeHtml(parts.join(' et ')) + ' avant de valider.</span>';
+            }
+            return;
+        }
+
+        var r = receptions.record(t.bs, lignes);
+        showReceptionSuccess(panel, r);
+    }
+
+    function receptionTotal(lignes) {
+        return (lignes || []).reduce(function (sum, l) { return sum + (l.recu || 0); }, 0);
+    }
+
+    /* Bandeau de confirmation après l'enregistrement de la réception */
+    function showReceptionSuccess(panel, r) {
+        var prev = panel.querySelector('[data-reception-done]');
+        if (prev) prev.parentNode.removeChild(prev);
+        var div = document.createElement('div');
+        div.setAttribute('data-reception-done', '1');
+        div.className = 'alert-mock alert-mock--success mb-3';
+        div.innerHTML = '<i class="fa-solid fa-box-open"></i>' +
+            '<span>Réception <strong>signalée</strong> pour ' + escapeHtml(r.bs) + ' le ' + escapeHtml(r.date) +
+            ' par ' + escapeHtml(r.par) + ' — ' + receptionTotal(r.lignes) + ' pièce(s) reçue(s). ' +
+            'Le suivi des retours démarre à partir de cette date.</span>';
+        panel.insertBefore(div, panel.firstChild);
+        var btn = panel.querySelector('[data-confirm-reception]');
+        if (btn) {
+            btn.disabled = true;
+            btn.classList.add('btn-mock--outline');
+            btn.innerHTML = '<i class="fa-solid fa-box-open"></i> Réception confirmée';
+        }
     }
 
     function fillSelect(select, options, selected) {
@@ -694,8 +793,8 @@
             '<div class="alert-mock ' + (r.created ? 'alert-mock--success' : 'alert-mock--info') + ' mb-3">' +
                 '<i class="fa-solid ' + (r.created ? 'fa-circle-check' : 'fa-circle-info') + '"></i>' +
                 '<span>' + (r.created
-                    ? 'Transit <strong>' + escapeHtml(t.id) + '</strong> créé au magasin <strong>' + escapeHtml(t.magasin) + '</strong> — vérifiez les quantités reçues puis confirmez le passage.'
-                    : 'Un transit existe déjà pour ce BS à ce magasin : <strong>' + escapeHtml(t.id) + '</strong>. Vérifiez les quantités reçues puis confirmez le passage.') +
+                    ? 'Transit <strong>' + escapeHtml(t.id) + '</strong> créé au magasin <strong>' + escapeHtml(t.magasin) + '</strong> — vérifiez les quantités reçues, puis confirmez le passage et la réception.'
+                    : 'Un transit existe déjà pour ce BS à ce magasin : <strong>' + escapeHtml(t.id) + '</strong>. Vérifiez les quantités reçues, puis confirmez le passage et la réception.') +
                 '</span></div>' +
             '<div class="d-flex flex-wrap" style="gap:10px;">' +
                 '<button class="btn-mock" type="button" data-confirm-passage><i class="fa-solid fa-circle-check"></i> Confirmer le passage</button>' +
@@ -705,6 +804,8 @@
             '<div data-confirm-result class="mt-3"></div>' +
             '<p class="cell-muted mt-3 mb-0" style="font-size:0.82rem;">' +
                 '<i class="fa-solid fa-circle-info text-teal"></i> ' +
+                'Deux validations distinctes : « Confirmer le passage » contrôle les quantités par rapport au bon ; ' +
+                '« Confirmer la réception » enregistre, article par article, la quantité réellement reçue. ' +
                 'Chaque passage est horodaté et rattaché à l\'agent. Un écart de quantité rend le passage non conforme et bloque le BS jusqu\'à résolution de l\'anomalie.' +
             '</p>';
 
@@ -714,18 +815,24 @@
                 confirmPassage(t, panel);
             });
         }
+        var recvBtn = panel.querySelector('[data-confirm-reception]');
+        if (recvBtn) {
+            recvBtn.addEventListener('click', function () {
+                confirmReception(t, panel);
+            });
+        }
     }
 
-    /* Bouton « Signaler la réception » après le scan : l'agent de transit
-       déclare la réception du bon scanné (modale + persistance gérées par
-       le module reception.js). Désactivé si la réception est déjà faite. */
+    /* Bouton « Confirmer la réception » après le scan : enregistre la
+       réception du bon scanné avec la quantité réellement reçue pour chaque
+       article confirmé (case « Reçu » de la table du détail, persistance
+       gérée par reception.js). Désactivé si la réception est déjà faite. */
     function receptionButtonHtml(bs) {
-        var modal = document.querySelector('[data-modal="reception"]');
-        if (!modal) return '';
-        var done = window.S2M && window.S2M.receptions && S2M.receptions.isReceptionne(bs);
+        if (!window.S2M || !window.S2M.receptions) return '';
+        var done = S2M.receptions.isReceptionne(bs);
         return done
             ? '<button class="btn-mock btn-mock--outline" type="button" disabled><i class="fa-solid fa-box-open"></i> Réception déjà signalée</button>'
-            : '<button class="btn-mock btn-mock--outline" type="button" data-reception-signal="' + escapeHtml(bs) + '" data-modal-open="reception"><i class="fa-solid fa-box-open"></i> Signaler la réception</button>';
+            : '<button class="btn-mock btn-mock--outline" type="button" data-confirm-reception><i class="fa-solid fa-box-open"></i> Confirmer la réception</button>';
     }
 
     /* --- Boot --- */
