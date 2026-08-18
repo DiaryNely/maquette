@@ -105,15 +105,16 @@ Le formulaire de création est organisé en deux sections :
   contact, moyen de transport), qui s'ajoute ensuite aux suggestions. Le moyen sélectionné est repris
   sur la fiche détail du BS.
 
-**2. Articles et destinataires**
+**2. Articles**
+- Un **sélecteur « Magasin destinataire »** (liste déroulante, obligatoire) dans la section « Informations
+  de l'opération » fixe le magasin de destination pour **l'ensemble du BS**. Un seul magasin peut être
+  sélectionné.
 - Une **table d'articles** : chaque ligne porte son **type** (Article / Info / Immo / Fourniture /
-  Autre), **code**, **désignation**, **quantité**, **état** (Neuf / Bon état / Usage / À réformer),
-  sa **destination** (magasin, « Non précisée » possible) et son **bénéficiaire**.
-- **Destination et bénéficiaire par ligne** : un seul BS peut couvrir plusieurs magasins et plusieurs
-  bénéficiaires. Le champ bénéficiaire est une **recherche avec suggestions filtrées selon le
-  magasin choisi sur la ligne** ; la valeur retenue est le simple nom de la personne (jamais une
-  concaténation). Un **bandeau récapitule la répartition** (ex. « 3 articles répartis entre : 2 ×
-  Magasin central, 1 × Entrepôt S2M. 2 bénéficiaires renseignés ») pour la validation.
+  Autre), **code**, **désignation**, **quantité**, **état** (Neuf / Bon état / Usage / À réformer)
+- **Bénéficiaire unique** : un seul champ bénéficiaire pour tout le BS, dans la section « Informations
+  de l'opération ». C'est une **recherche avec suggestions filtrées par le magasin destinataire** ;
+  la valeur retenue est le simple nom de la personne (jamais une concaténation). Lorsque le magasin
+  destination change, le bénéficiaire est réinitialisé.
 - **À rendre** (case à cocher OUI) : si coché, saisie de la **date de retour prévue** sur la ligne.
 - Ajout de lignes (« Ajouter un article » / bouton + de l'en-tête de table) et suppression par ligne ;
   le nombre minimal de lignes est 1.
@@ -157,8 +158,7 @@ précédent/suivant).
   moyen d'acheminement, motif, date de sortie, date limite de retour (avec nombre d'articles à
   rendre).
 - **Articles et suivi des retours** : table par ligne (type, code, désignation, unité, quantité,
-  état, **destination**, **bénéficiaire**, à rendre, retour prévu, **suivi du retour**) + chips
-  récapitulatifs (nombre de destinations, de bénéficiaires, d'articles à rendre). Les retours
+  état, à rendre, retour prévu, **suivi du retour**) + chip nombre d'articles à rendre. Les retours
   partiels ou complets sont enregistrés à la réception (quantité restituée, état constaté, date
   effective) ; un retour non effectué à la date prévue déclenche une alerte.
 - **Workflow de validation** : 5 étapes visuelles — **Initiateur → Responsable → Sécurité → Transit →
@@ -388,9 +388,8 @@ transit** (« Déclarer une anomalie ») :
 - **Personnel** : nom, matricule, magasin/entité, rôle (catalogue des bénéficiaires et des agents).
 - **Moyens d'acheminement** : nom (transporteur/société), contact, moyen de transport.
 - **Bons de sortie** : numéro, initiateur, dates (création, sortie souhaitée, limite de retour),
-  statut (brouillon, soumis, en cours, validé, refusé, annulé, clôturé, réceptionné), retour attendu,
-  moyen d'acheminement, motif, commentaire, lignes (type, code, désignation, quantité, état,
-  **destination, bénéficiaire et date de retour prévue par article**), QR.
+  statut (brouillon, soumis, en cours, validé, refusé, annulé, clôturé, réceptionné), retour attendu,   moyen d'acheminement, motif, commentaire, **magasin_destination** (unique), **bénéficiaire** (unique),
+   lignes (type, code, désignation, quantité, état, date de retour prévue si à rendre), QR.
 - **Transits / passages** : numéro, BS, magasin, agent, date/heure d'arrivée, statut (à contrôler /
   conforme / non conforme), note, anomalie liée.
 - **Réceptions** : BS, date/heure, déclarant (matricule), magasin de réception, lignes (code,
@@ -412,8 +411,7 @@ backend :
 - **`assets/js/app.js`** — routage des pages par paramètre d'URL, portails par rôle (préfixe),
   préfixage automatique des liens internes, garde d'accès par rôle, en-tête utilisateur simulé.
 - **`assets/js/demande.js`** — création de BS : lignes d'articles (ajout/suppression), case
-  « À rendre » + date de retour, recherche de personnel avec suggestions, recherche et ajout de
-  moyens d'acheminement, répartition multi-destination (bandeau récapitulatif).
+  « À rendre » + date de retour, recherche de personnel avec suggestions, recherche et ajout de   moyens d'acheminement, bénéficiaire unique filtré par le magasin destinataire.
 - **`assets/js/bs-list.js`** — liste des BS : deux onglets envoyés / à recevoir, filtres (recherche,
   statut, retour), compteurs, badges, actions par ligne, liste unique admin (tous les BS), statut « Réceptionné ».
 - **`assets/js/transit.js`** — scan : création du transit (persistance `s2m.transits.v1`), contrôle

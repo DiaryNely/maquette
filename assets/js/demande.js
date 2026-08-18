@@ -120,13 +120,13 @@ document.addEventListener('change', function (event) {
         function choose(p) {
             input.value = p.nom;
             list.hidden = true;
-            hint.innerHTML = '<i class="fa-solid fa-circle-check text-teal"></i> ' +
+            if (hint) hint.innerHTML = '<i class="fa-solid fa-circle-check text-teal"></i> ' +
                 escapeHtml(p.nom) + ' — ' + escapeHtml(p.matricule) + ' · ' + escapeHtml(p.role) + ' · ' + escapeHtml(p.magasin);
         }
 
         function resetSelection() {
             input.value = '';
-            hint.textContent = HINT_DEFAULT;
+            if (hint) hint.textContent = HINT_DEFAULT;
             list.hidden = true;
         }
 
@@ -227,8 +227,8 @@ document.addEventListener('change', function (event) {
 
         const input = root.querySelector('[data-ach-input]');
         const list = root.querySelector('[data-ach-list]');
+        if (!input || !list) return false;
         const hint = document.querySelector('[data-ach-hint]');
-        if (!input || !list || !hint) return false;
 
         const addBtn = document.querySelector('[data-ach-add]');
         const saveBtn = document.querySelector('[data-ach-save]');
@@ -259,7 +259,7 @@ document.addEventListener('change', function (event) {
         function choose(a) {
             input.value = labelOf(a);
             list.hidden = true;
-            hint.innerHTML = '<i class="fa-solid fa-circle-check text-teal"></i> ' +
+            if (hint) hint.innerHTML = '<i class="fa-solid fa-circle-check text-teal"></i> ' +
                 escapeHtml(a.nom) + ' — ' + escapeHtml(a.transport) + ' · ' + escapeHtml(a.contact);
         }
 
@@ -311,7 +311,7 @@ document.addEventListener('change', function (event) {
                 const transport = document.getElementById('ach-transport');
                 if (!nom || !contact || !transport) return;
                 if (!nom.value.trim() || !contact.value.trim()) {
-                    hint.innerHTML = '<i class="fa-solid fa-circle-exclamation"></i> ' +
+                    if (hint) hint.innerHTML = '<i class="fa-solid fa-circle-exclamation"></i> ' +
                         'Renseignez au minimum le nom complet et le contact du nouveau moyen.';
                     return;
                 }
@@ -339,23 +339,25 @@ document.addEventListener('change', function (event) {
 })();
 
 /* ============================================================
-   DESTINATION PAR LIGNE — chaque ligne d'article peut avoir
-   son propre magasin destinataire ET son propre personnel
-   destinataire (bénéficiaire). Le bon ne porte pas de destination
-   principale : chaque ligne est autonome. Le champ bénéficiaire
-   est une recherche avec suggestions (composant personnel-search)
-   filtrée par le magasin choisi sur la ligne ; la valeur retenue
-   est le simple nom de la personne, jamais une concaténation.
-   Un bandeau récapitule la répartition pour la validation.
+   BÉNÉFICIAIRE UNIQUE — le bon de sortie est associé à un seul
+   magasin destinataire ET un seul bénéficiaire, tous deux
+   sélectionnés dans la section « Informations de l'opération ».
+   Le champ bénéficiaire est une recherche avec suggestions
+   filtrée par le personnel du magasin destination choisi.
+   Lorsque le magasin change, le bénéficiaire est réinitialisé.
    ============================================================ */
 (function () {
     'use strict';
 
     function boot() {
-        const root = document.querySelector('[data-product-lines]');
-        const banner = document.querySelector('[data-multi-dest-banner]');
-        const text = banner ? banner.querySelector('[data-multi-dest-text]') : null;
-        if (!root || !banner || !text) return false;
+        const destSelect = document.getElementById('bs-magasin-destination');
+        const root = document.querySelector('[data-bs-beneficiary-search]');
+        if (!destSelect || !root) return false;
+
+        const input = root.querySelector('[data-bs-beneficiary-input]');
+        const list = root.querySelector('[data-bs-beneficiary-list]');
+        if (!input || !list) return false;
+        const hint = document.querySelector('[data-bs-beneficiary-hint]');
 
         const PERSONNEL = (window.S2M && window.S2M.personnel) || [];
 
@@ -369,14 +371,24 @@ document.addEventListener('change', function (event) {
             return String(s).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
         }
 
-        function storeOf(line) {
-            const sel = line.querySelector('select[name="product-destination[]"]');
-            return sel && sel.value ? sel.value : '';
+        function currentStore() {
+            return destSelect.value || '';
         }
 
-        function placeholderFor(line) {
-            const store = storeOf(line);
-            return store ? 'Personnel de « ' + store + ' »' : 'Choisissez d\'abord un magasin';
+        const HINT_DEFAULT = "Sélectionnez d'abord le magasin destinataire, puis saisissez un nom pour filtrer le personnel de ce magasin.";
+
+        function updateState() {
+            const store = currentStore();
+            if (!store) {
+                input.readOnly = true;
+                input.value = '';
+                input.placeholder = 'Sélectionnez d'abord un magasin…';
+                if (hint) hint.textContent = HINT_DEFAULT;
+                list.hidden = true;
+            } else {
+                input.readOnly = false;
+                input.placeholder = 'Personnel de « ' + store + ' »';
+            }
         }
 
         function peopleOf(store, query) {
@@ -387,17 +399,11 @@ document.addEventListener('change', function (event) {
             });
         }
 
-        /* Affiche les suggestions de la ligne sous le champ, au-dessus
-           de tout conteneur défilant (position fixe par rapport au
-           viewport). La valeur sélectionnée reste le simple nom. */
-        function renderList(input, query) {
-            const line = input.closest('.product-line');
-            const list = line.querySelector('[data-personnel-list]');
-            const store = storeOf(line);
-
+        function render(query) {
+            const store = currentStore();
             if (!store) {
                 list.innerHTML = '<li class="personnel-search__empty">' +
-                    'Choisissez d\'abord un magasin de destination.</li>';
+                    'Sélectionnez d\'abord un magasin destinataire.</li>';
                 list.hidden = false;
                 return;
             }
@@ -416,142 +422,73 @@ document.addEventListener('change', function (event) {
                         '</li>';
                 }).join('');
             }
-
-            const rect = input.getBoundingClientRect();
-            list.style.position = 'fixed';
-            list.style.top = (rect.bottom + 4) + 'px';
-            list.style.left = rect.left + 'px';
-            list.style.right = 'auto';
             list.hidden = false;
         }
 
-        function choose(input, p) {
+        function choose(p) {
             input.value = p.nom;
-            const list = input.closest('.personnel-search').querySelector('[data-personnel-list]');
             list.hidden = true;
-            refresh();
+            if (hint) hint.innerHTML = '<i class="fa-solid fa-circle-check text-teal"></i> ' +
+                escapeHtml(p.nom) + ' — ' + escapeHtml(p.matricule) + ' · ' + escapeHtml(p.role) + ' · ' + escapeHtml(p.magasin);
         }
 
-        function refresh() {
-            const byDest = {};
-            let assigned = 0;
-            let beneficiaries = 0;
-            root.querySelectorAll('.product-line').forEach(function (line) {
-                const sel = line.querySelector('select[name="product-destination[]"]');
-                const ben = line.querySelector('input[name="product-beneficiary[]"]');
-                const dest = sel && sel.value;
-                if (dest) {
-                    assigned += 1;
-                    byDest[dest] = (byDest[dest] || 0) + 1;
-                }
-                const custom = ben && ben.value.trim();
-                if (custom) beneficiaries += 1;
-            });
-
-            const parts = [];
-            if (assigned > 0) {
-                const list = Object.keys(byDest)
-                    .map(function (d) { return byDest[d] + ' × ' + d; })
-                    .join(', ');
-                parts.push(assigned + ' article' + (assigned > 1 ? 's' : '') +
-                    ' réparti' + (assigned > 1 ? 's' : '') + ' entre : ' + list);
-            }
-            if (beneficiaries > 0) {
-                parts.push(beneficiaries + ' bénéficiaire' + (beneficiaries > 1 ? 's' : '') + ' renseigné' + (beneficiaries > 1 ? 's' : ''));
-            }
-
-            if (parts.length) {
-                text.textContent = parts.join('. ') + '.';
-                banner.hidden = false;
-            } else {
-                banner.hidden = true;
-            }
+        function resetSelection() {
+            input.value = '';
+            if (hint) hint.textContent = HINT_DEFAULT;
+            list.hidden = true;
         }
 
-        /* Délégation sur l'ensemble des lignes, y compris les nouvelles */
-        root.addEventListener('focusin', function (event) {
-            if (!event.target.matches('input[name="product-beneficiary[]"]')) return;
-            event.target.placeholder = placeholderFor(event.target.closest('.product-line'));
-            renderList(event.target, '');
+        /* Quand le magasin destination change, le bénéficiaire est réinitialisé */
+        destSelect.addEventListener('change', function () {
+            resetSelection();
+            updateState();
         });
 
-        root.addEventListener('input', function (event) {
-            if (!event.target.matches('input[name="product-beneficiary[]"]')) return;
-            renderList(event.target, event.target.value);
-            refresh();
+        input.addEventListener('focus', function () {
+            if (input.readOnly) return;
+            render(input.value);
+        });
+        input.addEventListener('input', function () {
+            if (input.readOnly) return;
+            render(input.value);
         });
 
-        root.addEventListener('keydown', function (event) {
-            const input = event.target.closest('input[name="product-beneficiary[]"]');
-            const item = event.target.closest('.personnel-search__item');
-            if (!input && !item) return;
-            const line = (input || item).closest('.product-line');
-            const list = line.querySelector('[data-personnel-list]');
+        input.addEventListener('keydown', function (event) {
             if (event.key === 'Escape') {
                 list.hidden = true;
                 return;
             }
             const items = list.querySelectorAll('.personnel-search__item');
             if (!items.length) return;
-            const results = list._results || [];
-            if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
+            const idx = Array.prototype.indexOf.call(items, document.activeElement);
+            if (event.key === 'ArrowDown') {
                 event.preventDefault();
-                const idx = Array.prototype.indexOf.call(items, document.activeElement);
-                const next = event.key === 'ArrowDown'
-                    ? (idx + 1) % items.length
-                    : (idx - 1 + items.length) % items.length;
-                items[next].focus();
+                items[(idx + 1) % items.length].focus();
+            } else if (event.key === 'ArrowUp') {
+                event.preventDefault();
+                items[(idx - 1 + items.length) % items.length].focus();
             } else if (event.key === 'Enter') {
+                event.preventDefault();
                 const active = document.activeElement;
                 if (active && active.classList.contains('personnel-search__item')) {
-                    event.preventDefault();
-                    const idx = Array.prototype.indexOf.call(items, active);
-                    choose(input || line.querySelector('input[name="product-beneficiary[]"]'), results[idx]);
+                    choose(list._results[Array.prototype.indexOf.call(items, active)]);
                 }
             }
         });
 
-        root.addEventListener('click', function (event) {
+        list.addEventListener('click', function (event) {
             const item = event.target.closest('.personnel-search__item');
             if (!item) return;
-            const line = item.closest('.product-line');
-            const list = line.querySelector('[data-personnel-list]');
-            const results = list._results || [];
             const idx = Array.prototype.indexOf.call(list.querySelectorAll('.personnel-search__item'), item);
-            choose(line.querySelector('input[name="product-beneficiary[]"]'), results[idx]);
-        });
-
-        /* Changement de magasin sur une ligne : le bénéficiaire est
-           réinitialisé (les suggestions dépendent du magasin) */
-        root.addEventListener('change', function (event) {
-            if (!event.target.matches('select[name="product-destination[]"]')) return;
-            const line = event.target.closest('.product-line');
-            const ben = line.querySelector('input[name="product-beneficiary[]"]');
-            if (ben) {
-                ben.value = '';
-                ben.placeholder = placeholderFor(line);
-                const list = line.querySelector('[data-personnel-list]');
-                if (list) list.hidden = true;
-            }
-            refresh();
+            choose(list._results[idx]);
         });
 
         document.addEventListener('click', function (event) {
-            if (event.target.closest('[data-personnel-input]')) return;
-            root.querySelectorAll('[data-personnel-list]').forEach(function (list) {
-                if (!list.hidden) list.hidden = true;
-            });
+            if (list.hidden) return;
+            if (!event.target.closest('[data-bs-beneficiary-search]')) list.hidden = true;
         });
 
-        /* Après ajout / suppression d'une ligne (gérés ailleurs dans ce fichier) */
-        document.addEventListener('click', function (event) {
-            if (event.target.closest('[data-add-product-line]') ||
-                event.target.closest('[data-remove-product-line]')) {
-                setTimeout(refresh, 0);
-            }
-        });
-
-        refresh();
+        updateState();
         return true;
     }
 

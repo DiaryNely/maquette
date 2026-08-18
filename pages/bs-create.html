@@ -4,7 +4,6 @@
     <div class="mock-page-head">
         <div class="mock-page-head__title">
             <h1><i class="fa-solid fa-plus text-teal"></i> Création d'un bon de sortie</h1>
-            <p>Créez un seul bon de sortie et répartissez les articles entre plusieurs magasins et bénéficiaires.</p>
         </div>
         <div class="mock-page-head__actions">
             <button type="button" class="btn-mock" data-go-back><i class="fa-solid fa-arrow-left"></i> Retour</button>
@@ -33,6 +32,37 @@
                         </div>
                     </div>
 
+                    <!-- Magasin destinataire (unique pour tout le BS) -->
+                    <div class="form-grid-2__item">
+                        <div class="form-group">
+                            <label for="bs-magasin-destination">Magasin destinataire</label>
+                            <select class="form-control" id="bs-magasin-destination" required>
+                                <option value="" selected>— Choisir un magasin —</option>
+                                <option>Siège - Administration S2M</option>
+                                <option>Magasin central</option>
+                                <option>Entrepôt S2M</option>
+                                <option>Plateforme logistique</option>
+                                <option>Poste de contrôle</option>
+                                <option>Barrière de sortie</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Bénéficiaire unique (filtré par le magasin destinataire) -->
+                    <div class="form-grid-2__item">
+                        <div class="form-group">
+                            <label for="bs-beneficiaire">Bénéficiaire</label>
+                            <div class="ach-row">
+                                <div class="ach-search" data-bs-beneficiary-search>
+                                    <input type="text" class="form-control" id="bs-beneficiaire"
+                                        placeholder="Rechercher le bénéficiaire…" autocomplete="off"
+                                        data-bs-beneficiary-input readonly>
+                                    <ul class="personnel-search__list" data-bs-beneficiary-list role="listbox" hidden></ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                     <!-- Moyen d'acheminement : recherche + suggestions, bouton Ajouter -->
                     <div class="form-grid-2__item form-grid-2__item--full">
                         <div class="form-group">
@@ -49,10 +79,6 @@
                                     <i class="fa-solid fa-plus"></i> Ajouter
                                 </button>
                             </div>
-                            <p class="text-muted2 mb-0 mt-1" style="font-size:0.78rem;" data-ach-hint>
-                                Saisissez un nom, un contact ou un moyen de transport pour filtrer les moyens
-                                enregistrés, ou cliquez sur « Ajouter » pour en créer un nouveau.
-                            </p>
                         </div>
                     </div>
 
@@ -100,8 +126,7 @@
         <div class="mock-card">
             <div class="mock-card__head">
                 <div>
-                    <h2 class="mock-card__title"><i class="fa-solid fa-boxes-stacked"></i> 2. Articles et destinataires</h2>
-                    <p class="mb-0 text-muted2" style="font-size:0.78rem;">Chaque ligne précise sa destination et son bénéficiaire. Un bon peut donc couvrir plusieurs magasins.</p>
+                    <h2 class="mock-card__title"><i class="fa-solid fa-boxes-stacked"></i> 2. Articles</h2>
                 </div>
                 <button class="btn-mock btn-mock--sm" type="button" data-add-product-line>
                     <i class="fa-solid fa-plus"></i> Ajouter un article
@@ -117,8 +142,6 @@
                                 <th>Désignation</th>
                                 <th>Quantité</th>
                                 <th>État</th>
-                                <th>Destination</th>
-                                <th>Bénéficiaire</th>
                                 <th>À rendre</th>
                                 <th>Date de retour prévue</th>
                                 <th class="text-center">
@@ -153,22 +176,6 @@
                                         <option>Usage</option>
                                         <option>À réformer</option>
                                     </select>
-                                </td>
-                                <td>
-                                    <select class="form-control form-control-sm" name="product-destination[]">
-                                        <option value="" selected>Non précisée</option>
-                                        <option>Siège - Administration S2M</option>
-                                        <option>Magasin central</option>
-                                        <option>Entrepôt S2M</option>
-                                    </select>
-                                </td>
-                                <td>
-                                    <div class="personnel-search" data-line-personnel>
-                                        <input type="text" class="form-control form-control-sm" name="product-beneficiary[]"
-                                            placeholder="Rechercher le bénéficiaire…" autocomplete="off"
-                                            spellcheck="false" data-personnel-input>
-                                        <ul class="personnel-search__list" data-personnel-list role="listbox" hidden></ul>
-                                    </div>
                                 </td>
                                 <td class="text-center">
                                     <div class="custom-control custom-checkbox">
@@ -209,22 +216,6 @@
                                         <option>Usage</option>
                                         <option>À réformer</option>
                                     </select>
-                                </td>
-                                <td>
-                                    <select class="form-control form-control-sm" name="product-destination[]">
-                                        <option value="">Non précisée</option>
-                                        <option>Siège - Administration S2M</option>
-                                        <option>Magasin central</option>
-                                        <option selected>Entrepôt S2M</option>
-                                    </select>
-                                </td>
-                                <td>
-                                    <div class="personnel-search" data-line-personnel>
-                                        <input type="text" class="form-control form-control-sm" name="product-beneficiary[]"
-                                            placeholder="Rechercher le bénéficiaire…" autocomplete="off"
-                                            spellcheck="false" data-personnel-input value="Ranarivelo Tsiky">
-                                        <ul class="personnel-search__list" data-personnel-list role="listbox" hidden></ul>
-                                    </div>
                                 </td>
                                 <td class="text-center">
                                     <div class="custom-control custom-checkbox">
@@ -271,22 +262,6 @@
                         <option>Usage</option>
                         <option>À réformer</option>
                     </select>
-                </td>
-                <td>
-                    <select class="form-control form-control-sm" name="product-destination[]">
-                        <option value="" selected>Non précisée</option>
-                        <option>Siège - Administration S2M</option>
-                        <option>Magasin central</option>
-                        <option>Entrepôt S2M</option>
-                    </select>
-                </td>
-                <td>
-                    <div class="personnel-search" data-line-personnel>
-                        <input type="text" class="form-control form-control-sm" name="product-beneficiary[]"
-                            placeholder="Rechercher le bénéficiaire…" autocomplete="off"
-                            spellcheck="false" data-personnel-input>
-                        <ul class="personnel-search__list" data-personnel-list role="listbox" hidden></ul>
-                    </div>
                 </td>
                 <td class="text-center">
                     <div class="custom-control custom-checkbox">

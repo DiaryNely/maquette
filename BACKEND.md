@@ -95,7 +95,7 @@
 
 ### 3.1 Création (`bs-create`)
 
-**Logique métier** — un BS est un ensemble de lignes d'articles, chaque ligne étant autonome (type, code, désignation, quantité, état, **destination**, **bénéficiaire**, **à rendre**, **date de retour prévue**). Il n'y a pas de destination principale.
+**Logique métier** — un BS est associé à **un seul magasin destinataire** et **un seul bénéficiaire** (sélectionnés dans l'en-tête du formulaire). Chaque ligne d'article porte son type, code, désignation, quantité, état, et éventuellement **à rendre** avec **date de retour prévue**.
 
 **Données** : `bs` (en-tête) + `bs_lines` (lignes).
 
@@ -108,7 +108,7 @@
 - au moins **1 ligne** ;
 - chaque ligne : code non vide, désignation non vide, quantité entière ≥ 1, état ∈ {Neuf, Bon état, Usage, À réformer} ;
 - si « à rendre » coché ⇒ **date de retour prévue requise** et postérieure à la date de sortie ;
-- le bénéficiaire doit exister dans le référentiel personnel et appartenir au **magasin de destination de la ligne** (la sélection client est une suggestion ; le serveur résout le matricule) ;
+- le bénéficiaire unique du BS doit exister dans le référentiel personnel et appartenir au **magasin de destination du BS** (la sélection client est une suggestion ; le serveur résout le matricule) ;
 - moyen d'acheminement requis (nom + contact) ;
 - un BS **émis ne peut plus être modifié** librement (seuls les brouillons sont modifiables/annulables).
 
@@ -152,7 +152,7 @@
 
 ### 3.5 Fiche détail (`bs-detail`)
 
-**Données renvoyées** : en-tête (numéro, badge statut, actions selon statut : retour, QR, modifier, annuler), informations générales (initiateur, bénéficiaire, magasins, acheminement, motif, dates, articles à rendre), lignes d'articles avec destination/bénéficiaire/à rendre/retour prévu/**suivi du retour**, workflow, analyse du parcours (durée, étapes, passages), chronologie (audit), anomalies liées, carte « Réception de la marchandise ».
+**Données renvoyées** : en-tête (numéro, badge statut, actions selon statut : retour, QR, modifier, annuler), informations générales (initiateur, bénéficiaire unique, magasin d'origine, magasin de destination unique, acheminement, motif, dates, articles à rendre), lignes d'articles avec à rendre/retour prévu/**suivi du retour**, workflow, analyse du parcours (durée, étapes, passages), chronologie (audit), anomalies liées, carte « Réception de la marchandise ».
 
 **Traitements** :
 - calcul du **suivi des retours** par ligne (quantité restituée, état constaté, date effective — issus de la réception) ;

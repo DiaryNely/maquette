@@ -6,7 +6,6 @@
             <h1><i class="fa-solid fa-file-lines text-teal"></i> Bon de sortie <span class="mono" data-bs-ref>BS-2026-0142</span>
                 <span class="badge-status badge--encours" data-bs-status>En cours</span>
             </h1>
-            <p>Détail complet : articles, retours, workflow, chronologie du parcours et QR code.</p>
         </div>
         <div class="mock-page-head__actions">
             <button type="button" class="btn-mock btn-mock--outline" data-go-back><i class="fa-solid fa-arrow-left"></i> Retour</button>
@@ -68,8 +67,7 @@
     <div class="mock-card">
         <div class="mock-card__head">
             <h2 class="mock-card__title"><i class="fa-solid fa-boxes-stacked"></i> Articles et suivi des retours</h2>
-            <span class="chip"><i class="fa-solid fa-store"></i> 2 destinations</span>
-            <span class="chip"><i class="fa-solid fa-user"></i> 2 bénéficiaires</span>
+
             <span class="chip"><i class="fa-solid fa-rotate-left"></i> 2 articles à rendre</span>
         </div>
         <div class="mock-card__body mock-card__body--flush">
@@ -83,8 +81,6 @@
                             <th>Unité</th>
                             <th>Qté</th>
                             <th>État</th>
-                            <th>Destination</th>
-                            <th>Bénéficiaire</th>
                             <th>À rendre</th>
                             <th>Retour prévu</th>
                             <th>Suivi du retour</th>
@@ -98,8 +94,6 @@
                             <td>rme</td>
                             <td>10</td>
                             <td>Neuf</td>
-                            <td class="cell-muted">Siège - Administration S2M</td>
-                            <td class="cell-muted">Rasoanirina Miora</td>
                             <td><i class="fa-solid fa-xmark text-red"></i></td>
                             <td class="cell-muted">—</td>
                             <td><span class="cell-muted">Non concerné</span></td>
@@ -111,8 +105,6 @@
                             <td>pce</td>
                             <td>2</td>
                             <td>Bon état</td>
-                            <td><span class="badge-status badge--info">Entrepôt S2M</span></td>
-                            <td><span class="badge-status badge--info">Ranarivelo Tsiky</span></td>
                             <td><i class="fa-solid fa-check text-teal"></i></td>
                             <td>12/09/2026</td>
                             <td><span class="badge-status badge--encours">En attente</span></td>
@@ -124,8 +116,6 @@
                             <td>pce</td>
                             <td>1</td>
                             <td>Neuf</td>
-                            <td class="cell-muted">Siège - Administration S2M</td>
-                            <td class="cell-muted">Rasoanirina Miora</td>
                             <td><i class="fa-solid fa-check text-teal"></i></td>
                             <td>12/09/2026</td>
                             <td><span class="badge-status badge--encours">En attente</span></td>
@@ -137,8 +127,6 @@
                             <td>boîte</td>
                             <td>5</td>
                             <td>Neuf</td>
-                            <td class="cell-muted">Siège - Administration S2M</td>
-                            <td class="cell-muted">Rasoanirina Miora</td>
                             <td><i class="fa-solid fa-xmark text-red"></i></td>
                             <td class="cell-muted">—</td>
                             <td><span class="cell-muted">Non concerné</span></td>
@@ -146,13 +134,7 @@
                     </tbody>
                 </table>
             </div>
-            <div class="mock-card__body" style="border-top:1px solid var(--m-line-soft);">
-                <p class="mb-0" style="font-size:0.82rem; color:var(--m-muted);">
-                    <i class="fa-solid fa-rotate-left text-teal"></i>
-                    Les retours partiels ou complets sont enregistrés à la réception : quantité restituée,
-                    état constaté et date effective. Un retour non effectué à la date prévue déclenche une alerte.
-                </p>
-            </div>
+
         </div>
     </div>
 
@@ -322,11 +304,7 @@
                         <div class="qr-block__hint">Généré automatiquement à la création du bon.</div>
                     </div>
                 </div>
-                <p class="mb-0" style="font-size:0.82rem; color:var(--m-text); margin-top:10px;">
-                    <i class="fa-solid fa-shield-halved text-teal"></i> <strong>Authentification :</strong>
-                    le scan ouvre le BS et propose les actions autorisées selon le rôle de l'utilisateur
-                    et l'étape courante du workflow.
-                </p>
+
             </div>
         </div>
     </div>

@@ -661,8 +661,8 @@
         if (!root || !magSel) return null;
         var input = root.querySelector('[data-scan-agent]');
         var list = root.querySelector('[data-scan-personnel-list]');
+        if (!input || !list) return null;
         var hint = document.querySelector('[data-scan-personnel-hint]');
-        if (!input || !list || !hint) return null;
 
         var results = [];
 
@@ -693,13 +693,13 @@
         function choose(p) {
             input.value = p.nom;
             list.hidden = true;
-            hint.innerHTML = '<i class="fa-solid fa-circle-check text-teal"></i> ' +
+            if (hint) hint.innerHTML = '<i class="fa-solid fa-circle-check text-teal"></i> ' +
                 escapeHtml(p.nom) + ' — ' + escapeHtml(p.matricule) + ' · ' + escapeHtml(p.role) + ' · ' + escapeHtml(p.magasin);
         }
 
         function resetSelection() {
             input.value = '';
-            hint.textContent = 'Plusieurs personnes peuvent porter le même nom — choisissez dans les suggestions.';
+            if (hint) hint.textContent = 'Plusieurs personnes peuvent porter le même nom — choisissez dans les suggestions.';
             list.hidden = true;
         }
 
@@ -802,13 +802,7 @@
                 receptionButtonHtml(t.bs) +
                 '<button class="btn-mock btn-mock--danger" type="button" data-modal-open="anomalie" data-bs="' + escapeHtml(t.bs) + '" data-magasin="' + escapeHtml(t.magasin) + '"><i class="fa-solid fa-triangle-exclamation"></i> Déclarer une anomalie</button>' +
             '</div>' +
-            '<div data-confirm-result class="mt-3"></div>' +
-            '<p class="cell-muted mt-3 mb-0" style="font-size:0.82rem;">' +
-                '<i class="fa-solid fa-circle-info text-teal"></i> ' +
-                'Deux validations distinctes : « Confirmer le passage » contrôle les quantités par rapport au bon ; ' +
-                '« Confirmer la réception » enregistre, article par article, la quantité réellement reçue. ' +
-                'Chaque passage est horodaté et rattaché à l\'agent. Un écart de quantité rend le passage non conforme et bloque le BS jusqu\'à résolution de l\'anomalie.' +
-            '</p>';
+            '<div data-confirm-result class="mt-3"></div>';
 
         var btn = panel.querySelector('[data-confirm-passage]');
         if (btn) {
