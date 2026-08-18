@@ -99,7 +99,6 @@
             '<td class="cell-muted">' + escapeHtml(b.origine) + '</td>' +
             '<td>' + escapeHtml(b.beneficiaire) + '</td>' +
             '<td class="cell-muted">' + escapeHtml(b.destination) + '</td>' +
-            '<td>' + badgeRetour(b.retour) + '</td>' +
             '<td>' + escapeHtml(b.motif) + '</td>' +
             '<td>' + badgeStatut(b.statut) + '</td>' +
             '<td class="cell-actions">' + actions(b, tab) + '</td>' +
