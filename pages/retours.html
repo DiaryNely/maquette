@@ -1,0 +1,94 @@
+<section data-retours>
+    <div data-menu="menu.html"></div>
+
+    <div class="mock-page-head">
+        <div class="mock-page-head__title">
+            <h1><i class="fa-solid fa-rotate-left text-teal"></i> Suivi des retours de matériel</h1>
+            <p>Suivi et validation des retours pour les sorties temporaires d'articles</p>
+        </div>
+    </div>
+
+    <!-- Indicateurs KPI -->
+    <div class="kpi-grid">
+        <div class="kpi-card">
+            <div class="kpi-card__icon kpi-card__icon--red"><i class="fa-solid fa-clock"></i></div>
+            <div>
+                <div class="kpi-card__value" data-kpi-retard>—</div>
+                <div class="kpi-card__label">Retours en retard</div>
+            </div>
+        </div>
+        <div class="kpi-card">
+            <div class="kpi-card__icon kpi-card__icon--amber"><i class="fa-solid fa-hourglass-half"></i></div>
+            <div>
+                <div class="kpi-card__value" data-kpi-attente>—</div>
+                <div class="kpi-card__label">Retours en attente</div>
+            </div>
+        </div>
+        <div class="kpi-card">
+            <div class="kpi-card__icon kpi-card__icon--teal"><i class="fa-solid fa-circle-check"></i></div>
+            <div>
+                <div class="kpi-card__value" data-kpi-valides>—</div>
+                <div class="kpi-card__label">Retours effectués</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Onglets dynamiques selon le rôle -->
+    <div class="mock-tabs" data-retours-tabs role="tablist">
+        <!-- Rempli dynamiquement en JS (Ce que je dois rendre / Ce qu'on doit me rendre OR Retours en attente / Retours effectués) -->
+    </div>
+
+    <!-- Conteneur principal des retours -->
+    <div class="mock-panel is-active">
+        <div class="filter-bar">
+            <div class="search-input">
+                <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
+                <input type="text" class="form-control" data-retours-search placeholder="Rechercher un code, article, magasin ou personne…">
+            </div>
+            <select class="form-control" data-retours-statut-select>
+                <option value="tous" selected>Tous les statuts de suivi</option>
+                <option value="En attente">En attente</option>
+                <option value="En retard">En retard</option>
+                <option value="Retourné">Retourné</option>
+            </select>
+            <div class="filter-spacer"></div>
+            <button class="btn-refresh" data-retours-reset title="Réinitialiser la recherche"><i class="fa-solid fa-rotate"></i></button>
+            <button class="btn-export" type="button" title="Exporter en Excel"><i class="fa-solid fa-file-excel"></i></button>
+        </div>
+
+        <div class="table-mock-wrap">
+            <table class="table-mock">
+                <thead>
+                    <tr>
+                        <th>N° BS</th>
+                        <th>Code</th>
+                        <th>Désignation</th>
+                        <th>Qté</th>
+                        <th>Retour prévu</th>
+                        <th data-col-personne1>Initiateur / Source</th>
+                        <th data-col-personne2>Bénéficiaire / Destinataire</th>
+                        <th>Suivi</th>
+                        <th class="text-right">Actions</th>
+                    </tr>
+                </thead>
+                <tbody data-retours-tbody>
+                    <!-- Rempli dynamiquement en JS -->
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Pagination simulée -->
+        <div class="pagination-bar" role="navigation" aria-label="Pagination">
+            <div class="pagination-info"><span data-retours-results>0 résultat</span></div>
+            <div class="pagination-jump">
+                <label for="page-input-ret">Allez à la page :</label>
+                <input type="text" id="page-input-ret" aria-label="Numéro de page" value="1" readonly style="width: 50px; text-align: center;">
+            </div>
+            <div class="pagination-navigation">
+                <button class="pagination-arrow" type="button" aria-label="Page précédente" disabled>←</button>
+                <span class="pagination-current" aria-current="page">1</span>
+                <button class="pagination-arrow" type="button" aria-label="Page suivante" disabled>→</button>
+            </div>
+        </div>
+    </div>
+</section>

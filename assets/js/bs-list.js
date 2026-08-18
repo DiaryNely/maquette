@@ -183,6 +183,9 @@
             var recPanel = root.querySelector('[data-mock-panel="recevoir"]');
             if (recPanel) recPanel.classList.remove('is-active');
             renderPanel('envoyes', filterList(BS, 'envoyes'), BS.length);
+            
+            var actions = root.querySelector('.mock-page-head__actions');
+            if (actions) actions.classList.add('is-hidden');
             return;
         }
 
