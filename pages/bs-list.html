@@ -5,7 +5,11 @@
         <div class="mock-page-head__title">
             <h1><i class="fa-solid fa-file-lines text-teal"></i> Gestion des Bons de Sortie</h1>
         </div>
-        
+        <div class="mock-page-head__actions">
+            <a href="index.html?page=bs-create" class="btn-mock">
+                <i class="fa-solid fa-plus"></i> Nouveau bon de sortie
+            </a>
+        </div>
     </div>
 
     <!-- Sous-menus : envoyés / à recevoir -->
@@ -25,7 +29,8 @@
         <div class="filter-bar">
             <div class="search-input">
                 <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
-                <input type="text" class="form-control" data-bslist-search placeholder="Rechercher un BS, un bénéficiaire, un motif…">
+                <input type="text" class="form-control" data-bslist-search
+                    placeholder="Rechercher un BS, un bénéficiaire, un motif…">
             </div>
             <select class="form-control" data-bslist-statut>
                 <option value="" selected>Tous les statuts</option>
@@ -46,15 +51,13 @@
             <input type="date" class="form-control" value="2026-08-01" aria-label="Date de début">
             <input type="date" class="form-control" value="2026-08-12" aria-label="Date de fin">
             <div class="filter-spacer"></div>
-            <button class="btn-mock btn-mock--outline btn-mock--sm" data-bslist-reset><i class="fa-solid fa-rotate"></i> Réinitialiser</button>
-            <button class="btn-export" type="button" title="Exporter en Excel"><i class="fa-solid fa-file-excel"></i></button>
+            <button class="btn-refresh" data-bslist-reset title="Réinitialiser la recherche et les filtres"><i
+                    class="fa-solid fa-rotate"></i></button>
+            <button class="btn-export" type="button" title="Exporter en Excel"><i
+                    class="fa-solid fa-file-excel"></i></button>
         </div>
-        
-        <div class="mock-page-head__actions">
-            <a href="index.html?page=bs-create" class="btn-mock">
-                <i class="fa-solid fa-plus"></i> Nouveau bon de sortie
-            </a>
-        </div>
+
+
 
         <div class="table-mock-wrap">
             <table class="table-mock">
@@ -94,7 +97,8 @@
         <div class="filter-bar">
             <div class="search-input">
                 <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
-                <input type="text" class="form-control" data-bslist-search placeholder="Rechercher un BS, un initiateur, un motif…">
+                <input type="text" class="form-control" data-bslist-search
+                    placeholder="Rechercher un BS, un initiateur, un motif…">
             </div>
             <select class="form-control" data-bslist-statut>
                 <option value="" selected>Tous les statuts</option>
@@ -115,9 +119,13 @@
             <input type="date" class="form-control" value="2026-08-01" aria-label="Date de début">
             <input type="date" class="form-control" value="2026-08-12" aria-label="Date de fin">
             <div class="filter-spacer"></div>
-            <button class="btn-mock btn-mock--outline btn-mock--sm" data-bslist-reset><i class="fa-solid fa-rotate"></i> Réinitialiser</button>
-            <button class="btn-export" type="button" title="Exporter en Excel"><i class="fa-solid fa-file-excel"></i></button>
+            <button class="btn-refresh" data-bslist-reset title="Réinitialiser la recherche et les filtres"><i
+                    class="fa-solid fa-rotate"></i></button>
+            <button class="btn-export" type="button" title="Exporter en Excel"><i
+                    class="fa-solid fa-file-excel"></i></button>
         </div>
+
+
 
         <div class="table-mock-wrap">
             <table class="table-mock">

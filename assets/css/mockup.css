@@ -232,6 +232,43 @@
     border-radius: 50%;
 }
 
+/* Boutons de navigation (Retour, Annuler, Fermer) */
+.btn-mock[data-go-back],
+.btn-mock[data-modal-close],
+.btn-mock[data-ach-cancel] {
+    background: #fff;
+    color: var(--m-muted);
+    border: 1px solid var(--m-line);
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.btn-mock[data-go-back] i,
+.btn-mock[data-modal-close] i,
+.btn-mock[data-ach-cancel] i {
+    transition: transform 0.2s ease;
+}
+
+.btn-mock[data-go-back]:hover,
+.btn-mock[data-modal-close]:hover,
+.btn-mock[data-ach-cancel]:hover {
+    color: var(--m-ink);
+    background: var(--m-bg-soft);
+    border-color: var(--m-faint);
+    opacity: 1;
+}
+
+.btn-mock[data-go-back]:hover i,
+.btn-mock[data-modal-close]:hover i.fa-arrow-left,
+.btn-mock[data-ach-cancel]:hover i.fa-arrow-left {
+    transform: translateX(-4px); /* Cute micro-animation: arrow slides left */
+}
+
+.btn-mock[data-go-back]:hover i.fa-xmark,
+.btn-mock[data-modal-close]:hover i.fa-xmark,
+.btn-mock[data-ach-cancel]:hover i.fa-xmark {
+    transform: rotate(90deg); /* Micro-animation rotating cross */
+}
+
 /* ==============================
    BADGES DE STATUT
    ============================== */
@@ -605,8 +642,87 @@
     text-align: right;
 }
 
-.table-mock .cell-actions .btn-mock {
+/* Boutons d'action iconiques colorés */
+.action-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    padding: 0;
+    border-radius: 6px;
+    border: 1px solid transparent;
+    color: #fff;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: background 0.15s ease, opacity 0.15s ease, transform 0.05s ease;
+    text-decoration: none;
+    line-height: 1;
+}
+.action-btn:hover {
+    text-decoration: none;
+    color: #fff;
+}
+.action-btn:active {
+    transform: translateY(1px);
+}
+.action-btn + .action-btn {
     margin-left: 4px;
+}
+/* Voir / Détails → bleu */
+.action-btn--view {
+    background-color: var(--m-blue);
+    color: #fff;
+}
+.action-btn--view:hover {
+    background-color: #115ec4;
+    color: #fff;
+}
+/* Modifier → orange */
+.action-btn--edit {
+    background-color: #f59e0b;
+    color: #fff;
+}
+.action-btn--edit:hover {
+    background-color: #d97706;
+    color: #fff;
+}
+/* Supprimer / Annuler → rouge */
+.action-btn--danger {
+    background-color: var(--m-red);
+    color: #fff;
+}
+.action-btn--danger:hover {
+    background-color: #b91c1c;
+    color: #fff;
+}
+/* Valider / Confirmer / Réceptionner → vert */
+.action-btn--success {
+    background-color: var(--m-teal);
+    color: #fff;
+}
+.action-btn--success:hover {
+    background-color: #047857;
+    color: #fff;
+}
+/* Parcours / Infos → bleu foncé / indigo */
+.action-btn--info {
+    background-color: #6366f1;
+    color: #fff;
+}
+.action-btn--info:hover {
+    background-color: #4f46e5;
+    color: #fff;
+}
+/* Désactivé */
+.action-btn:disabled,
+.action-btn[disabled] {
+    opacity: 0.45;
+    cursor: not-allowed;
+    pointer-events: none;
+    background-color: #e5e7eb !important;
+    border-color: #e5e7eb !important;
+    color: #9ca3af !important;
 }
 
 /* mini avatar avec initiales */
@@ -2009,27 +2125,42 @@ body.modal-open {
 /* ==============================
    BOUTON EXPORT EXCEL (icône seule)
    ============================== */
-.btn-export {
+.btn-export,
+.btn-refresh {
     display: inline-flex;
     align-items: center;
     justify-content: center;
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    border-radius: 6px;
+    border: 1px solid transparent;
+    cursor: pointer;
+    font-size: 0.95rem;
+    line-height: 1;
+    transition: background 0.15s ease, opacity 0.15s ease, transform 0.05s ease;
+}
+
+.btn-export {
     background-color: #03a803;
     color: #fff;
-    padding: 6px 9px;
-    border: 1px solid #03a803;
-    border-radius: 12%;
-    cursor: pointer;
-    font-size: 1rem;
-    line-height: 1;
-    transition: opacity 0.15s ease, transform 0.05s ease;
 }
-
 .btn-export:hover {
+    background-color: #028a02;
     color: #fff;
-    opacity: 0.85;
 }
 
-.btn-export:active {
+.btn-refresh {
+    background-color: var(--m-blue);
+    color: #fff;
+}
+.btn-refresh:hover {
+    background-color: #115ec4;
+    color: #fff;
+}
+
+.btn-export:active,
+.btn-refresh:active {
     transform: translateY(1px);
 }
 
@@ -2245,24 +2376,30 @@ body.modal-open {
     opacity: 0.88;
 }
 
-/* croix rouge sans bordure pour supprimer une ligne */
+/* croix rouge remplie pour supprimer une ligne */
 .btn-remove-row {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 26px;
-    height: 26px;
+    width: 30px;
+    height: 30px;
     padding: 0;
-    border: 0;
-    background: transparent;
-    color: var(--m-red);
-    font-size: 0.95rem;
+    border: 1px solid transparent;
+    background-color: var(--m-red);
+    color: #fff;
+    font-size: 0.85rem;
     cursor: pointer;
-    border-radius: 4px;
+    border-radius: 6px;
+    transition: background 0.15s ease, opacity 0.15s ease, transform 0.05s ease;
 }
 
 .btn-remove-row:hover {
-    color: #b33131;
+    background-color: #b91c1c;
+    color: #fff;
+}
+
+.btn-remove-row:active {
+    transform: translateY(1px);
 }
 
 /* ==============================

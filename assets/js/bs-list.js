@@ -66,24 +66,19 @@
     }
 
     function actions(b, tab) {
-        var html = '<a class="btn-mock btn-mock--outline btn-mock--sm" href="index.html?page=bs-detail" title="Voir le détail"><i class="fa-solid fa-eye"></i></a>';
+        var html = '<a class="action-btn action-btn--view" href="index.html?page=bs-detail" title="Voir le détail"><i class="fa-solid fa-eye"></i></a>';
         if (b.statut === 'Brouillon') {
-            html += '<a class="btn-mock btn-mock--outline btn-mock--sm" href="index.html?page=bs-create" title="Modifier"><i class="fa-solid fa-pen"></i></a>' +
-                    '<button class="btn-mock btn-mock--danger btn-mock--sm" type="button" title="Annuler ce brouillon"><i class="fa-solid fa-xmark"></i></button>';
+            html += '<a class="action-btn action-btn--edit" href="index.html?page=bs-create" title="Modifier"><i class="fa-solid fa-pen"></i></a>' +
+                    '<button class="action-btn action-btn--danger" type="button" title="Annuler ce brouillon"><i class="fa-solid fa-xmark"></i></button>';
         }
-        /* Réception en deux temps, uniquement sur les BS à recevoir, réservée
-           au personnel (l'administrateur suit en lecture seule) :
-           1. constat physique par l'agent de transit (page Scan & Transit) ;
-           2. confirmation simple par le destinataire (sans ressaisie des
-              quantités), qui fait passer le BS à « Réceptionné ». */
         if (tab === 'recevoir' && currentRole() !== 'admin') {
             var receptions = window.S2M && window.S2M.receptions;
             if (receptions && receptions.isConfirme(b.bs)) {
-                html = '<button class="btn-mock btn-mock--outline btn-mock--sm" type="button" disabled title="Réception confirmée par le destinataire"><i class="fa-solid fa-box-open"></i> Réception confirmée</button>' + html;
+                html = '<button class="action-btn action-btn--success" type="button" disabled title="Réception confirmée par le destinataire"><i class="fa-solid fa-box-open"></i></button>' + html;
             } else if (receptions && receptions.isReceptionne(b.bs)) {
-                html = '<button class="btn-mock btn-mock--outline btn-mock--sm" type="button" data-reception-confirm="' + escapeHtml(b.bs) + '" title="Le constat de réception a été fait par le transit — confirmez la réception"><i class="fa-solid fa-box-open"></i> Confirmer la réception</button>' + html;
+                html = '<button class="action-btn action-btn--success" type="button" data-reception-confirm="' + escapeHtml(b.bs) + '" title="Confirmer la réception"><i class="fa-solid fa-box-open"></i></button>' + html;
             } else {
-                html = '<button class="btn-mock btn-mock--outline btn-mock--sm" type="button" disabled title="La réception est constatée par l\'agent de transit avant confirmation"><i class="fa-solid fa-hourglass-half"></i> En attente de réception par le transit</button>' + html;
+                html = '<button class="action-btn action-btn--success" type="button" disabled title="En attente de réception par le transit"><i class="fa-solid fa-hourglass-half"></i></button>' + html;
             }
         }
         return html;

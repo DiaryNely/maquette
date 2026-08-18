@@ -321,7 +321,7 @@
                 '<td>' + (r.anomalie
                     ? '<a class="cell-link" href="index.html?page=anomalie-detail">' + escapeHtml(r.anomalie) + '</a>'
                     : '<span class="cell-muted">—</span>') + '</td>' +
-                '<td class="cell-actions"><button class="btn-mock btn-mock--outline btn-mock--sm" type="button" data-bs-select="' + escapeHtml(r.bs) + '" data-modal-open="parcours"><i class="fa-solid fa-route"></i> Voir le parcours</button></td>' +
+                '<td class="cell-actions"><button class="action-btn action-btn--info" type="button" data-bs-select="' + escapeHtml(r.bs) + '" data-modal-open="parcours" title="Voir le parcours"><i class="fa-solid fa-route"></i></button></td>' +
                 '</tr>';
         }).join('');
     }
@@ -544,7 +544,6 @@
         var btn = panel.querySelector('[data-confirm-passage]');
         if (btn) {
             btn.disabled = true;
-            btn.classList.add('btn-mock--outline');
             btn.innerHTML = '<i class="fa-solid ' + (conforme ? 'fa-circle-check' : 'fa-circle-xmark') + '"></i> ' +
                 (conforme ? 'Passage confirmé' : 'Passage bloqué');
         }
@@ -625,7 +624,6 @@
         var btn = panel.querySelector('[data-confirm-reception]');
         if (btn) {
             btn.disabled = true;
-            btn.classList.add('btn-mock--outline');
             btn.innerHTML = '<i class="fa-solid fa-box-open"></i> Constat enregistré';
         }
     }
@@ -826,8 +824,8 @@
         if (!window.S2M || !window.S2M.receptions) return '';
         var done = S2M.receptions.isReceptionne(bs);
         return done
-            ? '<button class="btn-mock btn-mock--outline" type="button" disabled><i class="fa-solid fa-box-open"></i> Constat déjà enregistré</button>'
-            : '<button class="btn-mock btn-mock--outline" type="button" data-confirm-reception><i class="fa-solid fa-box-open"></i> Confirmer la réception</button>';
+            ? '<button class="btn-mock" type="button" disabled><i class="fa-solid fa-box-open"></i> Constat déjà enregistré</button>'
+            : '<button class="btn-mock" type="button" data-confirm-reception><i class="fa-solid fa-box-open"></i> Confirmer la réception</button>';
     }
 
     /* --- Boot --- */

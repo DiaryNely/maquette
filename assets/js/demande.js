@@ -382,7 +382,7 @@ document.addEventListener('change', function (event) {
             if (!store) {
                 input.readOnly = true;
                 input.value = '';
-                input.placeholder = 'Sélectionnez d'abord un magasin…';
+                input.placeholder = 'Sélectionnez d\'abord un magasin…';
                 if (hint) hint.textContent = HINT_DEFAULT;
                 list.hidden = true;
             } else {
