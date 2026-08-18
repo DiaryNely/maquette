@@ -211,11 +211,13 @@ confirmer sa réception.
   les quantités reçues correspondent aux quantités attendues → passage **« Conforme »** (clôturé) ;
   sinon → passage **« Non conforme »** avec la liste des écarts (code, attendu, reçu) et le BS reste
   **bloqué** jusqu'à résolution de l'anomalie.
-- **« Confirmer la réception »** : enregistre la réception **article par article** avec la
-  **quantité réellement reçue** de chaque ligne confirmée (case « Reçu »). Toutes les lignes
-  « À recevoir » doivent être confirmées avec leur quantité avant de considérer la réception
-  terminée ; une ligne non confirmée ou une quantité manquante bloque la validation (message dans
-  le panneau). « Réception déjà signalée » (désactivé) si déjà fait.
+- **« Confirmer la réception »** : enregistre la **réception physique** **article par article**
+  avec la **quantité réellement reçue** de chaque ligne confirmée (case « Reçu »). Toutes les lignes
+  « À recevoir » doivent être confirmées avec leur quantité avant de considérer le constat terminé ;
+  une ligne non confirmée ou une quantité manquante bloque la validation (message dans le panneau).
+  Le bon passe alors **« en attente de confirmation du destinataire »** — c'est la confirmation du
+  destinataire (lambda) qui clôt la réception et déclenche la notification (voir § 6).
+  « Réception déjà signalée » (désactivé) si le constat est déjà fait.
 - **« Déclarer une anomalie »** : ouvre la modale de déclaration (le BS concerné est déterminé par
   le contexte et affiché en lecture seule).
 
@@ -238,36 +240,38 @@ Lecture seule : l'administrateur ne scanne pas et ne contrôle pas.
 
 ## 6. Gestion de la réception
 
-La réception se signale **là où le bon est déjà visible** (aucune page dédiée, pour éviter toute
-redondance avec la liste des BS) :
+La réception se fait **en deux temps**, là où le bon est déjà visible (aucune page dédiée, pour
+éviter toute redondance avec la liste des BS) :
 
-- **Personnel (lambda)** : l'onglet **« BS à recevoir »** de la liste des BS porte, sur chaque bon
-  reçu, une action **« Réceptionner »** (bouton de la ligne) ; une fois la réception signalée, le
-  bouton devient « Réceptionné » (désactivé) et le statut du bon passe à **« Réceptionné »**.
-- **Scan & Transit** : après le scan d'un BS, l'agent dispose du bouton **« Confirmer la
-  réception »** dans le panneau de contrôle (à côté de « Confirmer le passage » et « Déclarer une
-  anomalie »). La réception s'effectue **dans la table du détail du transit**, article par article :
-  l'agent renseigne la **quantité réellement reçue** de chaque ligne « À recevoir » puis coche la
-  case **« Reçu »** ; le bouton enregistre alors la réception avec ces quantités par ligne. C'est
-  une validation distincte du « passage » (contrôle des quantités) : les deux sont nécessaires et
-  non redondantes — la réception identifie précisément quels articles ont été réellement reçus.
-  « Réception déjà signalée » (désactivé) si le bon est déjà réceptionné.
-- **Fiche détail d'un BS** : carte « Réception de la marchandise » avec le bouton « Signaler la
-  réception » (masqué pour l'admin, qui suit en lecture seule).
+1. **Réception physique — agent de transit** : à l'étape transit (Scan & Transit), l'agent constate
+   la marchandise **article par article** : chaque ligne « À recevoir » porte la quantité réellement
+   reçue et une case « Reçu » ; « Confirmer la réception » enregistre le constat avec ces quantités
+   (voir § 5.1). Le bon passe alors **« en attente de confirmation du destinataire »**.
+2. **Confirmation — destinataire (Personnel lambda)** : le bénéficiaire **confirme la réception du
+   bon** depuis l'onglet **« BS à recevoir »** de la liste des BS (bouton « Confirmer la réception »
+   sur chaque bon reçu) ou la fiche détail (carte « Réception de la marchandise »). C'est **une
+   simple confirmation, sans ressaisie des quantités** (déjà constatées par le transit — ressaisir
+   serait redondant et source d'écarts). Elle **déclenche la notification « Réception enregistrée »**
+   et fait passer le bon au statut **« Réceptionné »** (le bouton devient « Réception confirmée », 
+   désactivé).
+
+Règles :
+
+- **Garde-fou** : la confirmation du destinataire n'est possible que si la réception physique du
+  transit a été enregistrée ; sinon le bouton est inactif avec le libellé « En attente de réception
+  par le transit ».
+- L'ancien **« Réceptionner »** (modale de saisie des quantités côté personnel) est **supprimé** :
+  les quantités reçues sont le constat exclusif de l'agent de transit.
 - **Administrateur** : lecture seule — aucun bouton de signalement (liste des BS unique, carte du
   détail sans action).
-- **Signalement** : modale de confirmation détaillée (BS, magasin de destination, bénéficiaire,
-  motif, retour attendu) avec la **liste des articles et la confirmation des quantités reçues
-  article par article** (champs pré-remplis avec la quantité attendue, ajustables ; toutes les
-  quantités doivent être renseignées avant validation, sinon message d'erreur dans la modale). Les
-  quantités reçues sont enregistrées avec la réception.
-- L'enregistrement est **horodaté et rattaché à l'identité du déclarant**, persisté (localStorage
-  en maquette, base en production).
-- **Propagation** : le BS passe au statut **« Réceptionné »** (badge + filtre de statut) ; la fiche
-  détail marque l'étape **Réception** du workflow comme effectuée et ajoute l'événement à la
-  **chronologie du parcours** ; une notification « Réception enregistrée » est distribuée (initiateur,
-  bénéficiaire).
-- La date de réception sert de **point de départ au suivi des retours** (articles à rendre).
+- Les deux enregistrements (constat du transit, confirmation du destinataire) sont **horodatés et
+  rattachés à l'identité du déclarant**, persistés (localStorage en maquette, base en production).
+- **Propagation** : à la confirmation du destinataire, le BS passe au statut **« Réceptionné »**
+  (badge + filtre de statut) ; la fiche détail marque l'étape **Réception** du workflow comme
+  effectuée et ajoute l'événement à la **chronologie du parcours** ; une notification « Réception
+  enregistrée » est distribuée (initiateur, bénéficiaire).
+- La date de la **réception physique** sert de **point de départ au suivi des retours** (articles à
+  rendre).
 
 ---
 

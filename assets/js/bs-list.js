@@ -71,13 +71,19 @@
             html += '<a class="btn-mock btn-mock--outline btn-mock--sm" href="index.html?page=bs-create" title="Modifier"><i class="fa-solid fa-pen"></i></a>' +
                     '<button class="btn-mock btn-mock--danger btn-mock--sm" type="button" title="Annuler ce brouillon"><i class="fa-solid fa-xmark"></i></button>';
         }
-        /* Réception : uniquement sur les BS à recevoir, réservée au personnel
-           (l'administrateur suit en lecture seule). */
+        /* Réception en deux temps, uniquement sur les BS à recevoir, réservée
+           au personnel (l'administrateur suit en lecture seule) :
+           1. constat physique par l'agent de transit (page Scan & Transit) ;
+           2. confirmation simple par le destinataire (sans ressaisie des
+              quantités), qui fait passer le BS à « Réceptionné ». */
         if (tab === 'recevoir' && currentRole() !== 'admin') {
-            if (window.S2M && window.S2M.receptions && S2M.receptions.isReceptionne(b.bs)) {
-                html = '<button class="btn-mock btn-mock--outline btn-mock--sm" type="button" disabled title="Réception déjà signalée"><i class="fa-solid fa-box-open"></i> Réceptionné</button>' + html;
+            var receptions = window.S2M && window.S2M.receptions;
+            if (receptions && receptions.isConfirme(b.bs)) {
+                html = '<button class="btn-mock btn-mock--outline btn-mock--sm" type="button" disabled title="Réception confirmée par le destinataire"><i class="fa-solid fa-box-open"></i> Réception confirmée</button>' + html;
+            } else if (receptions && receptions.isReceptionne(b.bs)) {
+                html = '<button class="btn-mock btn-mock--outline btn-mock--sm" type="button" data-reception-confirm="' + escapeHtml(b.bs) + '" title="Le constat de réception a été fait par le transit — confirmez la réception"><i class="fa-solid fa-box-open"></i> Confirmer la réception</button>' + html;
             } else {
-                html = '<button class="btn-mock btn-mock--outline btn-mock--sm" type="button" data-reception-signal="' + escapeHtml(b.bs) + '" data-modal-open="reception" title="Signaler la réception de ce bon"><i class="fa-solid fa-box-open"></i> Réceptionner</button>' + html;
+                html = '<button class="btn-mock btn-mock--outline btn-mock--sm" type="button" disabled title="La réception est constatée par l\'agent de transit avant confirmation"><i class="fa-solid fa-hourglass-half"></i> En attente de réception par le transit</button>' + html;
             }
         }
         return html;
@@ -165,7 +171,9 @@
 
         if (window.S2M && window.S2M.receptions) {
             BS.forEach(function (b) {
-                if (S2M.receptions.isReceptionne(b.bs)) b.statut = 'Réceptionné';
+                /* le statut « Réceptionné » n'est posé qu'à la confirmation
+                   du destinataire (le constat du transit ne suffit pas) */
+                if (S2M.receptions.isConfirme(b.bs)) b.statut = 'Réceptionné';
             });
         }
 

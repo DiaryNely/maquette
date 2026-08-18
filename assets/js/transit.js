@@ -609,7 +609,8 @@
         return (lignes || []).reduce(function (sum, l) { return sum + (l.recu || 0); }, 0);
     }
 
-    /* Bandeau de confirmation après l'enregistrement de la réception */
+    /* Bandeau après l'enregistrement du constat de réception (transit) :
+       le bon passe « en attente de confirmation du destinataire ». */
     function showReceptionSuccess(panel, r) {
         var prev = panel.querySelector('[data-reception-done]');
         if (prev) prev.parentNode.removeChild(prev);
@@ -617,15 +618,15 @@
         div.setAttribute('data-reception-done', '1');
         div.className = 'alert-mock alert-mock--success mb-3';
         div.innerHTML = '<i class="fa-solid fa-box-open"></i>' +
-            '<span>Réception <strong>signalée</strong> pour ' + escapeHtml(r.bs) + ' le ' + escapeHtml(r.date) +
+            '<span>Constat de réception <strong>enregistré</strong> pour ' + escapeHtml(r.bs) + ' le ' + escapeHtml(r.date) +
             ' par ' + escapeHtml(r.par) + ' — ' + receptionTotal(r.lignes) + ' pièce(s) reçue(s). ' +
-            'Le suivi des retours démarre à partir de cette date.</span>';
+            'Le bon est <strong>en attente de confirmation du destinataire</strong> ; le suivi des retours démarre à partir de cette date.</span>';
         panel.insertBefore(div, panel.firstChild);
         var btn = panel.querySelector('[data-confirm-reception]');
         if (btn) {
             btn.disabled = true;
             btn.classList.add('btn-mock--outline');
-            btn.innerHTML = '<i class="fa-solid fa-box-open"></i> Réception confirmée';
+            btn.innerHTML = '<i class="fa-solid fa-box-open"></i> Constat enregistré';
         }
     }
 
@@ -823,15 +824,15 @@
         }
     }
 
-    /* Bouton « Confirmer la réception » après le scan : enregistre la
-       réception du bon scanné avec la quantité réellement reçue pour chaque
-       article confirmé (case « Reçu » de la table du détail, persistance
-       gérée par reception.js). Désactivé si la réception est déjà faite. */
+    /* Bouton « Confirmer la réception » après le scan : enregistre le constat
+       physique (quantité réellement reçue pour chaque article confirmé, case
+       « Reçu » de la table du détail, persistance gérée par reception.js).
+       Désactivé si le constat est déjà enregistré. */
     function receptionButtonHtml(bs) {
         if (!window.S2M || !window.S2M.receptions) return '';
         var done = S2M.receptions.isReceptionne(bs);
         return done
-            ? '<button class="btn-mock btn-mock--outline" type="button" disabled><i class="fa-solid fa-box-open"></i> Réception déjà signalée</button>'
+            ? '<button class="btn-mock btn-mock--outline" type="button" disabled><i class="fa-solid fa-box-open"></i> Constat déjà enregistré</button>'
             : '<button class="btn-mock btn-mock--outline" type="button" data-confirm-reception><i class="fa-solid fa-box-open"></i> Confirmer la réception</button>';
     }
 

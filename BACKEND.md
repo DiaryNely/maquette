@@ -213,7 +213,7 @@
 - « **Confirmer la réception** » : enregistre la réception avec les quantités réellement reçues **par ligne** (code, attendu, reçu) ;
 - **validations** : une ligne « À recevoir » non confirmée, ou une quantité invalide, bloque la validation (message explicite) ; la réception est horodatée et rattachée au matricule de l'agent ; le bouton passe à « Réception déjà signalée » une fois fait.
 
-**Interactions** : l'enregistrement alimente `receptions` (§ 6) et la propagation du statut « Réceptionné ».
+**Interactions** : le constat alimente `receptions` (§ 6.1) et place le BS « en attente de confirmation du destinataire » ; le statut final « Réceptionné » n'est posé qu'à la confirmation du destinataire (§ 6.2).
 
 ### 5.3 Déclaration d'anomalie depuis le transit
 
@@ -231,25 +231,46 @@
 
 ## 6. Réception
 
-### 6.1 Enregistrement
+La réception se fait **en deux temps** — deux acteurs, deux actes distincts et non redondants :
 
-**Données** : `receptions` (bs, date/heure [serveur], déclarant [matricule], magasin de réception, lignes `[{code, attendu, recu}]`).
+### 6.1 Réception physique — agent de transit
 
-**Points d'entrée** (le bon est déjà visible — aucune page dédiée) :
-- liste des BS, onglet « BS à recevoir » (Personnel) : bouton « Réceptionner » ;
-- page Scan & Transit : bouton « Confirmer la réception » (article par article, § 5.2) ;
-- fiche détail : carte « Réception de la marchandise » ;
-- admin : aucune action (lecture seule).
+- **Acteur** : l'agent de transit du magasin où passe le bon. C'est lui qui constate la marchandise
+  **article par article** : la table du détail du transit porte, par ligne, la quantité réellement
+  reçue et la confirmation « Reçu » (§ 5.2).
+- **Données** : `receptions` (bs, date/heure [serveur], déclarant [matricule], magasin de
+  réception, lignes `[{code, attendu, recu}]`).
+- **Validations** : toutes les lignes « À recevoir » confirmées avec une quantité valide ; unicité
+  du constat par BS ; horodatage et matricule côté serveur.
+- **Traitement** : le constat enregistre les quantités réellement reçues, initialise le suivi des
+  retours et place le BS « en attente de confirmation du destinataire » (pas encore `receptionne`).
 
-**Validations** : le BS doit être destiné au magasin du déclarant (hors cas transit) ; toutes les quantités reçues renseignées ; unicité de la réception par BS (une seule réception, rejet en cas de doublon).
+### 6.2 Confirmation du destinataire — Personnel (lambda)
 
-### 6.2 Propagation
+- **Acteur** : le bénéficiaire / le magasin destinataire. Il **confirme la réception du bon** — une
+  action simple, **sans ressaisie des quantités** (elles ont déjà été constatées par le transit :
+  toute ressaisie serait redondante et source d'écarts).
+- **Points d'entrée** (le bon est déjà visible — aucune page dédiée) :
+  - liste des BS, onglet « BS à recevoir » (Personnel) : bouton **« Confirmer la réception »**
+    (remplace l'ancien « Réceptionner » + modale de quantités, **supprimé**) ;
+  - fiche détail : carte « Réception de la marchandise » ;
+  - admin : aucune action (lecture seule).
+- **Garde-fou** : la confirmation n'est possible que si la réception physique du transit a été
+  enregistrée ; sinon le bouton est inactif avec le libellé « En attente de réception par le
+  transit ».
+- **Interactions** : la confirmation du destinataire **déclenche la notification « Réception
+  enregistrée »** vers l'initiateur et le bénéficiaire (selon configuration, § 8) et fait passer le
+  BS à `receptionne`.
 
-Après enregistrement, en **une transaction** :
+### 6.3 Propagation
+
+Après la confirmation du destinataire, en **une transaction** :
 1. statut du BS → `receptionne` ;
 2. étape **Réception** du workflow marquée effectuée + événement ajouté à la chronologie ;
-3. notification « Réception enregistrée » vers initiateur et bénéficiaire (selon configuration) ;
-4. les **retours** des articles « à rendre » sont initialisés : le suivi des retours démarre à la date de réception ; les quantités restituées enregistrées à la réception (retours partiels ou complets) alimentent le suivi par ligne (§ 3.5).
+3. notification « Réception enregistrée » (§ 6.2) ;
+4. les **retours** des articles « à rendre » : le suivi démarre à la date de la **réception physique**
+   (constat du transit) ; les quantités restituées enregistrées à la réception alimentent le suivi
+   par ligne (§ 3.5).
 
 ---
 

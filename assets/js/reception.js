@@ -145,6 +145,8 @@
         return r;
     }
 
+    /* Réception physique : constat article par article par l'agent de
+       transit (quantités réellement reçues, § transit). */
     function record(bs, lignes) {
         var r = { bs: bs, date: now(), par: currentUser(), ts: Date.now(), lignes: lignes || [] };
         receptions.push(r);
@@ -157,103 +159,58 @@
         return (lignes || []).reduce(function (sum, l) { return sum + (l.recu || 0); }, 0);
     }
 
-    /* --- Modale de confirmation (partagée par la liste et le scan) --- */
+    /* --- Confirmation du destinataire (Personnel lambda) ---
+       Le constat physique est fait par l'agent de transit ; le destinataire
+       confirme ensuite la réception du bon — une simple confirmation, sans
+       ressaisie des quantités. C'est cette confirmation qui fait passer le
+       BS à « Réceptionné » et déclenche la notification de réception. */
 
-    /* Table des articles avec saisie des quantités reçues ; les quantités
-       attendues sont pré-remplies pour une confirmation rapide. */
-    function fillReceptionArticles(modal, b) {
-        var body = modal.querySelector('[data-modal-articles-body]');
-        if (!body) return;
-        var list = articlesOf(b.bs);
-        if (!list.length) {
-            body.innerHTML = '<tr><td colspan="4" class="cell-muted text-center py-2">Aucune ligne d\'article connue pour ce bon.</td></tr>';
-            return;
+    var CONFIRM_STORAGE_KEY = 's2m.receptionConfirmations.v1';
+
+    function loadConfirmations() {
+        var raw = null;
+        try { raw = localStorage.getItem(CONFIRM_STORAGE_KEY); } catch (e) { raw = null; }
+        if (raw) {
+            try {
+                var list = JSON.parse(raw);
+                if (Array.isArray(list)) return list;
+            } catch (e) { /* données corrompues : liste vide */ }
         }
-        body.innerHTML = list.map(function (a) {
-            return '<tr>' +
-                '<td class="mono">' + escapeHtml(a.code) + '</td>' +
-                '<td>' + escapeHtml(a.designation) + '</td>' +
-                '<td>' + a.qte + '</td>' +
-                '<td><input type="number" class="form-control form-control-sm" style="width:84px;" min="0" value="' + a.qte + '" data-reception-qty data-code="' + escapeHtml(a.code) + '" data-expected="' + a.qte + '"></td>' +
-                '</tr>';
-        }).join('');
+        return [];
     }
 
-    function fillReceptionModal(modal, b) {
-        if (!modal || !b) return;
-        modal.querySelector('[data-modal-bs]').textContent = b.bs;
-        modal.querySelector('[data-modal-parcours]').textContent = b.destination;
-        modal.querySelector('[data-modal-beneficiaire]').textContent = b.beneficiaire;
-        modal.querySelector('[data-modal-motif]').textContent = b.motif;
-        modal.querySelector('[data-modal-articles]').textContent = articlesCount(b.bs) + ' ligne(s)';
-        modal.querySelector('[data-modal-retour]').innerHTML = b.retour
-            ? '<span class="badge-status badge--encours"><i class="fa-solid fa-rotate-left"></i> À rendre</span>'
-            : '<span class="badge-status badge--valide">Sans retour</span>';
-        var error = modal.querySelector('[data-reception-error]');
-        if (error) error.classList.add('is-hidden');
-        fillReceptionArticles(modal, b);
+    function saveConfirmations(list) {
+        try { localStorage.setItem(CONFIRM_STORAGE_KEY, JSON.stringify(list)); } catch (e) { /* stockage indisponible */ }
     }
 
-    /* Récupère les quantités saisies ; renvoie null si une quantité
-       attendue n'est pas renseignée (message dans la modale). */
-    function collectReceptionLignes(modal) {
-        var inputs = modal.querySelectorAll('[data-reception-qty]');
-        var firstEmpty = null;
-        var lignes = Array.prototype.map.call(inputs, function (input) {
-            var recu = parseInt(input.value, 10);
-            if (isNaN(recu)) {
-                if (!firstEmpty) firstEmpty = input;
-                recu = 0;
-            }
-            return {
-                code: input.getAttribute('data-code'),
-                attendu: parseInt(input.getAttribute('data-expected'), 10),
-                recu: recu
-            };
-        });
-        if (firstEmpty) {
-            var error = modal.querySelector('[data-reception-error]');
-            if (error) error.classList.remove('is-hidden');
-            firstEmpty.focus();
-            return null;
+    var confirmations = loadConfirmations();
+
+    function isConfirme(bs) {
+        return confirmations.some(function (c) { return c.bs === bs; });
+    }
+
+    function confirmationOf(bs) {
+        var c = null;
+        for (var i = confirmations.length - 1; i >= 0; i--) {
+            if (confirmations[i].bs === bs) { c = confirmations[i]; break; }
         }
-        var error = modal.querySelector('[data-reception-error]');
-        if (error) error.classList.add('is-hidden');
-        return lignes;
+        return c;
     }
 
-    /* Câble les boutons [data-reception-signal] (remplissage de la modale)
-       et la confirmation [data-reception-confirm] dans un périmètre donné. */
-    function initSignalModal(scope, afterSignal) {
-        var pendingBs = null;
-        scope.addEventListener('click', function (event) {
-            var btn = event.target.closest('[data-reception-signal]');
-            if (!btn) return;
-            var ref = btn.getAttribute('data-reception-signal');
-            var b = bsOf(ref);
-            if (!b) return;
-            pendingBs = ref;
-            fillReceptionModal(scope.querySelector('[data-modal="reception"]'), b);
-        });
-        var confirmBtn = scope.querySelector('[data-reception-confirm]');
-        if (confirmBtn) {
-            confirmBtn.addEventListener('click', function () {
-                var modal = scope.querySelector('[data-modal="reception"]');
-                if (!modal || !pendingBs) return;
-                var lignes = collectReceptionLignes(modal);
-                if (!lignes) return;
-                var bs = pendingBs;
-                pendingBs = null;
-                modal.hidden = true;
-                document.body.classList.remove('modal-open');
-                var r = record(bs, lignes);
-                if (afterSignal) afterSignal(bs, r);
-            });
-        }
+    function confirm(bs) {
+        var c = { bs: bs, date: now(), par: currentUser(), ts: Date.now() };
+        confirmations.push(c);
+        saveConfirmations(confirmations);
+        return c;
     }
+
 
     /* ============================================================
        FICHE DÉTAIL D'UN BS — carte « Réception de la marchandise »
+       Réception en deux temps : constat physique (transit) puis
+       confirmation du destinataire. La carte affiche l'état selon
+       l'avancement ; le bouton est une simple confirmation, sans
+       ressaisie des quantités.
        ============================================================ */
     function bootDetail() {
         var card = document.querySelector('[data-reception-card]');
@@ -278,56 +235,66 @@
         var timeline = document.querySelector('[data-bs-timeline]');
 
         function render() {
-            var r = receptionOf(bs);
-            if (r) {
-                if (signalBtn) signalBtn.classList.add('is-hidden');
-                if (chip) chip.textContent = 'Réceptionné le ' + r.date;
-                if (status) {
-                    status.textContent = 'Réceptionné';
-                    status.className = 'badge-status badge--info';
+            var r = receptionOf(bs);      // constat physique (transit)
+            var c = confirmationOf(bs);   // confirmation du destinataire
+            var confirmed = !!c;
+
+            if (signalBtn) {
+                if (role === 'admin' || role === 'transit') {
+                    /* l'admin suit en lecture seule ; le constat physique se
+                       fait sur la page Scan & Transit, pas depuis la fiche */
+                    signalBtn.classList.add('is-hidden');
+                } else if (!r) {
+                    signalBtn.disabled = true;
+                    signalBtn.innerHTML = '<i class="fa-solid fa-hourglass-half"></i> En attente de réception par le transit';
+                } else if (!c) {
+                    signalBtn.disabled = false;
+                    signalBtn.innerHTML = '<i class="fa-solid fa-box-open"></i> Confirmer la réception';
+                } else {
+                    signalBtn.classList.add('is-hidden');
                 }
-                if (stepTransit) {
-                    stepTransit.classList.add('workflow-step--done');
-                    stepTransit.classList.remove('workflow-step--current');
-                }
-                if (stepReception) stepReception.classList.add('workflow-step--done');
-                if (actor) actor.textContent = r.par.split(' (')[0];
-                if (currentChip) currentChip.innerHTML = '<i class="fa-solid fa-box-open"></i> Étape courante : Réception effectuée';
-                if (success && successText) {
-                    successText.textContent = 'Réception signalée le ' + r.date + ' par ' + r.par +
-                        ' — ' + totalRecu(r.lignes) + ' pièce(s) reçue(s). Le suivi des retours démarre à partir de cette date.';
-                    success.classList.remove('is-hidden');
-                }
-                if (timeline && !card.getAttribute('data-timeline-added')) {
-                    card.setAttribute('data-timeline-added', '1');
-                    var li = document.createElement('li');
-                    li.className = 'timeline-item';
-                    li.innerHTML =
-                        '<div class="timeline-item__title">Réception <span class="badge-status badge--info">Réceptionné</span></div>' +
-                        '<div class="timeline-item__meta">' + escapeHtml(r.par) + ' · ' + escapeHtml(r.date) + '</div>' +
-                        '<div class="timeline-item__desc">Marchandise réceptionnée au magasin de destination — suivi des retours engagé.</div>';
-                    timeline.insertBefore(li, timeline.firstChild);
-                }
-            } else if (role === 'admin' && signalBtn) {
-                /* l'administrateur suit la réception sans pouvoir la signaler */
-                signalBtn.classList.add('is-hidden');
+            }
+            if (chip) {
+                chip.textContent = confirmed
+                    ? 'Réception confirmée le ' + c.date
+                    : (r ? 'Réception constatée par le transit le ' + r.date : chip.textContent);
+            }
+            if (status && confirmed) {
+                status.textContent = 'Réceptionné';
+                status.className = 'badge-status badge--info';
+            }
+            if (stepTransit && r) {
+                stepTransit.classList.add('workflow-step--done');
+                stepTransit.classList.remove('workflow-step--current');
+            }
+            if (stepReception && confirmed) stepReception.classList.add('workflow-step--done');
+            if (actor && c) actor.textContent = c.par.split(' (')[0];
+            if (currentChip && confirmed) currentChip.innerHTML = '<i class="fa-solid fa-box-open"></i> Étape courante : Réception effectuée';
+            if (success && successText && confirmed) {
+                successText.textContent = 'Réception confirmée le ' + c.date + ' par ' + c.par +
+                    ' — constat du transit le ' + (r ? r.date : '—') + ' (' + totalRecu(r.lignes) + ' pièce(s) reçue(s)). ' +
+                    'Le suivi des retours démarre à partir de la date du constat.';
+                success.classList.remove('is-hidden');
+            }
+            if (timeline && confirmed && !card.getAttribute('data-timeline-added')) {
+                card.setAttribute('data-timeline-added', '1');
+                var li = document.createElement('li');
+                li.className = 'timeline-item';
+                li.innerHTML =
+                    '<div class="timeline-item__title">Réception <span class="badge-status badge--info">Confirmée</span></div>' +
+                    '<div class="timeline-item__meta">' + escapeHtml(c.par) + ' · ' + escapeHtml(c.date) + '</div>' +
+                    '<div class="timeline-item__desc">Réception physique constatée par le transit le ' +
+                        escapeHtml(r ? r.date : '—') + ', confirmée par le destinataire — suivi des retours engagé.</div>';
+                timeline.insertBefore(li, timeline.firstChild);
             }
         }
 
-        /* La modale du détail est fixe (BS-2026-0142) : on pré-remplit la
-           table des articles avec les quantités attendues. */
-        var modal = document.querySelector('[data-modal="reception"]');
-        var b = bsOf(bs);
-        if (modal && b) fillReceptionArticles(modal, b);
-
-        var confirmBtn = document.querySelector('[data-reception-confirm]');
-        if (confirmBtn && modal) {
-            confirmBtn.addEventListener('click', function () {
-                var lignes = collectReceptionLignes(modal);
-                if (!lignes) return;
-                modal.hidden = true;
-                document.body.classList.remove('modal-open');
-                record(bs, lignes);
+        /* Confirmation simple (destinataire) : aucune modale, aucune
+           ressaisie de quantités — le constat a été fait par le transit. */
+        if (signalBtn) {
+            signalBtn.addEventListener('click', function () {
+                if (!receptionOf(bs) || isConfirme(bs)) return;
+                confirm(bs);
                 render();
             });
         }
@@ -337,58 +304,31 @@
     }
 
     /* ============================================================
-       PAGE SCAN & TRANSIT — l'agent déclare la réception après le scan
-       ============================================================ */
-    function showScanReceptionSuccess(panel, r) {
-        var prev = panel.querySelector('[data-reception-done]');
-        if (prev) prev.parentNode.removeChild(prev);
-        var div = document.createElement('div');
-        div.setAttribute('data-reception-done', '1');
-        div.className = 'alert-mock alert-mock--success mb-3';
-        div.innerHTML = '<i class="fa-solid fa-box-open"></i>' +
-            '<span>Réception <strong>signalée</strong> pour ' + escapeHtml(r.bs) + ' le ' + escapeHtml(r.date) +
-            ' par ' + escapeHtml(r.par) + ' — ' + totalRecu(r.lignes) + ' pièce(s) reçue(s). Le suivi des retours démarre à partir de cette date.</span>';
-        panel.insertBefore(div, panel.firstChild);
-        var btn = panel.querySelector('[data-reception-signal]');
-        if (btn) {
-            btn.disabled = true;
-            btn.classList.add('btn-mock--outline');
-            btn.innerHTML = '<i class="fa-solid fa-box-open"></i> Réception signalée';
-        }
-    }
-
-    function bootScan() {
-        var panel = document.querySelector('[data-scan-panel]');
-        if (!panel) return false;
-        var section = panel.closest('section');
-        if (section && section.getAttribute('data-bound')) return true;
-        if (section) section.setAttribute('data-bound', '1');
-        var scope = section || panel;
-        initSignalModal(scope, function (bs, r) {
-            showScanReceptionSuccess(panel, r);
-        });
-        return true;
-    }
-
-    /* ============================================================
        LISTE DES BS — onglet « BS à recevoir » (personnel)
+       Confirmation simple du destinataire : le bouton n'est actif que
+       si le constat physique a été enregistré par l'agent de transit.
        ============================================================ */
     function bootList() {
         var root = document.querySelector('[data-bslist]');
         if (!root) return false;
         if (root.getAttribute('data-reception-bound')) return true;
         root.setAttribute('data-reception-bound', '1');
-        initSignalModal(root, function () {
+        root.addEventListener('click', function (event) {
+            var btn = event.target.closest('[data-reception-confirm]');
+            if (!btn) return;
+            var ref = btn.getAttribute('data-reception-confirm');
+            if (!isReceptionne(ref) || isConfirme(ref)) return;
+            confirm(ref);
             /* re-rend la liste : le statut du BS passe à « Réceptionné » */
             if (window.S2M && window.S2M.bsListRefresh) S2M.bsListRefresh();
         });
         return true;
     }
 
-    /* Démarrage selon la page affichée */
+    /* Démarrage selon la page affichée (la réception physique du transit
+       est gérée par transit.js sur la page Scan & Transit) */
     function tryBoot() {
         if (pageName() === 'bs-detail') return bootDetail();
-        if (pageName() === 'transit') return bootScan();
         if (pageName() === 'bs-list') return bootList();
         return false;
     }
@@ -407,14 +347,17 @@
     });
     bootObserver.observe(document.body, { childList: true, subtree: true });
 
-    /* API partagée : la liste des BS reflète le statut réceptionné. record et
-       receptionOf sont utilisés par la page Scan & Transit, qui enregistre la
-       réception directement depuis la table du détail (article par article). */
+    /* API partagée : la liste des BS reflète le statut réceptionné. record
+       (constat physique) est utilisé par la page Scan & Transit ; confirm
+       (confirmation du destinataire) par la liste des BS et la fiche détail. */
     window.S2M = window.S2M || {};
     window.S2M.receptions = {
         isReceptionne: isReceptionne,
         receptionOf: receptionOf,
         record: record,
+        confirm: confirm,
+        isConfirme: isConfirme,
+        confirmationOf: confirmationOf,
         list: receptions
     };
 })();
