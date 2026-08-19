@@ -20,23 +20,27 @@ async function inclure(selector, fichier) {
 
 /* Utilisateurs simulés pour chaque rôle (header) */
 const USERS = {
-    lambda:  { name: 'Rakotobe Hery',              desc: 'Personnel | Magasin central' },
-    transit: { name: 'Rabemananjara Solo',         desc: 'Transit | Plateforme logistique' },
-    admin:   { name: 'Administrateur - Automat SI', desc: 'Responsable informatique | Siège - Administration S2M' }
+    lambda:   { name: 'Rakotobe Hery',                desc: 'Personnel | Magasin central' },
+    transit:  { name: 'Rabemananjara Solo',           desc: 'Transit | Plateforme logistique' },
+    direction:{ name: 'Randriamahefa Vero',           desc: 'Direction | Siège - Administration S2M' },
+    admin:    { name: 'Administrateur - Automat SI',  desc: 'Responsable informatique | Siège - Administration S2M' }
 };
 
 /* Pages accessibles par rôle simulé (null = tout, rôle administrateur) */
 const ROLE_PAGES = {
-    lambda:  ['bs-list', 'bs-create', 'bs-detail', 'notifications', 'anomalie-detail', 'retours'],
-    transit: ['transit', 'bs-detail', 'anomalie-detail', 'notifications'],
-    admin:   null
+    lambda:   ['bs-list', 'bs-create', 'bs-detail', 'notifications', 'anomalie-detail', 'retours'],
+    transit:  ['transit', 'bs-detail', 'anomalie-detail', 'notifications'],
+    direction:['validations', 'bs-list', 'bs-detail', 'notifications'],
+    admin:    null
 };
 
 let role = null;
 
 /* Page d'accueil du portail d'un rôle */
 function roleHome(r) {
-    return 'index.html?page=' + (r === 'transit' ? 'transit/transit' : r + '/bs-list');
+    if (r === 'transit') return 'index.html?page=transit/transit';
+    if (r === 'direction') return 'index.html?page=direction/validations';
+    return 'index.html?page=' + r + '/bs-list';
 }
 
 /* Affiche l'utilisateur du rôle simulé dans le header */

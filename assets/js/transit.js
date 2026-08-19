@@ -56,8 +56,8 @@
         retour: '2 articles (retour avant le 12/09/2026)',
         articles: [
             { code: 'ART-102', designation: 'Rame papier A4 80 g (paquet de 500)', qte: 10, etat: 'Neuf', rendre: false },
-            { code: 'MAT-011', designation: 'Écran 24\" Dell P2422H', qte: 2, etat: 'Bon état', rendre: true },
-            { code: 'MAT-008', designation: 'Ordinateur portable Dell Latitude 5440', qte: 1, etat: 'Neuf', rendre: true },
+            { code: 'MAT-011', designation: 'Écran 24\" Dell P2422H', qte: 2, etat: 'Bon état', rendre: true, dateRetour: '12/09/2026' },
+            { code: 'MAT-008', designation: 'Ordinateur portable Dell Latitude 5440', qte: 1, etat: 'Neuf', rendre: true, dateRetour: '12/09/2026' },
             { code: 'FOU-031', designation: 'Boîte de stylos à bille bleu (12)', qte: 5, etat: 'Neuf', rendre: false }
         ]
     };
@@ -477,7 +477,8 @@
                     '<td>' + (aRecevoir
                         ? '<i class="fa-solid fa-check text-teal"></i>'
                         : '<i class="fa-solid fa-xmark text-red"></i>') + '</td>' +
-                    '<td><input type="number" class="form-control form-control-sm" style="width:84px;" min="0" data-qty data-expected="' + a.qte + '" data-code="' + escapeHtml(a.code) + '"></td>' +
+                    '<td><input type="number" class="form-control form-control-sm" style="width:84px;" min="0" data-qty data-expected="' + a.qte + '" data-code="' + escapeHtml(a.code) + '"' +
+                        (a.rendre ? ' data-rendre="1" data-retour-date="' + escapeHtml(a.dateRetour || '') + '"' : '') + '></td>' +
                     '<td>' + (aRecevoir
                         ? '<div class="custom-control custom-checkbox mb-0" style="white-space:nowrap;">' +
                             '<input type="checkbox" class="custom-control-input" id="receive-ok-' + escapeHtml(a.code) + '" data-receive-ok data-code="' + escapeHtml(a.code) + '">' +
@@ -573,18 +574,20 @@
             var input = tr.querySelector('[data-qty]');
             var code = cb.getAttribute('data-code');
             var attendu = parseInt(input.getAttribute('data-expected'), 10);
+            var aRendre = input.getAttribute('data-rendre') === '1';
+            var dateRetour = input.getAttribute('data-retour-date') || '';
             if (!cb.checked) {
                 notConfirmed.push(code);
-                lignes.push({ code: code, attendu: attendu, recu: 0 });
+                lignes.push({ code: code, attendu: attendu, recu: 0, aRendre: aRendre, dateRetour: dateRetour });
                 return;
             }
             var recu = parseInt(input.value, 10);
             if (isNaN(recu) || recu < 0) {
                 badQty.push(code);
-                lignes.push({ code: code, attendu: attendu, recu: isNaN(recu) ? 0 : recu });
+                lignes.push({ code: code, attendu: attendu, recu: isNaN(recu) ? 0 : recu, aRendre: aRendre, dateRetour: dateRetour });
                 return;
             }
-            lignes.push({ code: code, attendu: attendu, recu: recu });
+            lignes.push({ code: code, attendu: attendu, recu: recu, aRendre: aRendre, dateRetour: dateRetour });
         });
 
         if (notConfirmed.length || badQty.length) {
@@ -601,6 +604,11 @@
         }
 
         var r = receptions.record(t.bs, lignes);
+        /* les lignes « à rendre » réellement reçues créent / activent
+           l'obligation de retour (le destinataire devient responsable) */
+        if (window.S2M && window.S2M.retours) {
+            S2M.retours.activateFromReception(t.bs, lignes);
+        }
         showReceptionSuccess(panel, r);
     }
 

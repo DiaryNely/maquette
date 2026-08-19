@@ -32,7 +32,9 @@
         { bs: 'BS-2026-0138', date: '08/08/2026', initiateur: 'Rabenjanahary Mamy',   beneficiaire: 'Razafindrakoto Lova', origine: 'Siège - Administration S2M', destination: 'Magasin central', motif: 'Retour de matériel',   statut: 'Soumis',   retour: true },
         { bs: 'BS-2026-0137', date: '07/08/2026', initiateur: 'Rakotobe Hery',        beneficiaire: 'Rasoanirina Miora',  origine: 'Magasin central', destination: 'Siège - Administration S2M', motif: 'Équipement informatique', statut: 'Brouillon', retour: true },
         { bs: 'BS-2026-0136', date: '06/08/2026', initiateur: 'Razafindratsima Vola', beneficiaire: 'Rabeharisoa Andry',  origine: 'Entrepôt S2M',     destination: 'Magasin central',           motif: 'Équipement mobilier',   statut: 'Annulé',   retour: false },
-        { bs: 'BS-2026-0135', date: '05/08/2026', initiateur: 'Rakotomalala Njato',   beneficiaire: 'Rasolofoniaina Fanja', origine: 'Magasin central', destination: 'Entrepôt S2M',              motif: 'Consommables atelier',  statut: 'Clôturé',  retour: false }
+        { bs: 'BS-2026-0135', date: '05/08/2026', initiateur: 'Rakotomalala Njato',   beneficiaire: 'Rasolofoniaina Fanja', origine: 'Magasin central', destination: 'Entrepôt S2M',              motif: 'Consommables atelier',  statut: 'Clôturé',  retour: false },
+        { bs: 'BS-2026-0134', date: '01/08/2026', initiateur: 'Rabeharisoa Andry',    beneficiaire: 'Rakotobe Hery',        origine: 'Entrepôt S2M',     destination: 'Magasin central',           motif: 'Matériel de chantier',  statut: 'Réceptionné', retour: true },
+        { bs: 'BS-2026-0130', date: '28/07/2026', initiateur: 'Rakotobe Hery',        beneficiaire: 'Razafindrakoto Lova', origine: 'Magasin central', destination: 'Entrepôt S2M',               motif: 'Outillage',             statut: 'Clôturé',  retour: true }
     ];
 
     var STATUTS = ['Brouillon', 'Soumis', 'En cours', 'Validé', 'Refusé', 'Annulé', 'Clôturé'];

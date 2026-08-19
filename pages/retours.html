@@ -47,10 +47,10 @@
             </div>
             <select class="form-control" data-retours-statut-select>
                 <option value="tous" selected>Tous les statuts de suivi</option>
-                <option value="En attente">En attente (Chez le bénéficiaire)</option>
-                <option value="En retard">En retard de renvoi</option>
-                <option value="Retourné (Expédié)">Retour expédié (À réceptionner)</option>
-                <option value="Réceptionné (Clôturé)">Réceptionné (Clôturé)</option>
+                <option value="en_attente">En attente (Chez le bénéficiaire)</option>
+                <option value="en_retard">En retard de renvoi</option>
+                <option value="retour_expedie">Retour expédié (À réceptionner)</option>
+                <option value="cloture">Réceptionné (Clôturé)</option>
             </select>
             <div class="filter-spacer"></div>
             <button class="btn-refresh" data-retours-reset title="Réinitialiser la recherche"><i class="fa-solid fa-rotate"></i></button>
@@ -64,7 +64,7 @@
                         <th>N° BS</th>
                         <th>Code</th>
                         <th>Désignation</th>
-                        <th>Qté</th>
+                        <th>Qté due</th>
                         <th>Retour prévu</th>
                         <th data-col-personne1>Initiateur / Source</th>
                         <th data-col-personne2>Bénéficiaire / Destinataire</th>
@@ -105,6 +105,12 @@
             </div>
             <div class="modal-mock__body">
                 <p data-confirm-modal-message>Êtes-vous sûr de vouloir effectuer cette action ?</p>
+                <div class="form-group mt-3" data-confirm-qty-wrap hidden>
+                    <label for="confirm-retour-qty">Quantité à traiter</label>
+                    <input type="number" class="form-control" id="confirm-retour-qty" data-confirm-qty min="1" step="1">
+                    <small class="form-text text-muted" data-confirm-qty-hint></small>
+                </div>
+                <p class="text-red" data-confirm-modal-error hidden></p>
                 <div class="d-flex justify-content-end flex-wrap" style="gap:10px; margin-top:18px;">
                     <button type="button" class="btn-mock" data-modal-close><i class="fa-solid fa-xmark"></i> Annuler</button>
                     <button class="btn-mock" type="button" data-confirm-modal-btn><i class="fa-solid fa-check"></i> Confirmer</button>
