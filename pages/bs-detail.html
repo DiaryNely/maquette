@@ -23,25 +23,25 @@
     <div class="mock-card">
         <div class="mock-card__head">
             <h2 class="mock-card__title"><i class="fa-solid fa-user-tie"></i> Informations générales</h2>
-            <span class="chip">Créé le 12/08/2026 à 09:14</span>
+            <span class="chip" data-bs-created>Créé le 12/08/2026 à 09:14</span>
         </div>
         <div class="mock-card__body">
             <div class="info-grid">
                 <div class="info-grid__item">
                     <label>Initiateur</label>
-                    <div class="value">Rakotobe Hery</div>
+                    <div class="value" data-bs-initiateur>Rakotobe Hery</div>
                 </div>
                 <div class="info-grid__item">
                     <label>Bénéficiaire</label>
-                    <div class="value">Rasoanirina Miora</div>
+                    <div class="value" data-bs-beneficiaire>Rasoanirina Miora</div>
                 </div>
                 <div class="info-grid__item">
                     <label>Magasin d'origine</label>
-                    <div class="value">Magasin central</div>
+                    <div class="value" data-bs-origine>Magasin central</div>
                 </div>
                 <div class="info-grid__item">
                     <label>Magasin de destination</label>
-                    <div class="value">Siège - Administration S2M</div>
+                    <div class="value" data-bs-destination>Siège - Administration S2M</div>
                 </div>
                 <div class="info-grid__item">
                     <label>Moyen d'acheminement</label>
@@ -49,16 +49,47 @@
                 </div>
                 <div class="info-grid__item">
                     <label>Motif</label>
-                    <div class="value">Équipement informatique</div>
+                    <div class="value" data-bs-motif>Équipement informatique</div>
                 </div>
                 <div class="info-grid__item">
                     <label>Date de sortie</label>
-                    <div class="value">14/08/2026</div>
+                    <div class="value" data-bs-date>14/08/2026</div>
                 </div>
                 <div class="info-grid__item">
                     <label>Date limite de retour</label>
                     <div class="value value--muted">12/09/2026 (<span data-retours-count>2 articles à rendre</span>)</div>
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Validation par la Direction -->
+    <div class="mock-card" data-validation-card>
+        <div class="mock-card__head">
+            <h2 class="mock-card__title"><i class="fa-solid fa-user-tie"></i> Validation par la Direction</h2>
+            <span class="badge-status badge--soumis" data-validation-status>En attente de validation</span>
+        </div>
+        <div class="mock-card__body">
+            <p class="mb-2" data-validation-meta>Le bon attend la validation de la Direction.</p>
+            <p class="text-red mb-2" data-validation-motif hidden></p>
+            <div class="d-flex justify-content-end flex-wrap" style="gap:10px;" data-validation-actions hidden>
+                <button class="btn-mock btn-mock--danger" type="button" data-val-open="refuse" title="Refuser ce bon (motif obligatoire)"><i class="fa-solid fa-ban"></i> Refuser</button>
+                <button class="btn-mock" type="button" data-val-open="valide" title="Valider ce bon — le workflow passe à l'étape suivante"><i class="fa-solid fa-check"></i> Valider le BS</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Réception de la marchandise (contrôle des quantités — colis ouvert) -->
+    <div class="mock-card" data-reception-card>
+        <div class="mock-card__head">
+            <h2 class="mock-card__title"><i class="fa-solid fa-box-open text-teal"></i> Réception de la marchandise</h2>
+            <span class="badge-status badge--encours" data-reception-status>À recevoir</span>
+        </div>
+        <div class="mock-card__body">
+            <p class="mb-2" data-reception-meta>Le colis arrive au magasin du destinataire. Le contrôle des quantités se fait à la réception, colis ouvert.</p>
+            <p class="text-red mb-2" data-reception-ecarts hidden></p>
+            <div class="d-flex justify-content-end" data-reception-actions>
+                <a class="btn-mock" type="button" href="#" data-reception-go title="Contrôler la réception de ce BS"><i class="fa-solid fa-box-open"></i> Réceptionner ce BS</a>
             </div>
         </div>
     </div>
@@ -86,7 +117,7 @@
                             <th>Suivi du retour</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody data-bs-articles-body>
                         <tr>
                             <td><span class="chip">Article</span></td>
                             <td class="mono">ART-102</td>
@@ -151,6 +182,11 @@
                         <div class="workflow-step__dot"><i class="fa-solid fa-user"></i></div>
                         <div class="workflow-step__label">Initiateur</div>
                         <div class="workflow-step__actor">Rakotobe Hery</div>
+                    </div>
+                    <div class="workflow-step workflow-step--done" data-workflow-step="direction">
+                        <div class="workflow-step__dot"><i class="fa-solid fa-building"></i></div>
+                        <div class="workflow-step__label">Direction</div>
+                        <div class="workflow-step__actor">Randriamahefa V.</div>
                     </div>
                     <div class="workflow-step workflow-step--done">
                         <div class="workflow-step__dot"><i class="fa-solid fa-user-check"></i></div>
@@ -304,6 +340,32 @@
                     </div>
                 </div>
 
+            </div>
+        </div>
+    </div>
+
+<!-- Modale : Valider / Refuser ce BS (action Direction) -->
+    <div class="modal-mock" data-modal="validation" hidden>
+        <div class="modal-mock__backdrop" data-modal-close></div>
+        <div class="modal-mock__dialog" role="dialog" aria-modal="true" aria-label="Validation d'un bon de sortie">
+            <div class="modal-mock__head">
+                <h3 class="modal-mock__title" data-val-modal-title>Valider le BS</h3>
+                <button class="modal-mock__close" type="button" data-modal-close aria-label="Fermer">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            <div class="modal-mock__body">
+                <p data-val-modal-message>Êtes-vous sûr de vouloir valider ce bon de sortie ?</p>
+                <div class="form-group mt-3" data-val-motif-wrap hidden>
+                    <label for="val-motif-detail">Motif du refus <span class="text-red">*</span></label>
+                    <textarea class="form-control" id="val-motif-detail" data-val-motif rows="3"
+                        placeholder="Motif obligatoire pour refuser le BS…"></textarea>
+                </div>
+                <p class="text-red" data-val-modal-error hidden></p>
+                <div class="d-flex justify-content-end flex-wrap" style="gap:10px; margin-top:18px;">
+                    <button type="button" class="btn-mock" data-modal-close><i class="fa-solid fa-xmark"></i> Annuler</button>
+                    <button class="btn-mock" type="button" data-val-modal-btn><i class="fa-solid fa-check"></i> Valider le BS</button>
+                </div>
             </div>
         </div>
     </div>

@@ -1,0 +1,133 @@
+<section data-validations>
+    <div data-menu="menu.html"></div>
+
+    <div class="mock-page-head">
+        <div class="mock-page-head__title">
+            <h1><i class="fa-solid fa-user-tie text-teal"></i> Direction — Validation des bons de sortie</h1>
+        </div>
+        <div class="mock-page-head__actions">
+            <span class="chip chip--active"><i class="fa-solid fa-building"></i> Rôle : Direction</span>
+        </div>
+    </div>
+
+    <!-- Indicateurs KPI -->
+    <div class="kpi-grid">
+        <div class="kpi-card">
+            <div class="kpi-card__icon kpi-card__icon--amber"><i class="fa-solid fa-hourglass-half"></i></div>
+            <div>
+                <div class="kpi-card__value" data-kpi-attente>—</div>
+                <div class="kpi-card__label">En attente de validation</div>
+            </div>
+        </div>
+        <div class="kpi-card">
+            <div class="kpi-card__icon kpi-card__icon--teal"><i class="fa-solid fa-circle-check"></i></div>
+            <div>
+                <div class="kpi-card__value" data-kpi-valides>—</div>
+                <div class="kpi-card__label">BS validés</div>
+            </div>
+        </div>
+        <div class="kpi-card">
+            <div class="kpi-card__icon kpi-card__icon--red"><i class="fa-solid fa-ban"></i></div>
+            <div>
+                <div class="kpi-card__value" data-kpi-refuses>—</div>
+                <div class="kpi-card__label">BS refusés</div>
+            </div>
+        </div>
+        <div class="kpi-card">
+            <div class="kpi-card__icon kpi-card__icon--blue"><i class="fa-solid fa-file-lines"></i></div>
+            <div>
+                <div class="kpi-card__value" data-kpi-total>—</div>
+                <div class="kpi-card__label">Demandes traitées</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Onglets : en attente / validés / refusés -->
+    <div class="mock-tabs" data-val-tabs role="tablist">
+        <button class="mock-tab active" data-val-tab="attente" type="button">
+            <i class="fa-solid fa-hourglass-half"></i> En attente
+            <span class="chip chip--active" data-val-count="attente">0</span>
+        </button>
+        <button class="mock-tab" data-val-tab="valides" type="button">
+            <i class="fa-solid fa-circle-check"></i> Validés
+            <span class="chip chip--active" data-val-count="valides">0</span>
+        </button>
+        <button class="mock-tab" data-val-tab="refuses" type="button">
+            <i class="fa-solid fa-ban"></i> Refusés
+            <span class="chip chip--active" data-val-count="refuses">0</span>
+        </button>
+    </div>
+
+    <div class="mock-panel is-active">
+        <div class="filter-bar">
+            <div class="search-input">
+                <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
+                <input type="text" class="form-control" data-val-search placeholder="Rechercher un BS, un demandeur, un motif…">
+            </div>
+            <div class="filter-spacer"></div>
+            <button class="btn-refresh" data-val-reset title="Réinitialiser la recherche"><i class="fa-solid fa-rotate"></i></button>
+            <button class="btn-export" type="button" title="Exporter en Excel"><i class="fa-solid fa-file-excel"></i></button>
+        </div>
+
+        <div class="table-mock-wrap">
+            <table class="table-mock">
+                <thead>
+                    <tr>
+                        <th>N° BS</th>
+                        <th>Date</th>
+                        <th>Demandeur</th>
+                        <th>Magasin d'origine</th>
+                        <th>Bénéficiaire</th>
+                        <th>Magasin de destination</th>
+                        <th>Motif</th>
+                        <th>Décision</th>
+                        <th class="text-right">Actions</th>
+                    </tr>
+                </thead>
+                <tbody data-val-body>
+                    <!-- Rempli dynamiquement en JS -->
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Pagination simulée -->
+        <div class="pagination-bar" role="navigation" aria-label="Pagination">
+            <div class="pagination-info"><span data-val-results>0 résultat</span></div>
+            <div class="pagination-jump">
+                <label for="page-input-val">Allez à la page :</label>
+                <input type="text" id="page-input-val" aria-label="Numéro de page" value="1" readonly style="width: 50px; text-align: center;">
+            </div>
+            <div class="pagination-navigation">
+                <button class="pagination-arrow" type="button" aria-label="Page précédente" disabled>←</button>
+                <span class="pagination-current" aria-current="page">1</span>
+                <button class="pagination-arrow" type="button" aria-label="Page suivante" disabled>→</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modale : Valider / Refuser un BS -->
+    <div class="modal-mock" data-modal="validation" hidden>
+        <div class="modal-mock__backdrop" data-modal-close></div>
+        <div class="modal-mock__dialog" role="dialog" aria-modal="true" aria-label="Validation d'un bon de sortie">
+            <div class="modal-mock__head">
+                <h3 class="modal-mock__title" data-val-modal-title>Valider le BS</h3>
+                <button class="modal-mock__close" type="button" data-modal-close aria-label="Fermer">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            <div class="modal-mock__body">
+                <p data-val-modal-message>Êtes-vous sûr de vouloir valider ce bon de sortie ?</p>
+                <div class="form-group mt-3" data-val-motif-wrap hidden>
+                    <label for="val-motif">Motif du refus <span class="text-red">*</span></label>
+                    <textarea class="form-control" id="val-motif" data-val-motif rows="3"
+                        placeholder="Motif obligatoire pour refuser le BS…"></textarea>
+                </div>
+                <p class="text-red" data-val-modal-error hidden></p>
+                <div class="d-flex justify-content-end flex-wrap" style="gap:10px; margin-top:18px;">
+                    <button type="button" class="btn-mock" data-modal-close><i class="fa-solid fa-xmark"></i> Annuler</button>
+                    <button class="btn-mock" type="button" data-val-modal-btn><i class="fa-solid fa-check"></i> Valider le BS</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

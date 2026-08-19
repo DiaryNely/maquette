@@ -33,6 +33,15 @@
         'Rasoanirina Miora'
     ];
 
+    /* Moyens d'acheminement proposés à l'étape « Moyen d'acheminement » :
+       recherche avec suggestions + bouton Ajouter (même modèle que la
+       création d'un bon de sortie). */
+    var MOYENS = [
+        { nom: 'Rakoto Andry',        transport: 'Camion S2M',   contact: '034 12 345 67' },
+        { nom: 'Ravelojaona Dina',    transport: 'Camion S2M',   contact: '034 98 765 43' },
+        { nom: 'Razafindrakoto Lova', transport: 'Fourgon S2M',  contact: '032 55 44 33' }
+    ];
+
     /* Données de démo — transits déjà enregistrés par scan
        resultat : 'a-controle' | 'conforme' | 'non-conforme' */
     var SEED = [
@@ -43,7 +52,8 @@
         { id: 'TR-2026-0097', bs: 'BS-2026-0140', magasin: 'Plateforme logistique', agent: 'Rabemananjara Solo', arrivee: '11/08/2026 à 16:45', resultat: 'conforme', note: '', anomalie: null },
         { id: 'TR-2026-0096', bs: 'BS-2026-0140', magasin: 'Barrière de sortie', agent: 'Rakotobe Hery', arrivee: '11/08/2026 à 10:12', resultat: 'conforme', note: '', anomalie: null },
         { id: 'TR-2026-0092', bs: 'BS-2026-0139', magasin: 'Plateforme logistique', agent: 'Rabemananjara Solo', arrivee: '12/08/2026 à 10:15', resultat: 'non-conforme', note: '', anomalie: 'ANO-2026-014' },
-        { id: 'TR-2026-0088', bs: 'BS-2026-0135', magasin: 'Barrière de sortie', agent: 'Andrianarivo Tovo', arrivee: '05/08/2026 à 08:50', resultat: 'conforme', note: '', anomalie: null }
+        { id: 'TR-2026-0088', bs: 'BS-2026-0135', magasin: 'Barrière de sortie', agent: 'Andrianarivo Tovo', arrivee: '05/08/2026 à 08:50', resultat: 'conforme', note: '', anomalie: null },
+        { id: 'TR-2026-0095', bs: 'BS-2026-0134', magasin: 'Magasin central', agent: 'Rakotobe Hery', arrivee: '01/08/2026 à 11:30', resultat: 'conforme', note: '', anomalie: null, colis: { confirme: true, date: '01/08/2026 à 11:28' }, moyen: { chauffeur: 'Rakoto Andry', vehicule: 'Camion S2M · 034 12 345 67', date: '01/08/2026 à 11:20' }, statut: 'valide' }
     ];
 
     /* Données de démo — détails des bons de sortie scannés (initiateur,
@@ -84,6 +94,17 @@
                 { code: 'MAT-015', designation: 'Station d\'accueil USB-C Dell', qte: 3, etat: 'Neuf', rendre: true },
                 { code: 'ART-105', designation: 'Rame papier A3 80 g (paquet de 250)', qte: 6, etat: 'Neuf', rendre: false }
             ]
+        },
+        'BS-2026-0134': {
+            initiateur: 'Rabeharisoa Andry',
+            beneficiaire: 'Rakotobe Hery',
+            parcours: 'Entrepôt S2M → Magasin central',
+            retour: '2 articles (retour avant le 20/09/2026)',
+            articles: [
+                { code: 'MAT-045', designation: 'Marteau-piqueur pneumatique', qte: 2, etat: 'Bon état', rendre: true,  dateRetour: '20/09/2026' },
+                { code: 'MAT-046', designation: 'Brouette de chantier 100 L', qte: 3, etat: 'Neuf',      rendre: true,  dateRetour: '20/09/2026' },
+                { code: 'SEC-010', designation: 'Gilet haute visibilité', qte: 5, etat: 'Neuf',          rendre: false }
+            ]
         }
     };
 
@@ -98,7 +119,8 @@
         'BS-2026-0141': 'Entrepôt S2M → Magasin central',
         'BS-2026-0140': 'Magasin central → Entrepôt S2M',
         'BS-2026-0139': 'Magasin central → Siège - Administration S2M',
-        'BS-2026-0135': 'Magasin central → Entrepôt S2M'
+        'BS-2026-0135': 'Magasin central → Entrepôt S2M',
+        'BS-2026-0134': 'Entrepôt S2M → Magasin central'
     };
 
     /* « Magasin central → Entrepôt S2M » à partir du parcours ; accepte
@@ -191,19 +213,64 @@
             arrivee: now(),
             resultat: 'a-controle',
             note: '',
-            anomalie: null
+            anomalie: null,
+            colis: null,       // { confirme, date } — étape 2 (Confirmer le colis)
+            moyen: null,      // { nom, transport, contact, date } — dernière étape
+            statut: 'en-cours' // 'en-cours' | 'valide'
         };
         list.unshift(t);
         save(list);
-        return { transit: t, created: true };
+        return { transit: t, created: false };
     }
 
-    function validate(id, resultat, note) {
+    /* --- Étapes du workflow Transit (simplifié) ---
+       Scan → Vérification (valider / anomalie) → Moyen d'acheminement
+       Le contrôle des quantités a été déplacé à la réception : le colis est
+       fermé au transit, donc aucune saisie de quantité ne se fait ici. */
+
+    /* Confirme que le colis porte le bon identifiant (QR scanné, scellé,
+       intact). Le contrôle des quantités reste verrouillé : il se fera à
+       la réception, colis ouvert. */
+    function confirmColis(id) {
         var list = load();
         for (var i = 0; i < list.length; i++) {
             if (list[i].id === id) {
-                list[i].resultat = resultat;
-                if (note != null) list[i].note = note;
+                list[i].colis = { confirme: true, date: now() };
+                save(list);
+                return list[i];
+            }
+        }
+        return null;
+    }
+
+    /* Vérifie l'état du colis (conforme / non-conforme) + note. */
+    function setEtat(id, conforme, note) {
+        var list = load();
+        for (var i = 0; i < list.length; i++) {
+            if (list[i].id === id) {
+                list[i].resultat = conforme ? 'conforme' : 'non-conforme';
+                list[i].note = note || '';
+                save(list);
+                return list[i];
+            }
+        }
+        return null;
+    }
+
+    /* Dernière étape : valide le moyen d'acheminement choisi. Le transit est
+       alors terminé (statut 'valide') : le colis est arrivé au magasin et
+       pourra être réceptionné par le destinataire. */
+    function completeMoyen(id, moyen) {
+        var list = load();
+        for (var i = 0; i < list.length; i++) {
+            if (list[i].id === id) {
+                list[i].moyen = {
+                    nom: (moyen && moyen.nom) || '',
+                    transport: (moyen && moyen.transport) || '',
+                    contact: (moyen && moyen.contact) || '',
+                    date: now()
+                };
+                list[i].statut = 'valide';
                 save(list);
                 return list[i];
             }
@@ -416,11 +483,10 @@
         }
     }
 
-    /* Carte « 2. Détails du bon » : remplit le titre, le badge, la grille
-       d'informations et la table des articles. Chaque ligne indique si
-       l'article doit être réceptionné (« À recevoir »), porte la saisie de la
-       quantité réellement reçue et une case « Reçu » pour confirmer sa
-       réception — deux validations distinctes (passage / réception). */
+    /* Carte « 2. Détails du bon » : rendu lu par l'agent après le scan.
+        Le contrôle des quantités n'a plus lieu au transit (le colis est
+        fermé) : le tableau d'articles est purement informatif, il sert à
+        identifier le contenu du colis. */
     function renderDetails(bs) {
         var card = document.querySelector('[data-detail-bs]');
         if (!card) return;
@@ -462,10 +528,11 @@
             artEl.textContent = total + ' pièces / ' + d.articles.length + ' lignes';
         }
 
+        /* Tableau d'articles : informations uniquement, sans saisie de
+           quantité — le colis est fermé au transit. */
         var tbody = document.querySelector('[data-articles-body]');
         if (tbody) {
             tbody.innerHTML = d.articles.map(function (a) {
-                var aRecevoir = a.aRecevoir !== false;
                 return '<tr>' +
                     '<td class="mono">' + escapeHtml(a.code) + '</td>' +
                     '<td>' + escapeHtml(a.designation) + '</td>' +
@@ -474,166 +541,263 @@
                     '<td>' + (a.rendre
                         ? '<i class="fa-solid fa-check text-teal"></i>'
                         : '<i class="fa-solid fa-xmark text-red"></i>') + '</td>' +
-                    '<td>' + (aRecevoir
-                        ? '<i class="fa-solid fa-check text-teal"></i>'
-                        : '<i class="fa-solid fa-xmark text-red"></i>') + '</td>' +
-                    '<td><input type="number" class="form-control form-control-sm" style="width:84px;" min="0" data-qty data-expected="' + a.qte + '" data-code="' + escapeHtml(a.code) + '"' +
-                        (a.rendre ? ' data-rendre="1" data-retour-date="' + escapeHtml(a.dateRetour || '') + '"' : '') + '></td>' +
-                    '<td>' + (aRecevoir
-                        ? '<div class="custom-control custom-checkbox mb-0" style="white-space:nowrap;">' +
-                            '<input type="checkbox" class="custom-control-input" id="receive-ok-' + escapeHtml(a.code) + '" data-receive-ok data-code="' + escapeHtml(a.code) + '">' +
-                            '<label class="custom-control-label" for="receive-ok-' + escapeHtml(a.code) + '">Reçu</label>' +
-                          '</div>'
-                        : '<span class="cell-muted">—</span>') + '</td>' +
                     '</tr>';
             }).join('');
+        }
+    }
 
-            /* Cocher « Reçu » exige une quantité reçue valide sur la ligne :
-               sinon on décoche et on demande la saisie. */
-            tbody.querySelectorAll('[data-receive-ok]').forEach(function (cb) {
-                cb.addEventListener('change', function () {
-                    if (!cb.checked) return;
-                    var qty = cb.closest('tr').querySelector('[data-qty]');
-                    if (qty && (qty.value.trim() === '' || isNaN(parseInt(qty.value, 10)))) {
-                        cb.checked = false;
-                        qty.focus();
-                    }
+    /* --- Nouveau wizard de contrôle Transit (sans saisie de quantité) --- */
+
+    /* Libellé lisible d'un moyen d'acheminement (forme nouvelle {nom,
+       transport, contact} ou héritée {chauffeur, vehicule}). */
+    function moyenLabel(m) {
+        if (!m) return '';
+        if (m.nom) {
+            return m.nom + (m.transport ? ' — ' + m.transport : '') + (m.contact ? ' · ' + m.contact : '');
+        }
+        if (m.chauffeur) {
+            return m.chauffeur + (m.vehicule ? ' · ' + m.vehicule : '');
+        }
+        return '';
+    }
+
+    function wizardSteps(t) {
+        var etatOk = t.resultat === 'conforme' || t.resultat === 'non-conforme';
+        var moyenOk = !!(t.moyen && (t.moyen.nom || t.moyen.chauffeur));
+        return [
+            { id: 'check', label: 'Vérification du colis', done: etatOk, current: !etatOk },
+            { id: 'moyen', label: 'Moyen d\'acheminement', done: moyenOk, current: etatOk && !moyenOk }
+        ];
+    }
+
+    function renderWizard(t, panel) {
+        var steps = wizardSteps(t);
+
+        /* Corps de chaque étape — remplis dans leur propre <li> pour que
+           la frise verticale puisse relier les pastilles. */
+        var bodies = {};
+
+        /* Étape 1 : Vérification du colis (valider / anomalie) */
+        if (etatOk(t)) {
+            bodies.check =
+                '<div class="wizard-check__done">' +
+                '<span class="badge-status ' + (t.resultat === 'conforme' ? 'badge--valide' : 'badge--refuse') + '">' +
+                (t.resultat === 'conforme' ? 'Conforme' : 'Non conforme') + '</span>' +
+                (t.note ? '<span class="cell-muted">' + escapeHtml(t.note) + '</span>' : '') +
+                '<button class="btn-mock btn-mock--sm" type="button" disabled><i class="fa-solid fa-circle-check"></i> État vérifié</button>' +
+                '</div>';
+        } else {
+            bodies.check =
+                '<form class="wizard-check" data-check-form>' +
+                '<div class="wizard-check__note">' +
+                '<label for="transit-etat-note">Note (facultatif)</label>' +
+                '<input type="text" class="form-control" id="transit-etat-note" placeholder="État du colis, scellé, emballage…">' +
+                '</div>' + '<br>'+
+                '<div class="wizard-check__actions">' +
+                '<button type="submit" class="btn-mock" data-confirm-etat><i class="fa-solid fa-circle-check"></i> Colis conforme — valider</button>' +
+                '<button type="button" class="btn-mock btn-mock--danger" data-open-anomalie data-modal-open="anomalie" data-bs="' + escapeHtml(t.bs) + '" data-magasin="' + escapeHtml(t.magasin) + '"><i class="fa-solid fa-triangle-exclamation"></i> Déclarer une anomalie</button>' +
+                '</div>' +
+                '</form>';
+        }
+
+        /* Étape 2 : Moyen d'acheminement */
+        if (t.moyen && (t.moyen.nom || t.moyen.chauffeur)) {
+            bodies.moyen =
+                '<div class="wizard-moyen__done">' +
+                '<span class="cell-muted"><i class="fa-solid fa-truck text-teal"></i> ' + escapeHtml(moyenLabel(t.moyen)) + '</span>' +
+                '<button class="btn-mock btn-mock--sm" type="button" disabled><i class="fa-solid fa-circle-check"></i> Moyen validé</button>' +
+                '<div class="alert-mock alert-mock--success mb-0"><i class="fa-solid fa-circle-check"></i>' +
+                '<span>Transit <strong>validé</strong> pour ' + escapeHtml(t.bs) + ' — le colis est arrivé au magasin <strong>' + escapeHtml(t.magasin) + '</strong>. Le contrôle des quantités se fera à la réception, colis ouvert.</span></div>' +
+                '</div>';
+        } else {
+            bodies.moyen =
+                '<form class="wizard-moyen" data-moyen-form>' +
+                '<div class="ach-row">' +
+                '<div class="ach-search" data-moyen-search>' +
+                '<input type="text" class="form-control" id="transit-moyen" placeholder="Rechercher un moyen d\'acheminement…" autocomplete="off" data-moyen-input>' +
+                '<ul class="personnel-search__list" data-moyen-list role="listbox" hidden></ul>' +
+                '</div>' +
+                '<button class="btn-mock" type="button" data-moyen-add title="Ajouter un nouveau moyen d\'acheminement"><i class="fa-solid fa-plus"></i> Ajouter</button>' +
+                '</div>' +
+                '<div class="ach-new" data-moyen-new hidden>' +
+                '<div class="form-grid-2">' +
+                '<div class="form-grid-2__item"><div class="form-group"><label for="tm-nom">Nom complet</label><input type="text" class="form-control" id="tm-nom" placeholder="Nom du transporteur ou de la société"></div></div>' +
+                '<div class="form-grid-2__item"><div class="form-group"><label for="tm-contact">Contact</label><input type="text" class="form-control" id="tm-contact" placeholder="Téléphone ou e-mail"></div></div>' +
+                '<div class="form-grid-2__item"><div class="form-group"><label for="tm-transport">Moyen de transport</label><input type="text" class="form-control" id="tm-transport" placeholder="Ex. Camion S2M, Moto…"></div></div>' +
+                '</div>' +
+                '<div class="d-flex flex-wrap" style="gap:10px; margin-top:14px;">' +
+                '<button class="btn-mock btn-mock--sm" type="button" data-moyen-save><i class="fa-solid fa-check"></i> Enregistrer le moyen</button>' +
+                '<button class="btn-mock btn-mock--sm" type="button" data-moyen-cancel>Annuler</button>' +
+                '</div>' +
+                '</div>' +
+                '<button class="btn-mock btn-mock--sm" type="submit" data-confirm-moyen><i class="fa-solid fa-truck"></i> Valider l\'acheminement</button>' +
+                '</form>';
+        }
+
+        /* Assemblage : chaque étape porte son en-tête et son corps */
+        var html = '<ol class="wizard-steps" data-transit-steps>' +
+            steps.map(function (s) {
+                var cls = s.done ? 'wizard-step--done' : (s.current ? 'wizard-step--current' : 'wizard-step--pending');
+                return '<li class="wizard-step ' + cls + '" data-wstep="' + s.id + '">' +
+                    '<div class="wizard-step__head">' +
+                        '<span class="wizard-step__dot">' +
+                            (s.done ? '<i class="fa-solid fa-circle-check"></i>' : '<span class="wizard-step__num">' + (steps.indexOf(s) + 1) + '</span>') +
+                        '</span>' +
+                        '<span class="wizard-step__label">' + s.label + '</span>' +
+                        (s.current ? '<span class="chip chip--active wizard-step__state"><i class="fa-solid fa-circle"></i> En cours</span>' : '') +
+                    '</div>' +
+                    '<div class="wizard-step__body" data-wstep-body="' + s.id + '">' + (bodies[s.id] || '') + '</div>' +
+                    '</li>';
+            }).join('') +
+            '</ol>' +
+            '<div data-confirm-result class="mt-3"></div>';
+        panel.innerHTML = html;
+
+        /* visibilité : ne montrer le corps que de l'étape courante / faite */
+        steps.forEach(function (s) {
+            var body = panel.querySelector('[data-wstep-body="' + s.id + '"]');
+            if (body) body.style.display = (s.done || s.current) ? '' : 'none';
+        });
+
+        /* Étape 1 — valider le colis conforme */
+        var checkForm = panel.querySelector('[data-check-form]');
+        if (checkForm && !etatOk(t)) {
+            checkForm.addEventListener('submit', function (e) {
+                e.preventDefault();
+                var note = (checkForm.querySelector('#transit-etat-note').value || '').trim();
+                var updated = setEtat(t.id, true, note);
+                renderWizard(updated, panel);
+                refreshKpi();
+                document.querySelectorAll('[data-transits-table]').forEach(renderAllTable);
+            });
+        }
+
+        /* Étape 1 — déclarer une anomalie : marque le colis non conforme puis
+           laisse la modale s'ouvrir (data-modal-open, géré par mockup.js) */
+        var anomalieBtn = panel.querySelector('[data-open-anomalie]');
+        if (anomalieBtn && !etatOk(t)) {
+            anomalieBtn.addEventListener('click', function () {
+                var note = (panel.querySelector('#transit-etat-note').value || '').trim();
+                var updated = setEtat(t.id, false, note);
+                renderWizard(updated, panel);
+                refreshKpi();
+                document.querySelectorAll('[data-transits-table]').forEach(renderAllTable);
+            });
+        }
+
+        /* Étape 2 — moyen d'acheminement : recherche + suggestions + bouton
+           Ajouter (même modèle que la création d'un bon de sortie) */
+        var moyenForm = panel.querySelector('[data-moyen-form]');
+        if (moyenForm && !(t.moyen && (t.moyen.nom || t.moyen.chauffeur))) {
+            var moyenInput = moyenForm.querySelector('[data-moyen-input]');
+            var moyenList = moyenForm.querySelector('[data-moyen-list]');
+            var moyenNew = moyenForm.querySelector('[data-moyen-new]');
+            var moyenResults = [];
+            var moyenSelected = null;
+
+            function renderMoyen(query) {
+                var q = normalize(query);
+                moyenResults = MOYENS.filter(function (m) {
+                    return !q || normalize(m.nom + ' ' + m.transport + ' ' + m.contact).indexOf(q) !== -1;
                 });
+                if (!moyenResults.length) {
+                    moyenList.innerHTML = '<li class="personnel-search__empty">' +
+                        'Aucun moyen ne correspond — cliquez sur « Ajouter » pour en créer un nouveau.</li>';
+                    moyenList.hidden = false;
+                    return;
+                }
+                moyenList.innerHTML = moyenResults.map(function (m) {
+                    return '<li class="personnel-search__item" role="option" tabindex="-1">' +
+                        '<span><strong>' + escapeHtml(m.nom) + '</strong> <span class="text-muted2">· ' + escapeHtml(m.transport) + '</span></span>' +
+                        '<span class="text-muted2" style="white-space:nowrap;">' + escapeHtml(m.contact) + '</span>' +
+                        '</li>';
+                }).join('');
+                moyenList.hidden = false;
+            }
+
+            function chooseMoyen(m) {
+                moyenSelected = m;
+                moyenInput.value = moyenLabel(m);
+                moyenList.hidden = true;
+            }
+
+            moyenInput.addEventListener('focus', function () { renderMoyen(moyenInput.value); });
+            moyenInput.addEventListener('input', function () { renderMoyen(moyenInput.value); });
+            moyenInput.addEventListener('keydown', function (event) {
+                if (event.key === 'Escape') { moyenList.hidden = true; return; }
+                if (event.key === 'Enter') { event.preventDefault(); return; }
+                var items = moyenList.querySelectorAll('.personnel-search__item');
+                if (!items.length) return;
+                var idx = Array.prototype.indexOf.call(items, document.activeElement);
+                if (event.key === 'ArrowDown') {
+                    event.preventDefault();
+                    items[(idx + 1) % items.length].focus();
+                } else if (event.key === 'ArrowUp') {
+                    event.preventDefault();
+                    items[(idx - 1 + items.length) % items.length].focus();
+                }
+            });
+            moyenList.addEventListener('click', function (event) {
+                var item = event.target.closest('.personnel-search__item');
+                if (!item) return;
+                chooseMoyen(moyenResults[Array.prototype.indexOf.call(moyenList.querySelectorAll('.personnel-search__item'), item)]);
+            });
+            document.addEventListener('click', function (event) {
+                if (moyenList.hidden) return;
+                if (!event.target.closest('[data-moyen-search]')) moyenList.hidden = true;
+            });
+
+            /* Panneau « nouveau moyen » : ouverture, enregistrement, annulation */
+            var moyenAdd = moyenForm.querySelector('[data-moyen-add]');
+            var moyenSave = moyenForm.querySelector('[data-moyen-save]');
+            var moyenCancel = moyenForm.querySelector('[data-moyen-cancel]');
+            if (moyenAdd) {
+                moyenAdd.addEventListener('click', function () { moyenNew.hidden = false; });
+            }
+            if (moyenCancel) {
+                moyenCancel.addEventListener('click', function () { moyenNew.hidden = true; });
+            }
+            if (moyenSave) {
+                moyenSave.addEventListener('click', function () {
+                    var nom = moyenForm.querySelector('#tm-nom');
+                    var contact = moyenForm.querySelector('#tm-contact');
+                    var transport = moyenForm.querySelector('#tm-transport');
+                    if (!nom.value.trim() || !contact.value.trim()) return;
+                    var created = { nom: nom.value.trim(), contact: contact.value.trim(), transport: (transport.value || '').trim() };
+                    MOYENS.unshift(created);
+                    chooseMoyen(created);
+                    nom.value = '';
+                    contact.value = '';
+                    transport.value = '';
+                    moyenNew.hidden = true;
+                });
+            }
+
+            /* Soumission : valide le moyen sélectionné (ou saisi librement) */
+            moyenForm.addEventListener('submit', function (e) {
+                e.preventDefault();
+                var label = (moyenInput.value || '').trim();
+                var moyen = moyenSelected && moyenLabel(moyenSelected) === label ? moyenSelected : null;
+                if (!moyen && label) {
+                    moyen = MOYENS.filter(function (m) { return normalize(moyenLabel(m)) === normalize(label); })[0] ||
+                        { nom: label, transport: '', contact: '' };
+                }
+                if (!moyen || !moyen.nom) {
+                    var result = panel.querySelector('[data-confirm-result]');
+                    if (result) result.innerHTML = '';
+                    showAlert(result, 'Saisissez ou sélectionnez un moyen d\'acheminement.', 'danger');
+                    return;
+                }
+                var updated = completeMoyen(t.id, moyen);
+                renderWizard(updated, panel);
+                refreshKpi();
+                document.querySelectorAll('[data-transits-table]').forEach(renderAllTable);
             });
         }
     }
 
-    /* Vérifie les quantités saisies : si toutes correspondent aux quantités
-       attendues, le passage est conforme ; sinon il est non conforme et le
-       BS reste bloqué (invitation à déclarer une anomalie). */
-    function confirmPassage(t, panel) {
-        var mismatches = [];
-        document.querySelectorAll('[data-qty]').forEach(function (input) {
-            var expected = parseInt(input.getAttribute('data-expected'), 10);
-            var received = parseInt(input.value, 10);
-            if (isNaN(received) || received !== expected) {
-                mismatches.push({
-                    code: input.getAttribute('data-code'),
-                    expected: expected,
-                    received: isNaN(received) ? 0 : received
-                });
-            }
-        });
-
-        var conforme = mismatches.length === 0;
-        var updated = validate(t.id, conforme ? 'conforme' : 'non-conforme', '');
-        if (!updated) return;
-
-        var res = panel.querySelector('[data-confirm-result]');
-        if (res) {
-            if (conforme) {
-                res.className = 'alert-mock alert-mock--success';
-                res.innerHTML = '<i class="fa-solid fa-circle-check"></i>' +
-                    '<span>Passage <strong>conforme</strong> — toutes les quantités reçues correspondent au bon de sortie.</span>';
-            } else {
-                res.className = 'alert-mock alert-mock--danger';
-                res.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i>' +
-                    '<span>Contrôle <strong>non conforme</strong> — écart de quantité sur : ' +
-                    mismatches.map(function (m) {
-                        return '<strong>' + escapeHtml(m.code) + '</strong> (attendu ' + m.expected + ', reçu ' + m.received + ')';
-                    }).join(', ') +
-                    '. Déclarez une anomalie pour poursuivre.</span>';
-            }
-        }
-
-        // le bouton de confirmation est désactivé après validation
-        var btn = panel.querySelector('[data-confirm-passage]');
-        if (btn) {
-            btn.disabled = true;
-            btn.innerHTML = '<i class="fa-solid ' + (conforme ? 'fa-circle-check' : 'fa-circle-xmark') + '"></i> ' +
-                (conforme ? 'Passage confirmé' : 'Passage bloqué');
-        }
-
-        // rafraîchit le badge (sans réinitialiser la table : les quantités
-        // saisies et les confirmations de réception par ligne sont conservées)
-        var badgeEl = document.querySelector('[data-detail-badge]');
-        if (badgeEl) badgeEl.innerHTML = badge(updated.resultat);
-        refreshKpi();
-        document.querySelectorAll('[data-transits-table]').forEach(renderAllTable);
-    }
-
-    /* « Confirmer la réception » : validation distincte du passage. Pour
-       chaque article confirmé (case « Reçu »), la quantité réellement reçue
-       est enregistrée ; la réception n'est terminée que lorsque chaque ligne
-       à recevoir est confirmée avec sa quantité. */
-    function confirmReception(t, panel) {
-        var receptions = window.S2M && window.S2M.receptions;
-        if (!receptions || receptions.isReceptionne(t.bs)) return;
-
-        var notConfirmed = [];
-        var badQty = [];
-        var lignes = [];
-
-        document.querySelectorAll('[data-articles-body] [data-receive-ok]').forEach(function (cb) {
-            var tr = cb.closest('tr');
-            var input = tr.querySelector('[data-qty]');
-            var code = cb.getAttribute('data-code');
-            var attendu = parseInt(input.getAttribute('data-expected'), 10);
-            var aRendre = input.getAttribute('data-rendre') === '1';
-            var dateRetour = input.getAttribute('data-retour-date') || '';
-            if (!cb.checked) {
-                notConfirmed.push(code);
-                lignes.push({ code: code, attendu: attendu, recu: 0, aRendre: aRendre, dateRetour: dateRetour });
-                return;
-            }
-            var recu = parseInt(input.value, 10);
-            if (isNaN(recu) || recu < 0) {
-                badQty.push(code);
-                lignes.push({ code: code, attendu: attendu, recu: isNaN(recu) ? 0 : recu, aRendre: aRendre, dateRetour: dateRetour });
-                return;
-            }
-            lignes.push({ code: code, attendu: attendu, recu: recu, aRendre: aRendre, dateRetour: dateRetour });
-        });
-
-        if (notConfirmed.length || badQty.length) {
-            var parts = [];
-            if (notConfirmed.length) parts.push('confirmez la réception de chaque article (case « Reçu »)');
-            if (badQty.length) parts.push('renseignez la quantité reçue pour ' + badQty.map(escapeHtml).join(', '));
-            var res = panel.querySelector('[data-confirm-result]');
-            if (res) {
-                res.className = 'alert-mock alert-mock--danger';
-                res.innerHTML = '<i class="fa-solid fa-circle-exclamation"></i>' +
-                    '<span>' + escapeHtml(parts.join(' et ')) + ' avant de valider.</span>';
-            }
-            return;
-        }
-
-        var r = receptions.record(t.bs, lignes);
-        /* les lignes « à rendre » réellement reçues créent / activent
-           l'obligation de retour (le destinataire devient responsable) */
-        if (window.S2M && window.S2M.retours) {
-            S2M.retours.activateFromReception(t.bs, lignes);
-        }
-        showReceptionSuccess(panel, r);
-    }
-
-    function receptionTotal(lignes) {
-        return (lignes || []).reduce(function (sum, l) { return sum + (l.recu || 0); }, 0);
-    }
-
-    /* Bandeau après l'enregistrement du constat de réception (transit) :
-       le bon passe « en attente de confirmation du destinataire ». */
-    function showReceptionSuccess(panel, r) {
-        var prev = panel.querySelector('[data-reception-done]');
-        if (prev) prev.parentNode.removeChild(prev);
-        var div = document.createElement('div');
-        div.setAttribute('data-reception-done', '1');
-        div.className = 'alert-mock alert-mock--success mb-3';
-        div.innerHTML = '<i class="fa-solid fa-box-open"></i>' +
-            '<span>Constat de réception <strong>enregistré</strong> pour ' + escapeHtml(r.bs) + ' le ' + escapeHtml(r.date) +
-            ' par ' + escapeHtml(r.par) + ' — ' + receptionTotal(r.lignes) + ' pièce(s) reçue(s). ' +
-            'Le bon est <strong>en attente de confirmation du destinataire</strong> ; le suivi des retours démarre à partir de cette date.</span>';
-        panel.insertBefore(div, panel.firstChild);
-        var btn = panel.querySelector('[data-confirm-reception]');
-        if (btn) {
-            btn.disabled = true;
-            btn.innerHTML = '<i class="fa-solid fa-box-open"></i> Constat enregistré';
-        }
+    function etatOk(t) {
+        return t.resultat === 'conforme' || t.resultat === 'non-conforme';
     }
 
     function fillSelect(select, options, selected) {
@@ -800,40 +964,10 @@
             '<div class="alert-mock ' + (r.created ? 'alert-mock--success' : 'alert-mock--info') + ' mb-3">' +
                 '<i class="fa-solid ' + (r.created ? 'fa-circle-check' : 'fa-circle-info') + '"></i>' +
                 '<span>' + (r.created
-                    ? 'Transit <strong>' + escapeHtml(t.id) + '</strong> créé au magasin <strong>' + escapeHtml(t.magasin) + '</strong> — vérifiez les quantités reçues, puis confirmez le passage et la réception.'
-                    : 'Un transit existe déjà pour ce BS à ce magasin : <strong>' + escapeHtml(t.id) + '</strong>. Vérifiez les quantités reçues, puis confirmez le passage et la réception.') +
-                '</span></div>' +
-            '<div class="d-flex flex-wrap" style="gap:10px;">' +
-                '<button class="btn-mock" type="button" data-confirm-passage><i class="fa-solid fa-circle-check"></i> Confirmer le passage</button>' +
-                receptionButtonHtml(t.bs) +
-                '<button class="btn-mock btn-mock--danger" type="button" data-modal-open="anomalie" data-bs="' + escapeHtml(t.bs) + '" data-magasin="' + escapeHtml(t.magasin) + '"><i class="fa-solid fa-triangle-exclamation"></i> Déclarer une anomalie</button>' +
-            '</div>' +
-            '<div data-confirm-result class="mt-3"></div>';
-
-        var btn = panel.querySelector('[data-confirm-passage]');
-        if (btn) {
-            btn.addEventListener('click', function () {
-                confirmPassage(t, panel);
-            });
-        }
-        var recvBtn = panel.querySelector('[data-confirm-reception]');
-        if (recvBtn) {
-            recvBtn.addEventListener('click', function () {
-                confirmReception(t, panel);
-            });
-        }
-    }
-
-    /* Bouton « Confirmer la réception » après le scan : enregistre le constat
-       physique (quantité réellement reçue pour chaque article confirmé, case
-       « Reçu » de la table du détail, persistance gérée par reception.js).
-       Désactivé si le constat est déjà enregistré. */
-    function receptionButtonHtml(bs) {
-        if (!window.S2M || !window.S2M.receptions) return '';
-        var done = S2M.receptions.isReceptionne(bs);
-        return done
-            ? '<button class="btn-mock" type="button" disabled><i class="fa-solid fa-box-open"></i> Constat déjà enregistré</button>'
-            : '<button class="btn-mock" type="button" data-confirm-reception><i class="fa-solid fa-box-open"></i> Confirmer la réception</button>';
+                    ? 'Transit <strong>' + escapeHtml(t.id) + '</strong> créé au magasin <strong>' + escapeHtml(t.magasin) + '</strong> — le colis est fermé : le contrôle des quantités se fera à la réception.'
+                    : 'Un transit existe déjà pour ce BS à ce magasin : <strong>' + escapeHtml(t.id) + '</strong>.') +
+                '</span></div>';
+        renderWizard(t, panel);
     }
 
     /* --- Boot --- */
@@ -905,11 +1039,15 @@
     window.S2M.transits = {
         MAGASINS: MAGASINS,
         AGENTS: AGENTS,
+        MOYENS: MOYENS,
         all: all,
         forBs: forBs,
         find: find,
         create: create,
-        validate: validate,
+        confirmColis: confirmColis,
+        setEtat: setEtat,
+        completeMoyen: completeMoyen,
+        wizardSteps: wizardSteps,
         reset: reset,
         badge: badge,
         escapeHtml: escapeHtml

@@ -1658,6 +1658,188 @@ body.modal-open {
 }
 
 /* ==============================
+   WIZARD DE VALIDATION — Scan & Transit (agent)
+   Frise verticale du contrôle au transit : chaque étape est un
+   point relié par un trait (dégradé teal une fois franchie).
+   L'étape en cours porte un panneau de saisie blanc encadré
+   d'un liseré teal ; les étapes réalisées gardent un panneau
+   gris très clair avec leur confirmation. Reprend les codes
+   visuels de .workflow-step (pastilles) et .chip.
+   ============================== */
+.page-transit .wizard-steps {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.page-transit .wizard-step {
+    position: relative;
+    padding-left: 38px;
+}
+
+.page-transit .wizard-step + .wizard-step {
+    margin-top: 16px;
+}
+
+/* trait de liaison : du bas de la pastille jusqu'au point suivant */
+.page-transit .wizard-step::before {
+    content: "";
+    position: absolute;
+    left: 12px;
+    top: 26px;
+    bottom: -16px;
+    width: 2px;
+    background: var(--m-line);
+}
+
+.page-transit .wizard-step:last-child::before {
+    display: none;
+}
+
+.page-transit .wizard-step--done::before {
+    background: var(--m-primary);
+}
+
+.page-transit .wizard-step__head {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 11px;
+    min-height: 26px;
+}
+
+.page-transit .wizard-step__dot {
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    font-size: 12px;
+    line-height: 1;
+    background: var(--m-slate-soft);
+    color: var(--m-faint);
+    border: 2px solid var(--m-line);
+    position: relative;
+    z-index: 1;
+}
+
+.page-transit .wizard-step__num {
+    font-size: 0.72rem;
+    font-weight: 700;
+}
+
+.page-transit .wizard-step__label {
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: var(--m-ink);
+    transition: color 0.15s ease;
+}
+
+.page-transit .wizard-step__state {
+    margin-left: auto;
+    padding: 2px 9px;
+}
+
+/* étape réalisée : pastille dégradée + coche */
+.page-transit .wizard-step--done .wizard-step__dot {
+    background: var(--m-primary);
+    color: #fff;
+    border-color: transparent;
+}
+
+.page-transit .wizard-step--done .wizard-step__label {
+    color: var(--m-teal);
+}
+
+/* étape en cours : pastille teal entourée d'un halo */
+.page-transit .wizard-step--current .wizard-step__dot {
+    background: var(--m-teal-soft);
+    color: var(--m-teal);
+    border-color: var(--m-teal);
+    box-shadow: 0 0 0 4px rgba(14, 159, 110, 0.14);
+}
+
+.page-transit .wizard-step--current .wizard-step__label {
+    color: var(--m-ink);
+    font-weight: 700;
+}
+
+/* étape en attente : libellé atténué */
+.page-transit .wizard-step--pending .wizard-step__label {
+    color: var(--m-muted);
+}
+
+/* panneau de saisie / de confirmation de l'étape */
+.page-transit .wizard-step__body {
+    margin-top: 12px;
+    padding: 14px 16px;
+    background: #fff;
+    border: 1px solid var(--m-line);
+    border-left: 3px solid var(--m-teal);
+    border-radius: var(--m-radius);
+    box-shadow: 0 1px 2px rgba(43, 58, 85, 0.05);
+    font-size: 0.85rem;
+    color: var(--m-text);
+}
+
+.page-transit .wizard-step__body label {
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--m-ink);
+    margin-bottom: 3px;
+}
+
+.page-transit .wizard-step--done .wizard-step__body {
+    background: var(--m-bg-soft);
+    box-shadow: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .page-transit .wizard-step__dot,
+    .page-transit .wizard-step__label {
+        transition: none;
+    }
+}
+
+/* --- Étape « Vérification » : deux actions claires, note en dessous --- */
+.page-transit .wizard-check__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.page-transit .wizard-check__actions .btn-mock {
+    flex: 1 1 220px;
+    justify-content: center;
+}
+
+.page-transit .wizard-check__note {
+    margin: 0 0 4px;
+}
+
+.page-transit .wizard-check__done,
+.page-transit .wizard-moyen__done {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+}
+
+.page-transit .wizard-check__done .badge-status {
+    font-size: 0.88rem;
+}
+
+/* --- Étape « Moyen d'acheminement » : recherche + suggestions + Ajouter ---
+   Réutilise le bloc .ach-row / .ach-search / .ach-new de la création
+   d'un bon de sortie (suggestions .personnel-search__list) ; seul le
+   bouton de validation prend un espace sous la barre de recherche. */
+.page-transit .wizard-moyen [data-confirm-moyen] {
+    margin-top: 14px;
+}
+
+/* ==============================
    ONGLETS
    ============================== */
 .mock-tabs {

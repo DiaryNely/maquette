@@ -447,7 +447,7 @@
         return '<div class="timeline timeline--mini">' + o.mouvements.map(function (m) {
             var icon;
             var label;
-            if (m.type === 'reception') { icon = 'fa-box-open'; label = 'Réception (constat transit)'; }
+            if (m.type === 'reception') { icon = 'fa-box-open'; label = 'Réception (contrôle à la réception)'; }
             else if (m.type === 'renvoi') { icon = 'fa-paper-plane'; label = 'Renvoi (expédition du retour)'; }
             else if (m.type === 'retour_recu') { icon = 'fa-circle-check'; label = 'Réception du retour'; }
             else if (m.type === 'cloture') { icon = 'fa-lock'; label = 'Clôture'; }

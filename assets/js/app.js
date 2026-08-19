@@ -28,7 +28,7 @@ const USERS = {
 
 /* Pages accessibles par rôle simulé (null = tout, rôle administrateur) */
 const ROLE_PAGES = {
-    lambda:   ['bs-list', 'bs-create', 'bs-detail', 'notifications', 'anomalie-detail', 'retours'],
+    lambda:   ['bs-list', 'bs-create', 'bs-detail', 'notifications', 'anomalie-detail', 'retours', 'reception'],
     transit:  ['transit', 'bs-detail', 'anomalie-detail', 'notifications'],
     direction:['validations', 'bs-list', 'bs-detail', 'notifications'],
     admin:    null

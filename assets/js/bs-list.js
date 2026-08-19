@@ -33,7 +33,10 @@
         { bs: 'BS-2026-0137', date: '07/08/2026', initiateur: 'Rakotobe Hery',        beneficiaire: 'Rasoanirina Miora',  origine: 'Magasin central', destination: 'Siège - Administration S2M', motif: 'Équipement informatique', statut: 'Brouillon', retour: true },
         { bs: 'BS-2026-0136', date: '06/08/2026', initiateur: 'Razafindratsima Vola', beneficiaire: 'Rabeharisoa Andry',  origine: 'Entrepôt S2M',     destination: 'Magasin central',           motif: 'Équipement mobilier',   statut: 'Annulé',   retour: false },
         { bs: 'BS-2026-0135', date: '05/08/2026', initiateur: 'Rakotomalala Njato',   beneficiaire: 'Rasolofoniaina Fanja', origine: 'Magasin central', destination: 'Entrepôt S2M',              motif: 'Consommables atelier',  statut: 'Clôturé',  retour: false },
-        { bs: 'BS-2026-0134', date: '01/08/2026', initiateur: 'Rabeharisoa Andry',    beneficiaire: 'Rakotobe Hery',        origine: 'Entrepôt S2M',     destination: 'Magasin central',           motif: 'Matériel de chantier',  statut: 'Réceptionné', retour: true },
+        { bs: 'BS-2026-0134', date: '01/08/2026', initiateur: 'Rabeharisoa Andry',    beneficiaire: 'Rakotobe Hery',        origine: 'Entrepôt S2M',     destination: 'Magasin central',           motif: 'Matériel de chantier',  statut: 'En cours',  retour: true },
+        { bs: 'BS-2026-0133', date: '30/07/2026', initiateur: 'Razafindratsima Vola', beneficiaire: 'Rasolofoniaina Fanja', origine: 'Magasin central', destination: 'Entrepôt S2M',              motif: 'Outillage atelier',     statut: 'Soumis',   retour: false },
+        { bs: 'BS-2026-0132', date: '29/07/2026', initiateur: 'Rakotomalala Njato',   beneficiaire: 'Rabeharisoa Andry',    origine: 'Entrepôt S2M',     destination: 'Magasin central',           motif: 'Consommables atelier',  statut: 'Soumis',   retour: true },
+        { bs: 'BS-2026-0131', date: '28/07/2026', initiateur: 'Herilala Rabe',        beneficiaire: 'Randria Jean',         origine: 'Magasin central', destination: 'Siège - Administration S2M', motif: 'Équipement informatique', statut: 'Soumis',   retour: false },
         { bs: 'BS-2026-0130', date: '28/07/2026', initiateur: 'Rakotobe Hery',        beneficiaire: 'Razafindrakoto Lova', origine: 'Magasin central', destination: 'Entrepôt S2M',               motif: 'Outillage',             statut: 'Clôturé',  retour: true }
     ];
 
@@ -68,29 +71,29 @@
     }
 
     function actions(b, tab) {
-        var html = '<a class="action-btn action-btn--view" href="index.html?page=bs-detail" title="Voir le détail"><i class="fa-solid fa-eye"></i></a>';
+        var html = '<a class="action-btn action-btn--view" href="index.html?page=bs-detail&bs=' + encodeURIComponent(b.bs) + '" title="Voir le détail"><i class="fa-solid fa-eye"></i></a>';
         if (b.statut === 'Brouillon') {
             html += '<a class="action-btn action-btn--edit" href="index.html?page=bs-create" title="Modifier"><i class="fa-solid fa-pen"></i></a>' +
                     '<button class="action-btn action-btn--danger" type="button" title="Annuler ce brouillon"><i class="fa-solid fa-xmark"></i></button>';
         }
         if (tab === 'recevoir' && currentRole() !== 'admin') {
             var receptions = window.S2M && window.S2M.receptions;
-            if (receptions && receptions.isConfirme(b.bs)) {
-                html = '<button class="action-btn action-btn--success" type="button" disabled title="Réception confirmée par le destinataire"><i class="fa-solid fa-box-open"></i></button>' + html;
-            } else if (receptions && receptions.isReceptionne(b.bs)) {
-                html = '<button class="action-btn action-btn--success" type="button" data-reception-confirm="' + escapeHtml(b.bs) + '" title="Confirmer la réception"><i class="fa-solid fa-box-open"></i></button>' + html;
+            if (receptions && receptions.isReceptionne(b.bs)) {
+                html = '<button class="action-btn action-btn--success" type="button" disabled title="Réception déjà validée"><i class="fa-solid fa-box-open"></i></button>' + html;
             } else {
-                html = '<button class="action-btn action-btn--success" type="button" disabled title="En attente de réception par le transit"><i class="fa-solid fa-hourglass-half"></i></button>' + html;
+                html = '<a class="action-btn action-btn--success" href="' + routeReception(b.bs) + '" title="Réceptionner ce BS" data-reception-confirm="' + escapeHtml(b.bs) + '"><i class="fa-solid fa-box-open"></i></a>' + html;
             }
         }
         return html;
     }
 
     /* Chaque ligne affiche le nom de l'initiateur ainsi que les
-       magasins initiateur et bénéficiaire du bon. */
+       magasins initiateur et bénéficiaire du bon. Le lien vers le
+       détail porte la référence du BS (?bs=…) pour rendre la fiche
+       cohérente avec le bon consulté. */
     function rowHtml(b, tab) {
         return '<tr>' +
-            '<td><a class="cell-link" href="index.html?page=bs-detail">' + escapeHtml(b.bs) + '</a></td>' +
+            '<td><a class="cell-link" href="index.html?page=bs-detail&bs=' + encodeURIComponent(b.bs) + '">' + escapeHtml(b.bs) + '</a></td>' +
             '<td>' + escapeHtml(b.date) + '</td>' +
             '<td>' + escapeHtml(b.initiateur) + '</td>' +
             '<td class="cell-muted">' + escapeHtml(b.origine) + '</td>' +
@@ -140,6 +143,14 @@
         return raw.split('/')[0] || null;
     }
 
+    function routeReception(bs) {
+        var role = currentRole() || '';
+        var q = new URLSearchParams();
+        q.set('page', (role ? role + '/' : '') + 'reception');
+        q.set('bs', bs);
+        return 'index.html?' + q.toString();
+    }
+
     function filterList(list, tab) {
         var root = document.querySelector('[data-bslist]');
         var panel = root.querySelector('[data-mock-panel="' + tab + '"]');
@@ -167,9 +178,19 @@
 
         if (window.S2M && window.S2M.receptions) {
             BS.forEach(function (b) {
-                /* le statut « Réceptionné » n'est posé qu'à la confirmation
-                   du destinataire (le constat du transit ne suffit pas) */
-                if (S2M.receptions.isConfirme(b.bs)) b.statut = 'Réceptionné';
+                /* le statut « Réceptionné » est posé dès la validation
+                   définitive de la réception (contrôle des quantités) */
+                if (S2M.receptions.isReceptionne(b.bs)) b.statut = 'Réceptionné';
+            });
+        }
+
+        /* une décision de la Direction fait sortir un BS « Soumis »
+           (en attente de validation) vers « Validé » / « Refusé » */
+        if (window.S2M && window.S2M.validations) {
+            BS.forEach(function (b) {
+                if (b.statut === 'Soumis' && S2M.validations.decisionOf(b.bs)) {
+                    b.statut = S2M.validations.statutEffectif(b);
+                }
             });
         }
 
