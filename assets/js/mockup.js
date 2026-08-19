@@ -163,9 +163,23 @@
         }
     });
 
-    /* --- 5. Modale générique ---
-       Un bouton [data-modal-open="x"] ouvre [data-modal="x"].
-       Fermeture : croix, clic sur le fond, ou touche Échap. */
+    /* --- 5. Sélecteur de période des rapports --- */
+    /* Report period selector: only one option can be active. */
+    document.addEventListener('click', function (event) {
+        var option = event.target.closest('[data-report-period]');
+        if (!option) return;
+
+        var selector = option.closest('.reports-period-switch');
+        if (!selector) return;
+
+        var period = option.getAttribute('data-report-period');
+        selector.setAttribute('data-active', period);
+        selector.querySelectorAll('[data-report-period]').forEach(function (item) {
+            item.setAttribute('aria-pressed', item === option ? 'true' : 'false');
+        });
+    });
+
+    /* --- 6. Modale générique --- */
     document.addEventListener('click', function (event) {
         var opener = event.target.closest('[data-modal-open]');
         if (opener) {

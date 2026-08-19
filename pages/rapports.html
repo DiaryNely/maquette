@@ -6,9 +6,9 @@
             <h1><i class="fa-solid fa-chart-column text-teal"></i> Rapports &amp; statistiques</h1>
         </div>
         <div class="mock-page-head__actions">
-            <div class="btn-group" role="group" aria-label="Période">
-                <button type="button" class="btn-mock btn-mock--sm">Hebdomadaire</button>
-                <button type="button" class="btn-mock btn-mock--sm">Mensuel</button>
+            <div class="reports-period-switch" role="group" aria-label="Période du rapport" data-active="weekly">
+                <button type="button" class="reports-period-switch__option" data-report-period="weekly" aria-pressed="true">Hebdomadaire</button>
+                <button type="button" class="reports-period-switch__option" data-report-period="monthly" aria-pressed="false">Mensuel</button>
             </div>
             <button class="btn-export" type="button" title="Exporter le rapport en Excel"><i class="fa-solid fa-file-excel"></i></button>
         </div>
