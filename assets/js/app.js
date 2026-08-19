@@ -75,7 +75,7 @@ async function chargerMenus() {
 
     await Promise.all(Array.from(emplacements, async emplacement => {
         // cache-busting : le navigateur garde parfois menu.html en cache
-        const reponse = await fetch(fichier + '?v=5');
+        const reponse = await fetch(fichier + '?v=6');
         if (!reponse.ok) return;
         emplacement.outerHTML = await reponse.text();
     }));

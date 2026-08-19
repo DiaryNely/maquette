@@ -481,7 +481,7 @@
         if (role !== 'admin') {
             if (activeTab === 'tab1' && (st === 'en_attente' || st === 'en_retard')) {
                 var restant = o.qteDue - o.qteRendue - o.qteEnTransit;
-                actionHtml += '<button class="action-btn action-btn--info" type="button" data-expedier-retour="' + escapeHtml(o.bs) + '" data-expedier-code="' + escapeHtml(o.code) + '" data-max="' + restant + '" title="Enregistrer le retour (expédier vers le magasin d\'origine)">' +
+                actionHtml += '<button class="action-btn action-btn--success" type="button" data-expedier-retour="' + escapeHtml(o.bs) + '" data-expedier-code="' + escapeHtml(o.code) + '" data-max="' + restant + '" title="Enregistrer le retour (expédier vers le magasin d\'origine)">' +
                     '    <i class="fa-solid fa-paper-plane"></i>' +
                     '</button>';
             } else if (activeTab === 'tab2' && st === 'retour_expedie') {

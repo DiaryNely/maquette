@@ -191,7 +191,7 @@
                 '<a class="action-btn action-btn--view" href="' + detailHref(b.bs) + '" title="Voir le détail du BS"><i class="fa-solid fa-eye"></i></a>' +
                 (decided ? '' :
                     '<button class="action-btn action-btn--success" type="button" data-val-valider="' + escapeHtml(b.bs) + '" title="Valider le BS — poursuite du workflow"><i class="fa-solid fa-check"></i></button>' +
-                    '<button class="action-btn action-btn--danger" type="button" data-val-refuser="' + escapeHtml(b.bs) + '" title="Refuser le BS (motif obligatoire)"><i class="fa-solid fa-ban"></i></button>') +
+                    '<button class="action-btn action-btn--danger" type="button" data-val-refuser="' + escapeHtml(b.bs) + '" title="Refuser le BS (motif obligatoire)"><i class="fa-solid fa-xmark"></i></button>') +
             '</td>' +
         '</tr>';
         return html;

@@ -122,6 +122,13 @@
    ÉLÉMENTS DU MENU
 ============================== */
 
+/* Séparateur entre groupes de sous-menu */
+.floating-menu-separator {
+    height: 1px;
+    margin: 6px 18px;
+    background: rgba(255, 255, 255, 0.28);
+}
+
 .floating-menu-link {
     display: block;
 
