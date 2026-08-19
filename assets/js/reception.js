@@ -10,9 +10,10 @@
    est validée définitivement — ce qui met à jour le statut du BS et le
    stock du magasin.
 
-   Lieux de réception :
-     - page « Réception » (portail Personnel) : contrôle complet, BS à
-       recevoir pour le magasin du connecté ;
+   Accès :
+     - la page « Réception » est lancée directement pour un BS donné
+       (lien « Réceptionner ce BS » depuis la fiche détail) : on procède
+       au contrôle, pas de sélection de BS sur la page ;
      - fiche détail d'un BS : carte « Réception de la marchandise »
        (état + bouton d'accès à la réception).
    L'administrateur suit en lecture seule.
@@ -289,26 +290,6 @@
 
     /* --- Rendu : page Réception --- */
 
-    function recRowHtml(b) {
-        return '<tr data-bs="' + escapeHtml(b.bs) + '">' +
-            '<td class="mono">' + escapeHtml(b.bs) + '</td>' +
-            '<td>' + escapeHtml(b.motif) + '</td>' +
-            '<td class="cell-muted">' + escapeHtml(b.origine) + '</td>' +
-            '<td class="cell-muted">' + escapeHtml(b.destination) + '</td>' +
-            '<td>' + badgeStatutReception(b) + '</td>' +
-            '<td class="cell-actions">' +
-            '<a class="action-btn action-btn--success" data-rec-pick href="' + routeReception(b.bs) + '" data-bs="' + escapeHtml(b.bs) + '" title="Réceptionner ce BS"><i class="fa-solid fa-box-open"></i></a>' +
-            '<a class="action-btn action-btn--view" href="index.html?page=bs-detail&bs=' + encodeURIComponent(b.bs) + '" title="Voir le détail"><i class="fa-solid fa-eye"></i></a>' +
-            '</td></tr>';
-    }
-
-    function badgeStatutReception(b) {
-        var cls = 'badge--encours', lbl = 'En cours';
-        if (b.statut === 'Réceptionné') { cls = 'badge--info'; lbl = 'Réceptionné'; }
-        else if (b.statut === 'Refusé') { cls = 'badge--refuse'; lbl = 'Refusé'; }
-        return '<span class="badge-status ' + cls + '">' + lbl + '</span>';
-    }
-
     function routeReception(bs) {
         var role = currentRole() || '';
         var prefix = role ? role + '/' : '';
@@ -316,21 +297,6 @@
         q.set('page', prefix + 'reception');
         q.set('bs', bs);
         return 'index.html?' + q.toString();
-    }
-
-    function renderRecList(container) {
-        var tbody = container.querySelector('[data-rec-list] tbody') || container.querySelector('[data-rec-list]');
-        if (!tbody) return;
-        var q = '';
-        var si = container.querySelector('[data-rec-search]');
-        if (si) q = (si.value || '').trim().toLowerCase();
-        var all = bsAttendus();
-        var list = q ? all.filter(function (b) { return (b.bs.toLowerCase().indexOf(q) !== -1) || (b.motif.toLowerCase().indexOf(q) !== -1) || (b.origine.toLowerCase().indexOf(q) !== -1) || (b.destination.toLowerCase().indexOf(q) !== -1); }) : all;
-        if (!list.length) {
-            tbody.innerHTML = '<tr><td colspan="6" class="cell-muted text-center py-3">Aucun bon de sortie à recevoir pour <strong>' + escapeHtml(currentStore()) + '</strong>.</td></tr>';
-            return;
-        }
-        tbody.innerHTML = list.map(recRowHtml).join('');
     }
 
     /* Articles de la carte de contrôle de réception (catalogue) */
@@ -491,16 +457,6 @@
 
     /* --- Rendu : page de liste (bs-list "à recevoir") --- */
 
-    function bootReceptionList() {
-        var done = document.querySelector('[data-rec-list]');
-        if (!done) return false;
-        if (done.getAttribute('data-rec-bound')) return true;
-        done.setAttribute('data-rec-bound', '1');
-        renderRecList(done);
-        if (window.S2M && window.S2M.bsListRefresh) S2M.bsListRefresh();
-        return true;
-    }
-
     /* --- Rendu : fiche détail (carte Réception) --- */
 
     function bootDetail() {
@@ -606,17 +562,6 @@
             panel.querySelector('[data-rec-readonly]').classList.remove('is-hidden');
         }
 
-        /* choix d'un BS depuis la liste */
-        panel.addEventListener('click', function (event) {
-            var pick = event.target.closest('[data-rec-pick]');
-            if (pick) {
-                var href = pick.getAttribute('href');
-                var bs = new URLSearchParams(href.split('?')[1]).get('bs');
-                if (bs) { location.search = '?page=' + (role ? role + '/' : '') + 'reception&bs=' + bs; }
-                event.preventDefault();
-            }
-        });
-
         /* ajout / retrait d'articles supplémentaires */
         panel.addEventListener('click', function (event) {
             var add = event.target.closest('[data-rec-add-supp]');
@@ -647,17 +592,9 @@
             });
         }
 
-        /* filtre de recherche dans la liste des BS à recevoir */
-        panel.querySelector('[data-rec-search]').addEventListener('input', function () { renderRecList(panel); });
-        panel.querySelector('[data-rec-search-clear]').addEventListener('click', function () {
-            var si = panel.querySelector('[data-rec-search]'); if (si) si.value = '';
-            renderRecList(panel);
-        });
-
         var storeChip = panel.querySelector('[data-rec-store]');
         if (storeChip) storeChip.textContent = currentStore();
 
-        renderRecList(panel);
         var bs = currentBs();
         if (bs) renderReceptionForm(bs);
         refreshRecResult();
@@ -707,7 +644,6 @@
         if (!r) { showRecAlert(panel, 'Ce BS a déjà été réceptionné.', 'danger'); return; }
         showRecSuccess(panel, r);
         /* rafraîchit les vues dépendantes */
-        renderRecList(panel);
         if (window.S2M && window.S2M.bsListRefresh) S2M.bsListRefresh();
     }
 
@@ -745,7 +681,6 @@
 
     function tryBoot() {
         if (pageName() === 'reception' && document.querySelector('[data-rec-page]')) return bootReceptionPage();
-        if (pageName() === 'reception' && document.querySelector('[data-rec-list]')) return bootReceptionList();
         return bootDetail();
     }
 
