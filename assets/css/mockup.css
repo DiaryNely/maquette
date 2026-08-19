@@ -218,6 +218,28 @@
     color: var(--m-red);
 }
 
+/* Modifier → orange (cohérent avec action-btn--edit) */
+.btn-mock--edit {
+    background: #f59e0b;
+    color: #fff;
+}
+
+.btn-mock--edit:hover {
+    background: #d97706;
+    color: #fff;
+}
+
+/* Voir / Détails → bleu (cohérent avec action-btn--view) */
+.btn-mock--view {
+    background: var(--m-blue);
+    color: #fff;
+}
+
+.btn-mock--view:hover {
+    background: #115ec4;
+    color: #fff;
+}
+
 .btn-mock--sm {
     padding: 6px 12px;
     font-size: 0.8rem;
@@ -311,7 +333,8 @@
 /* Boutons de navigation (Retour, Annuler, Fermer) */
 .btn-mock[data-go-back],
 .btn-mock[data-modal-close],
-.btn-mock[data-ach-cancel] {
+.btn-mock[data-ach-cancel],
+.btn-mock[data-moyen-cancel] {
     background: #fff;
     color: var(--m-muted);
     border: 1px solid var(--m-line);
@@ -320,13 +343,15 @@
 
 .btn-mock[data-go-back] i,
 .btn-mock[data-modal-close] i,
-.btn-mock[data-ach-cancel] i {
+.btn-mock[data-ach-cancel] i,
+.btn-mock[data-moyen-cancel] i {
     transition: transform 0.2s ease;
 }
 
 .btn-mock[data-go-back]:hover,
 .btn-mock[data-modal-close]:hover,
-.btn-mock[data-ach-cancel]:hover {
+.btn-mock[data-ach-cancel]:hover,
+.btn-mock[data-moyen-cancel]:hover {
     color: var(--m-ink);
     background: var(--m-bg-soft);
     border-color: var(--m-faint);
@@ -335,13 +360,15 @@
 
 .btn-mock[data-go-back]:hover i,
 .btn-mock[data-modal-close]:hover i.fa-arrow-left,
-.btn-mock[data-ach-cancel]:hover i.fa-arrow-left {
+.btn-mock[data-ach-cancel]:hover i.fa-arrow-left,
+.btn-mock[data-moyen-cancel]:hover i.fa-arrow-left {
     transform: translateX(-4px); /* Cute micro-animation: arrow slides left */
 }
 
 .btn-mock[data-go-back]:hover i.fa-xmark,
 .btn-mock[data-modal-close]:hover i.fa-xmark,
-.btn-mock[data-ach-cancel]:hover i.fa-xmark {
+.btn-mock[data-ach-cancel]:hover i.fa-xmark,
+.btn-mock[data-moyen-cancel]:hover i.fa-xmark {
     transform: rotate(90deg); /* Micro-animation rotating cross */
 }
 
@@ -2623,7 +2650,7 @@ body.modal-open {
     padding: 0;
     border: 0;
     border-radius: 4px;
-    background: #1bb596;
+    background: var(--m-teal);
     color: #fff;
     font-size: 12px;
     cursor: pointer;
