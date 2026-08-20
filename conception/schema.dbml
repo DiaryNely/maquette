@@ -1,0 +1,457 @@
+// Use DBML to define your database structure
+// Docs: https://dbml.dbdiagram.io/docs
+
+Table "statut_bs" {
+  "id" BIGINT [pk, not null, increment]
+  "code" VARCHAR(50) [not null]
+  "libelle" VARCHAR(100) [not null]
+
+  Indexes {
+    code [unique, name: "uq_statut_bs_code"]
+  }
+}
+
+Table "type_article" {
+  "id" BIGINT [pk, not null, increment]
+  "code" VARCHAR(50) [not null]
+  "libelle" VARCHAR(100) [not null]
+
+  Indexes {
+    code [unique, name: "uq_type_article_code"]
+  }
+}
+
+Table "etat_article" {
+  "id" BIGINT [pk, not null, increment]
+  "code" VARCHAR(50) [not null]
+  "libelle" VARCHAR(100) [not null]
+
+  Indexes {
+    code [unique, name: "uq_etat_article_code"]
+  }
+}
+
+Table "statut_etape" {
+  "id" BIGINT [pk, not null, increment]
+  "code" VARCHAR(50) [not null]
+  "libelle" VARCHAR(100) [not null]
+
+  Indexes {
+    code [unique, name: "uq_statut_etape_code"]
+  }
+}
+
+Table "resultat_passage" {
+  "id" BIGINT [pk, not null, increment]
+  "code" VARCHAR(50) [not null]
+  "libelle" VARCHAR(100) [not null]
+
+  Indexes {
+    code [unique, name: "uq_resultat_passage_code"]
+  }
+}
+
+Table "statut_anomalie" {
+  "id" BIGINT [pk, not null, increment]
+  "code" VARCHAR(50) [not null]
+  "libelle" VARCHAR(100) [not null]
+
+  Indexes {
+    code [unique, name: "uq_statut_anomalie_code"]
+  }
+}
+
+Table "vote_anomalie" {
+  "id" BIGINT [pk, not null, increment]
+  "code" VARCHAR(50) [not null]
+  "libelle" VARCHAR(100) [not null]
+
+  Indexes {
+    code [unique, name: "uq_vote_anomalie_code"]
+  }
+}
+
+Table "transporteurs" {
+  "id" BIGINT [pk, not null, increment]
+  "nom" VARCHAR(190) [not null]
+  "contact" VARCHAR(190) [not null]
+  "type_transport" VARCHAR(60) [not null]
+  "cree_par_user_id" VARCHAR(30)
+  "created_at" DATETIME [not null, default: `CURRENT_TIMESTAMP`]
+
+  Indexes {
+    nom [name: "idx_transporteurs_nom"]
+  }
+}
+
+Table "number_sequences" {
+  "prefixe" VARCHAR(10) [not null]
+  "annee" SMALLINT [not null]
+  "prochaine_valeur" INT [not null, default: 1]
+
+  Indexes {
+    (prefixe, annee) [pk]
+  }
+}
+
+Table "bons_sortie" {
+  "id" BIGINT [pk, not null, increment]
+  "numero" VARCHAR(20) [not null]
+  "initiateur_user_id" VARCHAR(30) [not null]
+  "beneficiaire_user_id" VARCHAR(30) [not null]
+  "site_origine_id" VARCHAR(20) [not null]
+  "site_destination_id" VARCHAR(20) [not null]
+  "transporteur_id" BIGINT
+  "motif" VARCHAR(190)
+  "commentaire" VARCHAR(1000)
+  "date_sortie_souhaitee" DATE
+  "date_limite_retour" DATE
+  "statut_id" BIGINT [not null, default: 1]
+  "qr_payload" VARCHAR(190)
+  "qr_signature" VARCHAR(128)
+  "date_emission" DATETIME
+  "created_at" DATETIME [not null, default: `CURRENT_TIMESTAMP`]
+  "updated_at" DATETIME [not null, default: `CURRENT_TIMESTAMP`]
+
+  Indexes {
+    numero [unique, name: "uq_bons_sortie_numero"]
+    (site_origine_id, statut_id, created_at) [name: "idx_bs_origine_statut_created"]
+    (site_destination_id, statut_id, created_at) [name: "idx_bs_destination_statut_created"]
+    statut_id [name: "idx_bs_statut"]
+  }
+}
+
+Table "bs_lignes" {
+  "id" BIGINT [pk, not null, increment]
+  "bs_id" BIGINT [not null]
+  "type_article_id" BIGINT [not null]
+  "code" VARCHAR(60) [not null]
+  "designation" VARCHAR(190) [not null]
+  "quantite" INT [not null]
+  "etat_id" BIGINT [not null]
+  "a_rendre" TINYINT(1) [not null, default: 0]
+  "date_retour_prevue" DATE
+  "created_at" DATETIME [not null, default: `CURRENT_TIMESTAMP`]
+
+  Checks {
+    `quantite >= 1` [name: 'chk_bs_lignes_quantite']
+    `a_rendre = 0 OR date_retour_prevue IS NOT NULL` [name: 'chk_bs_lignes_retour']
+  }
+
+  Indexes {
+    (bs_id, a_rendre) [name: "idx_bs_lignes_bs_rendre"]
+  }
+}
+
+Table "bs_etapes" {
+  "id" BIGINT [pk, not null, increment]
+  "bs_id" BIGINT [not null]
+  "etape" VARCHAR(20) [not null]
+  "statut_id" BIGINT [not null, default: 1]
+  "acteur_user_id" VARCHAR(30)
+  "decision_at" DATETIME
+  "motif_refus" VARCHAR(500)
+  "created_at" DATETIME [not null, default: `CURRENT_TIMESTAMP`]
+
+  Indexes {
+    (bs_id, etape) [unique, name: "uq_bs_etapes"]
+  }
+}
+
+Table "passages_transit" {
+  "id" BIGINT [pk, not null, increment]
+  "numero" VARCHAR(20) [not null]
+  "bs_id" BIGINT [not null]
+  "site_id" VARCHAR(20) [not null]
+  "agent_user_id" VARCHAR(30) [not null]
+  "scanned_at" DATETIME(3) [not null]
+  "resultat_id" BIGINT [not null, default: 1]
+  "note" VARCHAR(500)
+  "idempotency_key" VARCHAR(64)
+  "created_at" DATETIME [not null, default: `CURRENT_TIMESTAMP`]
+
+  Indexes {
+    numero [unique, name: "uq_passages_numero"]
+    (bs_id, site_id) [unique, name: "uq_passages_bs_site"]
+    idempotency_key [unique, name: "uq_passages_idempotency"]
+    (bs_id, scanned_at) [name: "idx_passages_bs_scanned"]
+    site_id [name: "idx_passages_site"]
+  }
+}
+
+Table "receptions" {
+  "id" BIGINT [pk, not null, increment]
+  "bs_id" BIGINT [not null]
+  "site_id" VARCHAR(20) [not null]
+  "agent_user_id" VARCHAR(30) [not null]
+  "constat_at" DATETIME [not null]
+  "confirmed_by_user_id" VARCHAR(30)
+  "confirmed_at" DATETIME
+  "created_at" DATETIME [not null, default: `CURRENT_TIMESTAMP`]
+
+  Checks {
+    `confirmed_at IS NULL OR confirmed_by_user_id IS NOT NULL` [name: 'chk_receptions_confirmation']
+  }
+
+  Indexes {
+    bs_id [unique, name: "uq_receptions_bs"]
+    site_id [name: "idx_receptions_site"]
+  }
+}
+
+Table "reception_lignes" {
+  "id" BIGINT [pk, not null, increment]
+  "reception_id" BIGINT [not null]
+  "bs_ligne_id" BIGINT [not null]
+  "attendu" INT [not null]
+  "recu" INT [not null]
+  "ecart" INT [note: 'GENERATED ALWAYS AS (CAST(recu AS SIGNED) - CAST(attendu AS SIGNED)) VIRTUAL']
+
+  Checks {
+    `attendu >= 0` [name: 'chk_reception_lignes_attendu']
+    `recu >= 0` [name: 'chk_reception_lignes_recu']
+  }
+
+  Indexes {
+    (reception_id, bs_ligne_id) [unique, name: "uq_reception_lignes"]
+    bs_ligne_id [name: "idx_reception_lignes_bs_ligne"]
+  }
+}
+
+Table "mouvements_retour" {
+  "id" BIGINT [pk, not null, increment]
+  "bs_ligne_id" BIGINT [not null]
+  "site_retour_id" VARCHAR(20) [not null]
+  "quantite" INT [not null]
+  "etat_id" BIGINT [not null]
+  "expedie_par_user_id" VARCHAR(30)
+  "expedie_at" DATETIME
+  "recu_par_user_id" VARCHAR(30)
+  "recu_at" DATETIME
+  "created_at" DATETIME [not null, default: `CURRENT_TIMESTAMP`]
+
+  Checks {
+    `quantite >= 1` [name: 'chk_mouvements_quantite']
+    `expedie_at IS NULL OR expedie_par_user_id IS NOT NULL` [name: 'chk_mouvements_expedition']
+    `recu_at IS NULL OR recu_par_user_id IS NOT NULL` [name: 'chk_mouvements_reception']
+  }
+
+  Indexes {
+    (bs_ligne_id, recu_at) [name: "idx_mouvements_bs_ligne"]
+    site_retour_id [name: "idx_mouvements_site"]
+  }
+}
+
+Table "anomalies" {
+  "id" BIGINT [pk, not null, increment]
+  "numero" VARCHAR(20) [not null]
+  "bs_id" BIGINT [not null]
+  "passage_transit_id" BIGINT
+  "point_controle_site_id" VARCHAR(20) [not null]
+  "motif" VARCHAR(190) [not null]
+  "description" TEXT [not null]
+  "date_limite" DATETIME [not null]
+  "statut_id" BIGINT [not null, default: 1]
+  "cree_par_user_id" VARCHAR(30)
+  "created_at" DATETIME [not null, default: `CURRENT_TIMESTAMP`]
+  "date_resolution" DATETIME
+
+  Indexes {
+    numero [unique, name: "uq_anomalies_numero"]
+    (bs_id, statut_id, date_limite) [name: "idx_anomalies_bs_statut_limite"]
+    (statut_id, date_limite) [name: "idx_anomalies_statut_limite"]
+    passage_transit_id [name: "idx_anomalies_passage"]
+  }
+}
+
+Table "anomalie_messages" {
+  "id" BIGINT [pk, not null, increment]
+  "anomalie_id" BIGINT [not null]
+  "entite" VARCHAR(20) [not null, note: 'transit, securite, magasin']
+  "auteur_user_id" VARCHAR(30) [not null]
+  "contenu" TEXT [not null]
+  "created_at" DATETIME [not null, default: `CURRENT_TIMESTAMP`]
+
+  Indexes {
+    (anomalie_id, created_at) [name: "idx_anomalie_messages"]
+  }
+}
+
+Table "anomalie_votes" {
+  "id" BIGINT [pk, not null, increment]
+  "anomalie_id" BIGINT [not null]
+  "entite" VARCHAR(20) [not null, note: 'transit, securite, magasin']
+  "vote_id" BIGINT [not null]
+  "auteur_user_id" VARCHAR(30) [not null]
+  "created_at" DATETIME [not null, default: `CURRENT_TIMESTAMP`]
+
+  Indexes {
+    (anomalie_id, entite) [unique, name: "uq_anomalie_votes"]
+  }
+}
+
+Table "anomalie_fichiers" {
+  "id" BIGINT [pk, not null, increment]
+  "anomalie_id" BIGINT [not null]
+  "nom_original" VARCHAR(255) [not null]
+  "type_mime" VARCHAR(100) [not null]
+  "taille_octets" BIGINT [not null]
+  "cle_objet" VARCHAR(255) [not null]
+  "upload_par_user_id" VARCHAR(30)
+  "created_at" DATETIME [not null, default: `CURRENT_TIMESTAMP`]
+
+  Indexes {
+    anomalie_id [name: "idx_anomalie_fichiers"]
+  }
+}
+
+Table "notifications" {
+  "id" BIGINT [pk, not null, increment]
+  "destinataire_user_id" VARCHAR(30) [not null]
+  "type_evenement" VARCHAR(50) [not null]
+  "titre" VARCHAR(190) [not null]
+  "contenu" VARCHAR(1000)
+  "objet_type" VARCHAR(30)
+  "objet_id" BIGINT
+  "lu_at" DATETIME
+  "created_at" DATETIME [not null, default: `CURRENT_TIMESTAMP`]
+
+  Indexes {
+    (destinataire_user_id, lu_at, created_at) [name: "idx_notifications_destinataire"]
+  }
+}
+
+Table "notification_rules" {
+  "type_evenement" VARCHAR(50) [not null]
+  "role_cible" VARCHAR(30) [not null]
+  "active" TINYINT(1) [not null, default: 1]
+
+  Indexes {
+    (type_evenement, role_cible) [pk]
+  }
+}
+
+Table "menu_permissions" {
+  "id" BIGINT [pk, not null, increment]
+  "cible_type" VARCHAR(10) [not null]
+  "cible" VARCHAR(40) [not null]
+  "section" VARCHAR(30) [not null]
+  "autorise" TINYINT(1) [not null, default: 1]
+  "updated_at" DATETIME [not null, default: `CURRENT_TIMESTAMP`]
+
+  Indexes {
+    (cible_type, cible, section) [unique, name: "uq_menu_permissions"]
+  }
+}
+
+Table "audit_evenements" {
+  "id" BIGINT [pk, not null, increment]
+  "created_at" DATETIME(3) [not null, default: `CURRENT_TIMESTAMP(3)`]
+  "acteur_user_id" VARCHAR(30)
+  "action" VARCHAR(50) [not null]
+  "objet_type" VARCHAR(30) [not null]
+  "objet_id" BIGINT [not null]
+  "donnees" JSON
+  "ip" VARCHAR(45)
+
+  Indexes {
+    (objet_type, objet_id, created_at) [name: "idx_audit_objet"]
+    created_at [name: "idx_audit_date"]
+    (acteur_user_id, created_at) [name: "idx_audit_acteur"]
+  }
+}
+
+Ref "fk_bs_transporteur":"transporteurs"."id" ?<? "bons_sortie"."transporteur_id" [delete: set null]
+
+Ref "fk_bs_statut":"statut_bs"."id" <? "bons_sortie"."statut_id" [delete: restrict]
+
+Ref "fk_bs_lignes_bs":"bons_sortie"."id" <? "bs_lignes"."bs_id" [delete: cascade]
+
+Ref "fk_bs_lignes_type_article":"type_article"."id" <? "bs_lignes"."type_article_id" [delete: restrict]
+
+Ref "fk_bs_lignes_etat":"etat_article"."id" <? "bs_lignes"."etat_id" [delete: restrict]
+
+Ref "fk_bs_etapes_bs":"bons_sortie"."id" <? "bs_etapes"."bs_id" [delete: cascade]
+
+Ref "fk_bs_etapes_statut":"statut_etape"."id" <? "bs_etapes"."statut_id" [delete: restrict]
+
+Ref "fk_passages_bs":"bons_sortie"."id" <? "passages_transit"."bs_id" [delete: restrict]
+
+Ref "fk_passages_resultat":"resultat_passage"."id" <? "passages_transit"."resultat_id" [delete: restrict]
+
+Ref "fk_receptions_bs":"bons_sortie"."id" <? "receptions"."bs_id" [delete: restrict]
+
+Ref "fk_reception_lignes_reception":"receptions"."id" <? "reception_lignes"."reception_id" [delete: cascade]
+
+Ref "fk_reception_lignes_bs_ligne":"bs_lignes"."id" <? "reception_lignes"."bs_ligne_id" [delete: restrict]
+
+Ref "fk_mouvements_bs_ligne":"bs_lignes"."id" <? "mouvements_retour"."bs_ligne_id" [delete: restrict]
+
+Ref "fk_mouvements_etat":"etat_article"."id" <? "mouvements_retour"."etat_id" [delete: restrict]
+
+Ref "fk_anomalies_bs":"bons_sortie"."id" <? "anomalies"."bs_id" [delete: restrict]
+
+Ref "fk_anomalies_passage":"passages_transit"."id" ?<? "anomalies"."passage_transit_id" [delete: set null]
+
+Ref "fk_anomalies_statut":"statut_anomalie"."id" <? "anomalies"."statut_id" [delete: restrict]
+
+Ref "fk_anomalie_messages_anomalie":"anomalies"."id" <? "anomalie_messages"."anomalie_id" [delete: cascade]
+
+Ref "fk_anomalie_votes_anomalie":"anomalies"."id" <? "anomalie_votes"."anomalie_id" [delete: cascade]
+
+Ref "fk_anomalie_votes_vote":"vote_anomalie"."id" <? "anomalie_votes"."vote_id" [delete: restrict]
+
+Ref "fk_anomalie_fichiers_anomalie":"anomalies"."id" <? "anomalie_fichiers"."anomalie_id" [delete: cascade]
+
+Records statut_bs(id, code, libelle) {
+  1, 'brouillon', 'Brouillon'
+  2, 'soumis', 'Soumis'
+  3, 'en_validation', 'En validation'
+  4, 'valide', 'Validé'
+  5, 'en_transit', 'En transit'
+  6, 'en_attente_confirmation', 'En attente de confirmation'
+  7, 'receptionne', 'Réceptionné'
+  8, 'cloture', 'Clôturé'
+  9, 'refuse', 'Refusé'
+  10, 'annule', 'Annulé'
+}
+
+Records type_article(id, code, libelle) {
+  1, 'Article', 'Article'
+  2, 'Info', 'Informatique'
+  3, 'Immo', 'Immobilier'
+  4, 'Fourniture', 'Fourniture'
+  5, 'Autre', 'Autre'
+}
+
+Records etat_article(id, code, libelle) {
+  1, 'Neuf', 'Neuf'
+  2, 'Bon etat', 'Bon état'
+  3, 'Usage', 'Usage'
+  4, 'A reformer', 'À réformer'
+}
+
+Records statut_etape(id, code, libelle) {
+  1, 'en_attente', 'En attente'
+  2, 'valide', 'Validé'
+  3, 'refuse', 'Refusé'
+}
+
+Records resultat_passage(id, code, libelle) {
+  1, 'a_controler', 'À contrôler'
+  2, 'conforme', 'Conforme'
+  3, 'non_conforme', 'Non conforme'
+}
+
+Records statut_anomalie(id, code, libelle) {
+  1, 'ouverte', 'Ouverte'
+  2, 'en_retard', 'En retard'
+  3, 'resolue', 'Résolue'
+  4, 'abandonnee', 'Abandonnée'
+  5, 'cloturee', 'Clôturée'
+}
+
+Records vote_anomalie(id, code, libelle) {
+  1, 'resolue', 'Résolue'
+  2, 'abandon', 'Abandon'
+}

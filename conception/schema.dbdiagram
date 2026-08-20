@@ -1,0 +1,512 @@
+{
+  "version": "3.0.0",
+  "darkMode": true,
+  "gridEnabling": false,
+  "currentViewName": null,
+  "defaultView": {
+    "detailLevel": "All",
+    "relationshipMode": "All",
+    "tablePositions": [
+      {
+        "name": "statut_bs",
+        "schemaName": "public",
+        "x": 12,
+        "y": 940
+      },
+      {
+        "name": "type_article",
+        "schemaName": "public",
+        "x": 12,
+        "y": 418
+      },
+      {
+        "name": "etat_article",
+        "schemaName": "public",
+        "x": 12,
+        "y": 592
+      },
+      {
+        "name": "statut_etape",
+        "schemaName": "public",
+        "x": 12,
+        "y": 766
+      },
+      {
+        "name": "resultat_passage",
+        "schemaName": "public",
+        "x": 12,
+        "y": 1384
+      },
+      {
+        "name": "statut_anomalie",
+        "schemaName": "public",
+        "x": 12,
+        "y": 1558
+      },
+      {
+        "name": "entite_concertation",
+        "schemaName": "public",
+        "x": 12,
+        "y": 1732
+      },
+      {
+        "name": "vote_anomalie",
+        "schemaName": "public",
+        "x": 12,
+        "y": 1906
+      },
+      {
+        "name": "transporteurs",
+        "schemaName": "public",
+        "x": 12,
+        "y": 1114
+      },
+      {
+        "name": "number_sequences",
+        "schemaName": "public",
+        "x": 12,
+        "y": 12
+      },
+      {
+        "name": "bons_sortie",
+        "schemaName": "public",
+        "x": 684.01611328125,
+        "y": 501
+      },
+      {
+        "name": "bs_lignes",
+        "schemaName": "public",
+        "x": 1368.17041015625,
+        "y": 418
+      },
+      {
+        "name": "bs_etapes",
+        "schemaName": "public",
+        "x": 1368.17041015625,
+        "y": 817
+      },
+      {
+        "name": "passages_transit",
+        "schemaName": "public",
+        "x": 1368.17041015625,
+        "y": 1486
+      },
+      {
+        "name": "receptions",
+        "schemaName": "public",
+        "x": 1368.17041015625,
+        "y": 1151
+      },
+      {
+        "name": "reception_lignes",
+        "schemaName": "public",
+        "x": 1994.95703125,
+        "y": 816
+      },
+      {
+        "name": "mouvements_retour",
+        "schemaName": "public",
+        "x": 1994.95703125,
+        "y": 418
+      },
+      {
+        "name": "anomalies",
+        "schemaName": "public",
+        "x": 1994.95703125,
+        "y": 1086
+      },
+      {
+        "name": "anomalie_messages",
+        "schemaName": "public",
+        "x": 2591.3876953125,
+        "y": 752
+      },
+      {
+        "name": "anomalie_votes",
+        "schemaName": "public",
+        "x": 2591.3876953125,
+        "y": 1022
+      },
+      {
+        "name": "anomalie_fichiers",
+        "schemaName": "public",
+        "x": 2591.3876953125,
+        "y": 418
+      },
+      {
+        "name": "notifications",
+        "schemaName": "public",
+        "x": 1382.291015625,
+        "y": 12
+      },
+      {
+        "name": "notification_rules",
+        "schemaName": "public",
+        "x": 342.1376953125,
+        "y": 12
+      },
+      {
+        "name": "menu_permissions",
+        "schemaName": "public",
+        "x": 720.04150390625,
+        "y": 12
+      },
+      {
+        "name": "audit_evenements",
+        "schemaName": "public",
+        "x": 1043.78076171875,
+        "y": 12
+      }
+    ],
+    "tableGroupCollapseStates": [],
+    "stickyNoteLayouts": [],
+    "referencePaths": [
+      {
+        "firstFieldNames": [
+          "id"
+        ],
+        "firstTableName": "transporteurs",
+        "firstSchemaName": "public",
+        "firstRelation": "0..1",
+        "secondFieldNames": [
+          "transporteur_id"
+        ],
+        "secondTableName": "bons_sortie",
+        "secondSchemaName": "public",
+        "secondRelation": "0..*",
+        "checkPoints": []
+      },
+      {
+        "firstFieldNames": [
+          "id"
+        ],
+        "firstTableName": "statut_bs",
+        "firstSchemaName": "public",
+        "firstRelation": "1",
+        "secondFieldNames": [
+          "statut_id"
+        ],
+        "secondTableName": "bons_sortie",
+        "secondSchemaName": "public",
+        "secondRelation": "0..*",
+        "checkPoints": []
+      },
+      {
+        "firstFieldNames": [
+          "id"
+        ],
+        "firstTableName": "bons_sortie",
+        "firstSchemaName": "public",
+        "firstRelation": "1",
+        "secondFieldNames": [
+          "bs_id"
+        ],
+        "secondTableName": "bs_lignes",
+        "secondSchemaName": "public",
+        "secondRelation": "0..*",
+        "checkPoints": []
+      },
+      {
+        "firstFieldNames": [
+          "id"
+        ],
+        "firstTableName": "type_article",
+        "firstSchemaName": "public",
+        "firstRelation": "1",
+        "secondFieldNames": [
+          "type_article_id"
+        ],
+        "secondTableName": "bs_lignes",
+        "secondSchemaName": "public",
+        "secondRelation": "0..*",
+        "checkPoints": []
+      },
+      {
+        "firstFieldNames": [
+          "id"
+        ],
+        "firstTableName": "etat_article",
+        "firstSchemaName": "public",
+        "firstRelation": "1",
+        "secondFieldNames": [
+          "etat_id"
+        ],
+        "secondTableName": "bs_lignes",
+        "secondSchemaName": "public",
+        "secondRelation": "0..*",
+        "checkPoints": []
+      },
+      {
+        "firstFieldNames": [
+          "id"
+        ],
+        "firstTableName": "bons_sortie",
+        "firstSchemaName": "public",
+        "firstRelation": "1",
+        "secondFieldNames": [
+          "bs_id"
+        ],
+        "secondTableName": "bs_etapes",
+        "secondSchemaName": "public",
+        "secondRelation": "0..*",
+        "checkPoints": []
+      },
+      {
+        "firstFieldNames": [
+          "id"
+        ],
+        "firstTableName": "statut_etape",
+        "firstSchemaName": "public",
+        "firstRelation": "1",
+        "secondFieldNames": [
+          "statut_id"
+        ],
+        "secondTableName": "bs_etapes",
+        "secondSchemaName": "public",
+        "secondRelation": "0..*",
+        "checkPoints": []
+      },
+      {
+        "firstFieldNames": [
+          "id"
+        ],
+        "firstTableName": "bons_sortie",
+        "firstSchemaName": "public",
+        "firstRelation": "1",
+        "secondFieldNames": [
+          "bs_id"
+        ],
+        "secondTableName": "passages_transit",
+        "secondSchemaName": "public",
+        "secondRelation": "0..*",
+        "checkPoints": []
+      },
+      {
+        "firstFieldNames": [
+          "id"
+        ],
+        "firstTableName": "resultat_passage",
+        "firstSchemaName": "public",
+        "firstRelation": "1",
+        "secondFieldNames": [
+          "resultat_id"
+        ],
+        "secondTableName": "passages_transit",
+        "secondSchemaName": "public",
+        "secondRelation": "0..*",
+        "checkPoints": []
+      },
+      {
+        "firstFieldNames": [
+          "id"
+        ],
+        "firstTableName": "bons_sortie",
+        "firstSchemaName": "public",
+        "firstRelation": "1",
+        "secondFieldNames": [
+          "bs_id"
+        ],
+        "secondTableName": "receptions",
+        "secondSchemaName": "public",
+        "secondRelation": "0..*",
+        "checkPoints": []
+      },
+      {
+        "firstFieldNames": [
+          "id"
+        ],
+        "firstTableName": "receptions",
+        "firstSchemaName": "public",
+        "firstRelation": "1",
+        "secondFieldNames": [
+          "reception_id"
+        ],
+        "secondTableName": "reception_lignes",
+        "secondSchemaName": "public",
+        "secondRelation": "0..*",
+        "checkPoints": []
+      },
+      {
+        "firstFieldNames": [
+          "id"
+        ],
+        "firstTableName": "bs_lignes",
+        "firstSchemaName": "public",
+        "firstRelation": "1",
+        "secondFieldNames": [
+          "bs_ligne_id"
+        ],
+        "secondTableName": "reception_lignes",
+        "secondSchemaName": "public",
+        "secondRelation": "0..*",
+        "checkPoints": []
+      },
+      {
+        "firstFieldNames": [
+          "id"
+        ],
+        "firstTableName": "bs_lignes",
+        "firstSchemaName": "public",
+        "firstRelation": "1",
+        "secondFieldNames": [
+          "bs_ligne_id"
+        ],
+        "secondTableName": "mouvements_retour",
+        "secondSchemaName": "public",
+        "secondRelation": "0..*",
+        "checkPoints": []
+      },
+      {
+        "firstFieldNames": [
+          "id"
+        ],
+        "firstTableName": "etat_article",
+        "firstSchemaName": "public",
+        "firstRelation": "1",
+        "secondFieldNames": [
+          "etat_id"
+        ],
+        "secondTableName": "mouvements_retour",
+        "secondSchemaName": "public",
+        "secondRelation": "0..*",
+        "checkPoints": []
+      },
+      {
+        "firstFieldNames": [
+          "id"
+        ],
+        "firstTableName": "bons_sortie",
+        "firstSchemaName": "public",
+        "firstRelation": "1",
+        "secondFieldNames": [
+          "bs_id"
+        ],
+        "secondTableName": "anomalies",
+        "secondSchemaName": "public",
+        "secondRelation": "0..*",
+        "checkPoints": []
+      },
+      {
+        "firstFieldNames": [
+          "id"
+        ],
+        "firstTableName": "passages_transit",
+        "firstSchemaName": "public",
+        "firstRelation": "0..1",
+        "secondFieldNames": [
+          "passage_transit_id"
+        ],
+        "secondTableName": "anomalies",
+        "secondSchemaName": "public",
+        "secondRelation": "0..*",
+        "checkPoints": []
+      },
+      {
+        "firstFieldNames": [
+          "id"
+        ],
+        "firstTableName": "statut_anomalie",
+        "firstSchemaName": "public",
+        "firstRelation": "1",
+        "secondFieldNames": [
+          "statut_id"
+        ],
+        "secondTableName": "anomalies",
+        "secondSchemaName": "public",
+        "secondRelation": "0..*",
+        "checkPoints": []
+      },
+      {
+        "firstFieldNames": [
+          "id"
+        ],
+        "firstTableName": "anomalies",
+        "firstSchemaName": "public",
+        "firstRelation": "1",
+        "secondFieldNames": [
+          "anomalie_id"
+        ],
+        "secondTableName": "anomalie_messages",
+        "secondSchemaName": "public",
+        "secondRelation": "0..*",
+        "checkPoints": []
+      },
+      {
+        "firstFieldNames": [
+          "id"
+        ],
+        "firstTableName": "entite_concertation",
+        "firstSchemaName": "public",
+        "firstRelation": "1",
+        "secondFieldNames": [
+          "entite_id"
+        ],
+        "secondTableName": "anomalie_messages",
+        "secondSchemaName": "public",
+        "secondRelation": "0..*",
+        "checkPoints": []
+      },
+      {
+        "firstFieldNames": [
+          "id"
+        ],
+        "firstTableName": "anomalies",
+        "firstSchemaName": "public",
+        "firstRelation": "1",
+        "secondFieldNames": [
+          "anomalie_id"
+        ],
+        "secondTableName": "anomalie_votes",
+        "secondSchemaName": "public",
+        "secondRelation": "0..*",
+        "checkPoints": []
+      },
+      {
+        "firstFieldNames": [
+          "id"
+        ],
+        "firstTableName": "entite_concertation",
+        "firstSchemaName": "public",
+        "firstRelation": "1",
+        "secondFieldNames": [
+          "entite_id"
+        ],
+        "secondTableName": "anomalie_votes",
+        "secondSchemaName": "public",
+        "secondRelation": "0..*",
+        "checkPoints": []
+      },
+      {
+        "firstFieldNames": [
+          "id"
+        ],
+        "firstTableName": "vote_anomalie",
+        "firstSchemaName": "public",
+        "firstRelation": "1",
+        "secondFieldNames": [
+          "vote_id"
+        ],
+        "secondTableName": "anomalie_votes",
+        "secondSchemaName": "public",
+        "secondRelation": "0..*",
+        "checkPoints": []
+      },
+      {
+        "firstFieldNames": [
+          "id"
+        ],
+        "firstTableName": "anomalies",
+        "firstSchemaName": "public",
+        "firstRelation": "1",
+        "secondFieldNames": [
+          "anomalie_id"
+        ],
+        "secondTableName": "anomalie_fichiers",
+        "secondSchemaName": "public",
+        "secondRelation": "0..*",
+        "checkPoints": []
+      }
+    ]
+  },
+  "views": {}
+}
