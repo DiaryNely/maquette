@@ -1,7 +1,5 @@
-// Use DBML to define your database structure
-// Docs: https://dbml.dbdiagram.io/docs
 
-Table "statut_bs" {
+Table "gbs_statut_bs" {
   "id" BIGINT [pk, not null, increment]
   "code" VARCHAR(50) [not null]
   "libelle" VARCHAR(100) [not null]
@@ -11,7 +9,7 @@ Table "statut_bs" {
   }
 }
 
-Table "type_article" {
+Table "gbs_type_article" {
   "id" BIGINT [pk, not null, increment]
   "code" VARCHAR(50) [not null]
   "libelle" VARCHAR(100) [not null]
@@ -21,7 +19,7 @@ Table "type_article" {
   }
 }
 
-Table "etat_article" {
+Table "gbs_etat_article" {
   "id" BIGINT [pk, not null, increment]
   "code" VARCHAR(50) [not null]
   "libelle" VARCHAR(100) [not null]
@@ -31,17 +29,7 @@ Table "etat_article" {
   }
 }
 
-Table "statut_etape" {
-  "id" BIGINT [pk, not null, increment]
-  "code" VARCHAR(50) [not null]
-  "libelle" VARCHAR(100) [not null]
-
-  Indexes {
-    code [unique, name: "uq_statut_etape_code"]
-  }
-}
-
-Table "resultat_passage" {
+Table "gbs_resultat_passage" {
   "id" BIGINT [pk, not null, increment]
   "code" VARCHAR(50) [not null]
   "libelle" VARCHAR(100) [not null]
@@ -51,7 +39,7 @@ Table "resultat_passage" {
   }
 }
 
-Table "statut_anomalie" {
+Table "gbs_statut_anomalie" {
   "id" BIGINT [pk, not null, increment]
   "code" VARCHAR(50) [not null]
   "libelle" VARCHAR(100) [not null]
@@ -61,67 +49,116 @@ Table "statut_anomalie" {
   }
 }
 
-Table "vote_anomalie" {
-  "id" BIGINT [pk, not null, increment]
-  "code" VARCHAR(50) [not null]
-  "libelle" VARCHAR(100) [not null]
+Table "moyen_acheminement" {
+  "id_ma" int [pk, not null, increment]
+  "type" varchar(255)
+  "nom" varchar(255)
+  "tel" varchar(255)
+  "entite" varchar(255)
+  "numMat" varchar(255)
+  "remarque" varchar(255)
+}
+
+Table "personnel_p" {
+  "id_personnel" int [pk, not null, increment]
+  "nummatr" varchar(10) [not null]
+  "nomcomplet" varchar(100)
+  "prenom" varchar(100)
+  "num_tel" varchar(20)
+  "mail" varchar(50)
+  "date_embauche" varchar(10)
+  "etat" tinyint(1) [not null, default: '1']
+  "idfonction" int [not null]
+  "idmagasin" int [not null]
+  "num_magasin" int
 
   Indexes {
-    code [unique, name: "uq_vote_anomalie_code"]
+    nummatr [unique, name: "nummatr"]
   }
 }
 
-Table "transporteurs" {
-  "id" BIGINT [pk, not null, increment]
-  "nom" VARCHAR(190) [not null]
-  "contact" VARCHAR(190) [not null]
-  "type_transport" VARCHAR(60) [not null]
-  "cree_par_user_id" VARCHAR(30)
-  "created_at" DATETIME [not null, default: `CURRENT_TIMESTAMP`]
+Table "magasin" {
+  "id_magasin" int [pk, not null, increment]
+  "Num_magasin" int [not null]
+  "Nom_magasin" varchar(255) [not null]
+  "Categorie_magasin" int [not null]
+  "Adr_magasin" varchar(255)
+  "email_mag" varchar(255) [default: '--- -- --- --']
+  "phone_mag" varchar(20) [default: '--- -- --- --']
+  "idregion" int [default: '0']
+  "etat_mag" smallint [not null, default: '1']
+}
+
+Table "fonction_p" {
+  "id_fonction" int [pk, not null, increment]
+  "nom_fonction" varchar(100)
+  "genre" varchar(10) [default: 'S']
+  "id_dir" int [not null, default: '0']
+  "id_srv" int [not null, default: '0']
+  "id_dep" int [not null, default: '0']
+  "id_secteur" int [not null, default: '0']
+  "is_lead_dir" int [not null, default: '0']
+  "is_lead_srv" int [not null, default: '0']
+  "is_lead_dep" int [not null, default: '0']
+  "is_lead_secteur" int [not null, default: '0']
+  "heures_de_base" decimal(5,2)
 
   Indexes {
-    nom [name: "idx_transporteurs_nom"]
+    nom_fonction [unique, name: "nom_fonction"]
   }
 }
 
-Table "number_sequences" {
-  "prefixe" VARCHAR(10) [not null]
-  "annee" SMALLINT [not null]
-  "prochaine_valeur" INT [not null, default: 1]
-
-  Indexes {
-    (prefixe, annee) [pk]
-  }
-}
-
-Table "bons_sortie" {
+Table "gbs_bons_sortie" {
   "id" BIGINT [pk, not null, increment]
   "numero" VARCHAR(20) [not null]
-  "initiateur_user_id" VARCHAR(30) [not null]
-  "beneficiaire_user_id" VARCHAR(30) [not null]
-  "site_origine_id" VARCHAR(20) [not null]
-  "site_destination_id" VARCHAR(20) [not null]
-  "transporteur_id" BIGINT
+  "nummatr_initiateur" VARCHAR(10) [not null]
+  "nummatr_beneficiaire" VARCHAR(10) [not null]
+  "num_magasin_origine" INT [not null]
+  "num_magasin_destination" INT [not null]
+  "id_ma" INT
   "motif" VARCHAR(190)
   "commentaire" VARCHAR(1000)
   "date_sortie_souhaitee" DATE
   "date_limite_retour" DATE
   "statut_id" BIGINT [not null, default: 1]
-  "qr_payload" VARCHAR(190)
-  "qr_signature" VARCHAR(128)
   "date_emission" DATETIME
   "created_at" DATETIME [not null, default: `CURRENT_TIMESTAMP`]
   "updated_at" DATETIME [not null, default: `CURRENT_TIMESTAMP`]
 
   Indexes {
     numero [unique, name: "uq_bons_sortie_numero"]
-    (site_origine_id, statut_id, created_at) [name: "idx_bs_origine_statut_created"]
-    (site_destination_id, statut_id, created_at) [name: "idx_bs_destination_statut_created"]
+    (num_magasin_origine, statut_id, created_at) [name: "idx_bs_magasin_origine_statut_created"]
+    (num_magasin_destination, statut_id, created_at) [name: "idx_bs_magasin_destination_statut_created"]
     statut_id [name: "idx_bs_statut"]
+    nummatr_initiateur [name: "idx_bs_nummatr_initiateur"]
+    nummatr_beneficiaire [name: "idx_bs_nummatr_beneficiaire"]
+    id_ma [name: "idx_bs_id_ma"]
   }
 }
 
-Table "bs_lignes" {
+Table "gbs_qr_bons_sortie" {
+  "id" BIGINT [pk, not null, increment]
+  "bs_id" BIGINT [not null]
+  "numero" VARCHAR(20) [not null]
+  "num_magasin_origine" INT [not null]
+  "num_magasin_destination" INT [not null]
+  "nummatr_initiateur" VARCHAR(10) [not null]
+  "nummatr_recepteur" VARCHAR(10) [not null]
+  "qr_payload" VARCHAR(190)
+  "qr_signature" VARCHAR(128)
+  "created_at" DATETIME [not null, default: `CURRENT_TIMESTAMP`]
+
+  Indexes {
+    bs_id [unique, name: "uq_qr_bons_sortie_bs"]
+    numero [unique, name: "uq_qr_bons_sortie_numero"]
+    num_magasin_origine [name: "idx_qr_bons_sortie_magasin_origine"]
+    num_magasin_destination [name: "idx_qr_bons_sortie_magasin_destination"]
+    nummatr_initiateur [name: "idx_qr_bons_sortie_nummatr_initiateur"]
+    nummatr_recepteur [name: "idx_qr_bons_sortie_nummatr_recepteur"]
+  }
+}
+
+Table "gbs_bs_lignes" {
   "id" BIGINT [pk, not null, increment]
   "bs_id" BIGINT [not null]
   "type_article_id" BIGINT [not null]
@@ -140,30 +177,17 @@ Table "bs_lignes" {
 
   Indexes {
     (bs_id, a_rendre) [name: "idx_bs_lignes_bs_rendre"]
+    type_article_id [name: "idx_bs_lignes_type_article"]
+    etat_id [name: "idx_bs_lignes_etat"]
   }
 }
 
-Table "bs_etapes" {
-  "id" BIGINT [pk, not null, increment]
-  "bs_id" BIGINT [not null]
-  "etape" VARCHAR(20) [not null]
-  "statut_id" BIGINT [not null, default: 1]
-  "acteur_user_id" VARCHAR(30)
-  "decision_at" DATETIME
-  "motif_refus" VARCHAR(500)
-  "created_at" DATETIME [not null, default: `CURRENT_TIMESTAMP`]
-
-  Indexes {
-    (bs_id, etape) [unique, name: "uq_bs_etapes"]
-  }
-}
-
-Table "passages_transit" {
+Table "gbs_passages_transit" {
   "id" BIGINT [pk, not null, increment]
   "numero" VARCHAR(20) [not null]
   "bs_id" BIGINT [not null]
-  "site_id" VARCHAR(20) [not null]
-  "agent_user_id" VARCHAR(30) [not null]
+  "num_magasin" INT [not null]
+  "nummatr_agent" VARCHAR(10) [not null]
   "scanned_at" DATETIME(3) [not null]
   "resultat_id" BIGINT [not null, default: 1]
   "note" VARCHAR(500)
@@ -172,44 +196,54 @@ Table "passages_transit" {
 
   Indexes {
     numero [unique, name: "uq_passages_numero"]
-    (bs_id, site_id) [unique, name: "uq_passages_bs_site"]
+    (bs_id, num_magasin) [unique, name: "uq_passages_bs_magasin"]
     idempotency_key [unique, name: "uq_passages_idempotency"]
     (bs_id, scanned_at) [name: "idx_passages_bs_scanned"]
-    site_id [name: "idx_passages_site"]
+    num_magasin [name: "idx_passages_magasin"]
+    resultat_id [name: "idx_passages_resultat"]
+    nummatr_agent [name: "idx_passages_nummatr_agent"]
   }
 }
 
-Table "receptions" {
+Table "gbs_receptions" {
   "id" BIGINT [pk, not null, increment]
+  "numero" VARCHAR(20) [not null]
   "bs_id" BIGINT [not null]
-  "site_id" VARCHAR(20) [not null]
-  "agent_user_id" VARCHAR(30) [not null]
+  "num_magasin" INT [not null]
+  "nummatr_agent" VARCHAR(10) [not null]
   "constat_at" DATETIME [not null]
-  "confirmed_by_user_id" VARCHAR(30)
+  "nummatr_confirmation" VARCHAR(10)
   "confirmed_at" DATETIME
   "created_at" DATETIME [not null, default: `CURRENT_TIMESTAMP`]
 
   Checks {
-    `confirmed_at IS NULL OR confirmed_by_user_id IS NOT NULL` [name: 'chk_receptions_confirmation']
+    `confirmed_at IS NULL OR nummatr_confirmation IS NOT NULL` [name: 'chk_receptions_confirmation']
   }
 
   Indexes {
+    numero [unique, name: "uq_receptions_numero"]
     bs_id [unique, name: "uq_receptions_bs"]
-    site_id [name: "idx_receptions_site"]
+    num_magasin [name: "idx_receptions_magasin"]
+    nummatr_agent [name: "idx_receptions_nummatr_agent"]
+    nummatr_confirmation [name: "idx_receptions_nummatr_confirmation"]
   }
 }
 
-Table "reception_lignes" {
+Table "gbs_reception_lignes" {
   "id" BIGINT [pk, not null, increment]
   "reception_id" BIGINT [not null]
-  "bs_ligne_id" BIGINT [not null]
+  "bs_ligne_id" BIGINT
+  "code" VARCHAR(60)
+  "designation" VARCHAR(190)
   "attendu" INT [not null]
   "recu" INT [not null]
-  "ecart" INT [note: 'GENERATED ALWAYS AS (CAST(recu AS SIGNED) - CAST(attendu AS SIGNED)) VIRTUAL']
+  "ecart" INT
 
   Checks {
     `attendu >= 0` [name: 'chk_reception_lignes_attendu']
     `recu >= 0` [name: 'chk_reception_lignes_recu']
+    `(bs_ligne_id IS NOT NULL AND code IS NULL AND designation IS NULL)
+        OR (bs_ligne_id IS NULL AND code IS NOT NULL AND designation IS NOT NULL)` [name: 'chk_reception_lignes_supplement']
   }
 
   Indexes {
@@ -218,41 +252,46 @@ Table "reception_lignes" {
   }
 }
 
-Table "mouvements_retour" {
+Table "gbs_mouvements_retour" {
   "id" BIGINT [pk, not null, increment]
+  "numero" VARCHAR(20) [not null]
   "bs_ligne_id" BIGINT [not null]
-  "site_retour_id" VARCHAR(20) [not null]
+  "num_magasin_retour" INT [not null]
   "quantite" INT [not null]
   "etat_id" BIGINT [not null]
-  "expedie_par_user_id" VARCHAR(30)
+  "nummatr_expediteur" VARCHAR(10)
   "expedie_at" DATETIME
-  "recu_par_user_id" VARCHAR(30)
+  "nummatr_recepteur" VARCHAR(10)
   "recu_at" DATETIME
   "created_at" DATETIME [not null, default: `CURRENT_TIMESTAMP`]
 
   Checks {
     `quantite >= 1` [name: 'chk_mouvements_quantite']
-    `expedie_at IS NULL OR expedie_par_user_id IS NOT NULL` [name: 'chk_mouvements_expedition']
-    `recu_at IS NULL OR recu_par_user_id IS NOT NULL` [name: 'chk_mouvements_reception']
+    `expedie_at IS NULL OR nummatr_expediteur IS NOT NULL` [name: 'chk_mouvements_expedition']
+    `recu_at IS NULL OR nummatr_recepteur IS NOT NULL` [name: 'chk_mouvements_reception']
   }
 
   Indexes {
+    numero [unique, name: "uq_mouvements_numero"]
     (bs_ligne_id, recu_at) [name: "idx_mouvements_bs_ligne"]
-    site_retour_id [name: "idx_mouvements_site"]
+    num_magasin_retour [name: "idx_mouvements_magasin_retour"]
+    etat_id [name: "idx_mouvements_etat"]
+    nummatr_expediteur [name: "idx_mouvements_nummatr_expediteur"]
+    nummatr_recepteur [name: "idx_mouvements_nummatr_recepteur"]
   }
 }
 
-Table "anomalies" {
+Table "gbs_anomalies" {
   "id" BIGINT [pk, not null, increment]
   "numero" VARCHAR(20) [not null]
   "bs_id" BIGINT [not null]
   "passage_transit_id" BIGINT
-  "point_controle_site_id" VARCHAR(20) [not null]
+  "num_magasin_controle" INT [not null]
   "motif" VARCHAR(190) [not null]
   "description" TEXT [not null]
   "date_limite" DATETIME [not null]
   "statut_id" BIGINT [not null, default: 1]
-  "cree_par_user_id" VARCHAR(30)
+  "nummatr_createur" VARCHAR(10)
   "created_at" DATETIME [not null, default: `CURRENT_TIMESTAMP`]
   "date_resolution" DATETIME
 
@@ -261,53 +300,68 @@ Table "anomalies" {
     (bs_id, statut_id, date_limite) [name: "idx_anomalies_bs_statut_limite"]
     (statut_id, date_limite) [name: "idx_anomalies_statut_limite"]
     passage_transit_id [name: "idx_anomalies_passage"]
+    num_magasin_controle [name: "idx_anomalies_magasin_controle"]
+    nummatr_createur [name: "idx_anomalies_nummatr_createur"]
   }
 }
 
-Table "anomalie_messages" {
+Table "gbs_anomalie_participants" {
+  "anomalie_id" BIGINT [not null]
+  "nummatr" VARCHAR(10) [not null]
+  "vote" VARCHAR(10)
+  "voted_at" DATETIME
+
+  Checks {
+    `vote IS NULL OR vote IN ('resolue', 'abandon')` [name: 'chk_anomalie_participants_vote']
+  }
+
+  Indexes {
+    (anomalie_id, nummatr) [pk]
+    nummatr [name: "idx_anomalie_participants_nummatr"]
+  }
+}
+
+Table "gbs_anomalie_messages" {
   "id" BIGINT [pk, not null, increment]
   "anomalie_id" BIGINT [not null]
-  "entite" VARCHAR(20) [not null, note: 'transit, securite, magasin']
-  "auteur_user_id" VARCHAR(30) [not null]
+  "nummatr_auteur" VARCHAR(10) [not null]
   "contenu" TEXT [not null]
   "created_at" DATETIME [not null, default: `CURRENT_TIMESTAMP`]
 
   Indexes {
-    (anomalie_id, created_at) [name: "idx_anomalie_messages"]
+    (anomalie_id, created_at) [name: "idx_anomalie_messages_anomalie"]
+    nummatr_auteur [name: "idx_anomalie_messages_nummatr_auteur"]
   }
 }
 
-Table "anomalie_votes" {
-  "id" BIGINT [pk, not null, increment]
-  "anomalie_id" BIGINT [not null]
-  "entite" VARCHAR(20) [not null, note: 'transit, securite, magasin']
-  "vote_id" BIGINT [not null]
-  "auteur_user_id" VARCHAR(30) [not null]
-  "created_at" DATETIME [not null, default: `CURRENT_TIMESTAMP`]
+Table "gbs_anomalie_message_lus" {
+  "message_id" BIGINT [not null]
+  "nummatr" VARCHAR(10) [not null]
+  "lu_at" DATETIME [not null, default: `CURRENT_TIMESTAMP`]
 
   Indexes {
-    (anomalie_id, entite) [unique, name: "uq_anomalie_votes"]
+    (message_id, nummatr) [pk]
+    nummatr [name: "idx_anomalie_message_lus_nummatr"]
   }
 }
 
-Table "anomalie_fichiers" {
+Table "gbs_anomalie_message_fichiers" {
   "id" BIGINT [pk, not null, increment]
-  "anomalie_id" BIGINT [not null]
+  "message_id" BIGINT [not null]
   "nom_original" VARCHAR(255) [not null]
   "type_mime" VARCHAR(100) [not null]
   "taille_octets" BIGINT [not null]
   "cle_objet" VARCHAR(255) [not null]
-  "upload_par_user_id" VARCHAR(30)
   "created_at" DATETIME [not null, default: `CURRENT_TIMESTAMP`]
 
   Indexes {
-    anomalie_id [name: "idx_anomalie_fichiers"]
+    message_id [name: "idx_anomalie_message_fichiers_message"]
   }
 }
 
-Table "notifications" {
+Table "gbs_notifications" {
   "id" BIGINT [pk, not null, increment]
-  "destinataire_user_id" VARCHAR(30) [not null]
+  "nummatr_destinataire" VARCHAR(10) [not null]
   "type_evenement" VARCHAR(50) [not null]
   "titre" VARCHAR(190) [not null]
   "contenu" VARCHAR(1000)
@@ -317,96 +371,118 @@ Table "notifications" {
   "created_at" DATETIME [not null, default: `CURRENT_TIMESTAMP`]
 
   Indexes {
-    (destinataire_user_id, lu_at, created_at) [name: "idx_notifications_destinataire"]
+    (nummatr_destinataire, lu_at, created_at) [name: "idx_notifications_destinataire"]
   }
 }
 
-Table "notification_rules" {
+Table "gbs_notification_rules" {
   "type_evenement" VARCHAR(50) [not null]
-  "role_cible" VARCHAR(30) [not null]
+  "nom_fonction" VARCHAR(100) [not null]
   "active" TINYINT(1) [not null, default: 1]
 
   Indexes {
-    (type_evenement, role_cible) [pk]
+    (type_evenement, nom_fonction) [pk]
+    nom_fonction [name: "idx_notification_rules_nom_fonction"]
   }
 }
 
-Table "menu_permissions" {
+Table "gbs_menu_permissions" {
   "id" BIGINT [pk, not null, increment]
-  "cible_type" VARCHAR(10) [not null]
-  "cible" VARCHAR(40) [not null]
+  "nom_fonction" VARCHAR(100)
+  "nummatr" VARCHAR(10)
   "section" VARCHAR(30) [not null]
   "autorise" TINYINT(1) [not null, default: 1]
   "updated_at" DATETIME [not null, default: `CURRENT_TIMESTAMP`]
 
+  Checks {
+    `(nom_fonction IS NOT NULL AND nummatr IS NULL)
+        OR (nom_fonction IS NULL AND nummatr IS NOT NULL)` [name: 'chk_menu_permissions_cible']
+  }
+
   Indexes {
-    (cible_type, cible, section) [unique, name: "uq_menu_permissions"]
+    (nom_fonction, nummatr, section) [unique, name: "uq_menu_permissions"]
+    nummatr [name: "idx_menu_permissions_nummatr"]
   }
 }
 
-Table "audit_evenements" {
-  "id" BIGINT [pk, not null, increment]
-  "created_at" DATETIME(3) [not null, default: `CURRENT_TIMESTAMP(3)`]
-  "acteur_user_id" VARCHAR(30)
-  "action" VARCHAR(50) [not null]
-  "objet_type" VARCHAR(30) [not null]
-  "objet_id" BIGINT [not null]
-  "donnees" JSON
-  "ip" VARCHAR(45)
+Ref "fk_bs_statut":"gbs_statut_bs"."id" <? "gbs_bons_sortie"."statut_id" [delete: restrict]
 
-  Indexes {
-    (objet_type, objet_id, created_at) [name: "idx_audit_objet"]
-    created_at [name: "idx_audit_date"]
-    (acteur_user_id, created_at) [name: "idx_audit_acteur"]
-  }
-}
+Ref "fk_bs_nummatr_initiateur":"personnel_p"."nummatr" <? "gbs_bons_sortie"."nummatr_initiateur" [delete: restrict]
 
-Ref "fk_bs_transporteur":"transporteurs"."id" ?<? "bons_sortie"."transporteur_id" [delete: set null]
+Ref "fk_bs_nummatr_beneficiaire":"personnel_p"."nummatr" <? "gbs_bons_sortie"."nummatr_beneficiaire" [delete: restrict]
 
-Ref "fk_bs_statut":"statut_bs"."id" <? "bons_sortie"."statut_id" [delete: restrict]
+Ref "fk_bs_id_ma":"moyen_acheminement"."id_ma" ?<? "gbs_bons_sortie"."id_ma" [delete: set null]
 
-Ref "fk_bs_lignes_bs":"bons_sortie"."id" <? "bs_lignes"."bs_id" [delete: cascade]
+Ref "fk_qr_bons_sortie_bs":"gbs_bons_sortie"."id" <? "gbs_qr_bons_sortie"."bs_id" [delete: cascade]
 
-Ref "fk_bs_lignes_type_article":"type_article"."id" <? "bs_lignes"."type_article_id" [delete: restrict]
+Ref "fk_qr_bons_sortie_nummatr_initiateur":"personnel_p"."nummatr" <? "gbs_qr_bons_sortie"."nummatr_initiateur" [delete: restrict]
 
-Ref "fk_bs_lignes_etat":"etat_article"."id" <? "bs_lignes"."etat_id" [delete: restrict]
+Ref "fk_qr_bons_sortie_nummatr_recepteur":"personnel_p"."nummatr" <? "gbs_qr_bons_sortie"."nummatr_recepteur" [delete: restrict]
 
-Ref "fk_bs_etapes_bs":"bons_sortie"."id" <? "bs_etapes"."bs_id" [delete: cascade]
+Ref "fk_bs_lignes_bs":"gbs_bons_sortie"."id" <? "gbs_bs_lignes"."bs_id" [delete: cascade]
 
-Ref "fk_bs_etapes_statut":"statut_etape"."id" <? "bs_etapes"."statut_id" [delete: restrict]
+Ref "fk_bs_lignes_type_article":"gbs_type_article"."id" <? "gbs_bs_lignes"."type_article_id" [delete: restrict]
 
-Ref "fk_passages_bs":"bons_sortie"."id" <? "passages_transit"."bs_id" [delete: restrict]
+Ref "fk_bs_lignes_etat":"gbs_etat_article"."id" <? "gbs_bs_lignes"."etat_id" [delete: restrict]
 
-Ref "fk_passages_resultat":"resultat_passage"."id" <? "passages_transit"."resultat_id" [delete: restrict]
+Ref "fk_passages_bs":"gbs_bons_sortie"."id" <? "gbs_passages_transit"."bs_id" [delete: restrict]
 
-Ref "fk_receptions_bs":"bons_sortie"."id" <? "receptions"."bs_id" [delete: restrict]
+Ref "fk_passages_resultat":"gbs_resultat_passage"."id" <? "gbs_passages_transit"."resultat_id" [delete: restrict]
 
-Ref "fk_reception_lignes_reception":"receptions"."id" <? "reception_lignes"."reception_id" [delete: cascade]
+Ref "fk_passages_nummatr_agent":"personnel_p"."nummatr" <? "gbs_passages_transit"."nummatr_agent" [delete: restrict]
 
-Ref "fk_reception_lignes_bs_ligne":"bs_lignes"."id" <? "reception_lignes"."bs_ligne_id" [delete: restrict]
+Ref "fk_receptions_bs":"gbs_bons_sortie"."id" <? "gbs_receptions"."bs_id" [delete: restrict]
 
-Ref "fk_mouvements_bs_ligne":"bs_lignes"."id" <? "mouvements_retour"."bs_ligne_id" [delete: restrict]
+Ref "fk_receptions_nummatr_agent":"personnel_p"."nummatr" <? "gbs_receptions"."nummatr_agent" [delete: restrict]
 
-Ref "fk_mouvements_etat":"etat_article"."id" <? "mouvements_retour"."etat_id" [delete: restrict]
+Ref "fk_receptions_nummatr_confirmation":"personnel_p"."nummatr" ?<? "gbs_receptions"."nummatr_confirmation" [delete: set null]
 
-Ref "fk_anomalies_bs":"bons_sortie"."id" <? "anomalies"."bs_id" [delete: restrict]
+Ref "fk_reception_lignes_reception":"gbs_receptions"."id" <? "gbs_reception_lignes"."reception_id" [delete: cascade]
 
-Ref "fk_anomalies_passage":"passages_transit"."id" ?<? "anomalies"."passage_transit_id" [delete: set null]
+Ref "fk_reception_lignes_bs_ligne":"gbs_bs_lignes"."id" ?<? "gbs_reception_lignes"."bs_ligne_id" [delete: restrict]
 
-Ref "fk_anomalies_statut":"statut_anomalie"."id" <? "anomalies"."statut_id" [delete: restrict]
+Ref "fk_mouvements_bs_ligne":"gbs_bs_lignes"."id" <? "gbs_mouvements_retour"."bs_ligne_id" [delete: restrict]
 
-Ref "fk_anomalie_messages_anomalie":"anomalies"."id" <? "anomalie_messages"."anomalie_id" [delete: cascade]
+Ref "fk_mouvements_etat":"gbs_etat_article"."id" <? "gbs_mouvements_retour"."etat_id" [delete: restrict]
 
-Ref "fk_anomalie_votes_anomalie":"anomalies"."id" <? "anomalie_votes"."anomalie_id" [delete: cascade]
+Ref "fk_mouvements_nummatr_expediteur":"personnel_p"."nummatr" ?<? "gbs_mouvements_retour"."nummatr_expediteur" [delete: set null]
 
-Ref "fk_anomalie_votes_vote":"vote_anomalie"."id" <? "anomalie_votes"."vote_id" [delete: restrict]
+Ref "fk_mouvements_nummatr_recepteur":"personnel_p"."nummatr" ?<? "gbs_mouvements_retour"."nummatr_recepteur" [delete: set null]
 
-Ref "fk_anomalie_fichiers_anomalie":"anomalies"."id" <? "anomalie_fichiers"."anomalie_id" [delete: cascade]
+Ref "fk_anomalies_bs":"gbs_bons_sortie"."id" <? "gbs_anomalies"."bs_id" [delete: restrict]
 
-Records statut_bs(id, code, libelle) {
+Ref "fk_anomalies_passage":"gbs_passages_transit"."id" ?<? "gbs_anomalies"."passage_transit_id" [delete: set null]
+
+Ref "fk_anomalies_statut":"gbs_statut_anomalie"."id" <? "gbs_anomalies"."statut_id" [delete: restrict]
+
+Ref "fk_anomalies_nummatr_createur":"personnel_p"."nummatr" ?<? "gbs_anomalies"."nummatr_createur" [delete: set null]
+
+Ref "fk_anomalie_participants_anomalie":"gbs_anomalies"."id" <? "gbs_anomalie_participants"."anomalie_id" [delete: cascade]
+
+Ref "fk_anomalie_participants_nummatr":"personnel_p"."nummatr" <? "gbs_anomalie_participants"."nummatr" [delete: restrict]
+
+Ref "fk_anomalie_messages_anomalie":"gbs_anomalies"."id" <? "gbs_anomalie_messages"."anomalie_id" [delete: cascade]
+
+Ref "fk_anomalie_messages_nummatr_auteur":"personnel_p"."nummatr" <? "gbs_anomalie_messages"."nummatr_auteur" [delete: restrict]
+
+Ref "fk_anomalie_message_lus_message":"gbs_anomalie_messages"."id" <? "gbs_anomalie_message_lus"."message_id" [delete: cascade]
+
+Ref "fk_anomalie_message_lus_nummatr":"personnel_p"."nummatr" <? "gbs_anomalie_message_lus"."nummatr" [delete: restrict]
+
+Ref "fk_anomalie_message_fichiers_message":"gbs_anomalie_messages"."id" <? "gbs_anomalie_message_fichiers"."message_id" [delete: cascade]
+
+Ref "fk_notifications_nummatr_destinataire":"personnel_p"."nummatr" <? "gbs_notifications"."nummatr_destinataire" [delete: restrict]
+
+Ref "fk_notification_rules_nom_fonction":"fonction_p"."nom_fonction" <? "gbs_notification_rules"."nom_fonction" [delete: restrict]
+
+Ref "fk_menu_permissions_nom_fonction":"fonction_p"."nom_fonction" ?<? "gbs_menu_permissions"."nom_fonction" [delete: restrict]
+
+Ref "fk_menu_permissions_nummatr":"personnel_p"."nummatr" ?<? "gbs_menu_permissions"."nummatr" [delete: restrict]
+
+Records gbs_statut_bs(id, code, libelle) {
   1, 'brouillon', 'Brouillon'
   2, 'soumis', 'Soumis'
-  3, 'en_validation', 'En validation'
+  3, 'en_attente_validation', 'En attente de validation'
   4, 'valide', 'Validé'
   5, 'en_transit', 'En transit'
   6, 'en_attente_confirmation', 'En attente de confirmation'
@@ -416,7 +492,7 @@ Records statut_bs(id, code, libelle) {
   10, 'annule', 'Annulé'
 }
 
-Records type_article(id, code, libelle) {
+Records gbs_type_article(id, code, libelle) {
   1, 'Article', 'Article'
   2, 'Info', 'Informatique'
   3, 'Immo', 'Immobilier'
@@ -424,34 +500,23 @@ Records type_article(id, code, libelle) {
   5, 'Autre', 'Autre'
 }
 
-Records etat_article(id, code, libelle) {
+Records gbs_etat_article(id, code, libelle) {
   1, 'Neuf', 'Neuf'
   2, 'Bon etat', 'Bon état'
   3, 'Usage', 'Usage'
   4, 'A reformer', 'À réformer'
 }
 
-Records statut_etape(id, code, libelle) {
-  1, 'en_attente', 'En attente'
-  2, 'valide', 'Validé'
-  3, 'refuse', 'Refusé'
-}
-
-Records resultat_passage(id, code, libelle) {
+Records gbs_resultat_passage(id, code, libelle) {
   1, 'a_controler', 'À contrôler'
   2, 'conforme', 'Conforme'
   3, 'non_conforme', 'Non conforme'
 }
 
-Records statut_anomalie(id, code, libelle) {
+Records gbs_statut_anomalie(id, code, libelle) {
   1, 'ouverte', 'Ouverte'
   2, 'en_retard', 'En retard'
   3, 'resolue', 'Résolue'
   4, 'abandonnee', 'Abandonnée'
   5, 'cloturee', 'Clôturée'
-}
-
-Records vote_anomalie(id, code, libelle) {
-  1, 'resolue', 'Résolue'
-  2, 'abandon', 'Abandon'
 }

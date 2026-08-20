@@ -8,154 +8,148 @@
     "relationshipMode": "All",
     "tablePositions": [
       {
-        "name": "statut_bs",
+        "name": "gbs_statut_bs",
         "schemaName": "public",
-        "x": 12,
-        "y": 940
+        "x": 365.51416015625,
+        "y": 360
       },
       {
-        "name": "type_article",
+        "name": "gbs_type_article",
         "schemaName": "public",
-        "x": 12,
-        "y": 418
-      },
-      {
-        "name": "etat_article",
-        "schemaName": "public",
-        "x": 12,
-        "y": 592
-      },
-      {
-        "name": "statut_etape",
-        "schemaName": "public",
-        "x": 12,
-        "y": 766
-      },
-      {
-        "name": "resultat_passage",
-        "schemaName": "public",
-        "x": 12,
-        "y": 1384
-      },
-      {
-        "name": "statut_anomalie",
-        "schemaName": "public",
-        "x": 12,
-        "y": 1558
-      },
-      {
-        "name": "entite_concertation",
-        "schemaName": "public",
-        "x": 12,
-        "y": 1732
-      },
-      {
-        "name": "vote_anomalie",
-        "schemaName": "public",
-        "x": 12,
-        "y": 1906
-      },
-      {
-        "name": "transporteurs",
-        "schemaName": "public",
-        "x": 12,
-        "y": 1114
-      },
-      {
-        "name": "number_sequences",
-        "schemaName": "public",
-        "x": 12,
+        "x": 365.51416015625,
         "y": 12
       },
       {
-        "name": "bons_sortie",
+        "name": "gbs_etat_article",
         "schemaName": "public",
-        "x": 684.01611328125,
-        "y": 501
+        "x": 365.51416015625,
+        "y": 186
       },
       {
-        "name": "bs_lignes",
+        "name": "gbs_resultat_passage",
         "schemaName": "public",
-        "x": 1368.17041015625,
-        "y": 418
+        "x": 365.51416015625,
+        "y": 1010
       },
       {
-        "name": "bs_etapes",
+        "name": "gbs_statut_anomalie",
         "schemaName": "public",
-        "x": 1368.17041015625,
+        "x": 365.51416015625,
+        "y": 836
+      },
+      {
+        "name": "moyen_acheminement",
+        "schemaName": "public",
+        "x": 365.51416015625,
+        "y": 534
+      },
+      {
+        "name": "personnel_p",
+        "schemaName": "public",
+        "x": 365.51416015625,
+        "y": 1184
+      },
+      {
+        "name": "magasin",
+        "schemaName": "public",
+        "x": -197.77600006438826,
+        "y": -15.561810227437874
+      },
+      {
+        "name": "fonction_p",
+        "schemaName": "public",
+        "x": -188.7844677511117,
+        "y": 346.1567295378579
+      },
+      {
+        "name": "gbs_bons_sortie",
+        "schemaName": "public",
+        "x": 961.146484375,
+        "y": 116
+      },
+      {
+        "name": "gbs_qr_bons_sortie",
+        "schemaName": "public",
+        "x": 1637.9296875,
+        "y": 452
+      },
+      {
+        "name": "gbs_bs_lignes",
+        "schemaName": "public",
+        "x": 1637.9296875,
+        "y": 53
+      },
+      {
+        "name": "gbs_passages_transit",
+        "schemaName": "public",
+        "x": 1637.9296875,
+        "y": 893
+      },
+      {
+        "name": "gbs_receptions",
+        "schemaName": "public",
+        "x": 1637.9296875,
+        "y": 1291
+      },
+      {
+        "name": "gbs_reception_lignes",
+        "schemaName": "public",
+        "x": 2259.2373046875,
+        "y": 53
+      },
+      {
+        "name": "gbs_mouvements_retour",
+        "schemaName": "public",
+        "x": 2259.2373046875,
+        "y": 387
+      },
+      {
+        "name": "gbs_anomalies",
+        "schemaName": "public",
+        "x": 2259.2373046875,
         "y": 817
       },
       {
-        "name": "passages_transit",
+        "name": "gbs_anomalie_participants",
         "schemaName": "public",
-        "x": 1368.17041015625,
-        "y": 1486
+        "x": 2819.6669921875,
+        "y": 53
       },
       {
-        "name": "receptions",
+        "name": "gbs_anomalie_messages",
         "schemaName": "public",
-        "x": 1368.17041015625,
-        "y": 1151
+        "x": 2819.6669921875,
+        "y": 259
       },
       {
-        "name": "reception_lignes",
+        "name": "gbs_anomalie_message_lus",
         "schemaName": "public",
-        "x": 1994.95703125,
-        "y": 816
-      },
-      {
-        "name": "mouvements_retour",
-        "schemaName": "public",
-        "x": 1994.95703125,
-        "y": 418
-      },
-      {
-        "name": "anomalies",
-        "schemaName": "public",
-        "x": 1994.95703125,
-        "y": 1086
-      },
-      {
-        "name": "anomalie_messages",
-        "schemaName": "public",
-        "x": 2591.3876953125,
-        "y": 752
-      },
-      {
-        "name": "anomalie_votes",
-        "schemaName": "public",
-        "x": 2591.3876953125,
-        "y": 1022
-      },
-      {
-        "name": "anomalie_fichiers",
-        "schemaName": "public",
-        "x": 2591.3876953125,
-        "y": 418
-      },
-      {
-        "name": "notifications",
-        "schemaName": "public",
-        "x": 1382.291015625,
+        "x": 3361.1953125,
         "y": 12
       },
       {
-        "name": "notification_rules",
+        "name": "gbs_anomalie_message_fichiers",
         "schemaName": "public",
-        "x": 342.1376953125,
-        "y": 12
+        "x": 3361.1953125,
+        "y": 186
       },
       {
-        "name": "menu_permissions",
+        "name": "gbs_notifications",
         "schemaName": "public",
-        "x": 720.04150390625,
-        "y": 12
+        "x": 961.146484375,
+        "y": 738
       },
       {
-        "name": "audit_evenements",
+        "name": "gbs_notification_rules",
         "schemaName": "public",
-        "x": 1043.78076171875,
-        "y": 12
+        "x": 961.146484375,
+        "y": 1375
+      },
+      {
+        "name": "gbs_menu_permissions",
+        "schemaName": "public",
+        "x": 961.146484375,
+        "y": 1105
       }
     ],
     "tableGroupCollapseStates": [],
@@ -165,28 +159,58 @@
         "firstFieldNames": [
           "id"
         ],
-        "firstTableName": "transporteurs",
-        "firstSchemaName": "public",
-        "firstRelation": "0..1",
-        "secondFieldNames": [
-          "transporteur_id"
-        ],
-        "secondTableName": "bons_sortie",
-        "secondSchemaName": "public",
-        "secondRelation": "0..*",
-        "checkPoints": []
-      },
-      {
-        "firstFieldNames": [
-          "id"
-        ],
-        "firstTableName": "statut_bs",
+        "firstTableName": "gbs_statut_bs",
         "firstSchemaName": "public",
         "firstRelation": "1",
         "secondFieldNames": [
           "statut_id"
         ],
-        "secondTableName": "bons_sortie",
+        "secondTableName": "gbs_bons_sortie",
+        "secondSchemaName": "public",
+        "secondRelation": "0..*",
+        "checkPoints": []
+      },
+      {
+        "firstFieldNames": [
+          "nummatr"
+        ],
+        "firstTableName": "personnel_p",
+        "firstSchemaName": "public",
+        "firstRelation": "1",
+        "secondFieldNames": [
+          "nummatr_initiateur"
+        ],
+        "secondTableName": "gbs_bons_sortie",
+        "secondSchemaName": "public",
+        "secondRelation": "0..*",
+        "checkPoints": []
+      },
+      {
+        "firstFieldNames": [
+          "nummatr"
+        ],
+        "firstTableName": "personnel_p",
+        "firstSchemaName": "public",
+        "firstRelation": "1",
+        "secondFieldNames": [
+          "nummatr_beneficiaire"
+        ],
+        "secondTableName": "gbs_bons_sortie",
+        "secondSchemaName": "public",
+        "secondRelation": "0..*",
+        "checkPoints": []
+      },
+      {
+        "firstFieldNames": [
+          "id_ma"
+        ],
+        "firstTableName": "moyen_acheminement",
+        "firstSchemaName": "public",
+        "firstRelation": "0..1",
+        "secondFieldNames": [
+          "id_ma"
+        ],
+        "secondTableName": "gbs_bons_sortie",
         "secondSchemaName": "public",
         "secondRelation": "0..*",
         "checkPoints": []
@@ -195,13 +219,43 @@
         "firstFieldNames": [
           "id"
         ],
-        "firstTableName": "bons_sortie",
+        "firstTableName": "gbs_bons_sortie",
         "firstSchemaName": "public",
         "firstRelation": "1",
         "secondFieldNames": [
           "bs_id"
         ],
-        "secondTableName": "bs_lignes",
+        "secondTableName": "gbs_qr_bons_sortie",
+        "secondSchemaName": "public",
+        "secondRelation": "0..*",
+        "checkPoints": []
+      },
+      {
+        "firstFieldNames": [
+          "nummatr"
+        ],
+        "firstTableName": "personnel_p",
+        "firstSchemaName": "public",
+        "firstRelation": "1",
+        "secondFieldNames": [
+          "nummatr_initiateur"
+        ],
+        "secondTableName": "gbs_qr_bons_sortie",
+        "secondSchemaName": "public",
+        "secondRelation": "0..*",
+        "checkPoints": []
+      },
+      {
+        "firstFieldNames": [
+          "nummatr"
+        ],
+        "firstTableName": "personnel_p",
+        "firstSchemaName": "public",
+        "firstRelation": "1",
+        "secondFieldNames": [
+          "nummatr_recepteur"
+        ],
+        "secondTableName": "gbs_qr_bons_sortie",
         "secondSchemaName": "public",
         "secondRelation": "0..*",
         "checkPoints": []
@@ -210,13 +264,28 @@
         "firstFieldNames": [
           "id"
         ],
-        "firstTableName": "type_article",
+        "firstTableName": "gbs_bons_sortie",
+        "firstSchemaName": "public",
+        "firstRelation": "1",
+        "secondFieldNames": [
+          "bs_id"
+        ],
+        "secondTableName": "gbs_bs_lignes",
+        "secondSchemaName": "public",
+        "secondRelation": "0..*",
+        "checkPoints": []
+      },
+      {
+        "firstFieldNames": [
+          "id"
+        ],
+        "firstTableName": "gbs_type_article",
         "firstSchemaName": "public",
         "firstRelation": "1",
         "secondFieldNames": [
           "type_article_id"
         ],
-        "secondTableName": "bs_lignes",
+        "secondTableName": "gbs_bs_lignes",
         "secondSchemaName": "public",
         "secondRelation": "0..*",
         "checkPoints": []
@@ -225,13 +294,13 @@
         "firstFieldNames": [
           "id"
         ],
-        "firstTableName": "etat_article",
+        "firstTableName": "gbs_etat_article",
         "firstSchemaName": "public",
         "firstRelation": "1",
         "secondFieldNames": [
           "etat_id"
         ],
-        "secondTableName": "bs_lignes",
+        "secondTableName": "gbs_bs_lignes",
         "secondSchemaName": "public",
         "secondRelation": "0..*",
         "checkPoints": []
@@ -240,13 +309,13 @@
         "firstFieldNames": [
           "id"
         ],
-        "firstTableName": "bons_sortie",
+        "firstTableName": "gbs_bons_sortie",
         "firstSchemaName": "public",
         "firstRelation": "1",
         "secondFieldNames": [
           "bs_id"
         ],
-        "secondTableName": "bs_etapes",
+        "secondTableName": "gbs_passages_transit",
         "secondSchemaName": "public",
         "secondRelation": "0..*",
         "checkPoints": []
@@ -255,43 +324,28 @@
         "firstFieldNames": [
           "id"
         ],
-        "firstTableName": "statut_etape",
-        "firstSchemaName": "public",
-        "firstRelation": "1",
-        "secondFieldNames": [
-          "statut_id"
-        ],
-        "secondTableName": "bs_etapes",
-        "secondSchemaName": "public",
-        "secondRelation": "0..*",
-        "checkPoints": []
-      },
-      {
-        "firstFieldNames": [
-          "id"
-        ],
-        "firstTableName": "bons_sortie",
-        "firstSchemaName": "public",
-        "firstRelation": "1",
-        "secondFieldNames": [
-          "bs_id"
-        ],
-        "secondTableName": "passages_transit",
-        "secondSchemaName": "public",
-        "secondRelation": "0..*",
-        "checkPoints": []
-      },
-      {
-        "firstFieldNames": [
-          "id"
-        ],
-        "firstTableName": "resultat_passage",
+        "firstTableName": "gbs_resultat_passage",
         "firstSchemaName": "public",
         "firstRelation": "1",
         "secondFieldNames": [
           "resultat_id"
         ],
-        "secondTableName": "passages_transit",
+        "secondTableName": "gbs_passages_transit",
+        "secondSchemaName": "public",
+        "secondRelation": "0..*",
+        "checkPoints": []
+      },
+      {
+        "firstFieldNames": [
+          "nummatr"
+        ],
+        "firstTableName": "personnel_p",
+        "firstSchemaName": "public",
+        "firstRelation": "1",
+        "secondFieldNames": [
+          "nummatr_agent"
+        ],
+        "secondTableName": "gbs_passages_transit",
         "secondSchemaName": "public",
         "secondRelation": "0..*",
         "checkPoints": []
@@ -300,13 +354,43 @@
         "firstFieldNames": [
           "id"
         ],
-        "firstTableName": "bons_sortie",
+        "firstTableName": "gbs_bons_sortie",
         "firstSchemaName": "public",
         "firstRelation": "1",
         "secondFieldNames": [
           "bs_id"
         ],
-        "secondTableName": "receptions",
+        "secondTableName": "gbs_receptions",
+        "secondSchemaName": "public",
+        "secondRelation": "0..*",
+        "checkPoints": []
+      },
+      {
+        "firstFieldNames": [
+          "nummatr"
+        ],
+        "firstTableName": "personnel_p",
+        "firstSchemaName": "public",
+        "firstRelation": "1",
+        "secondFieldNames": [
+          "nummatr_agent"
+        ],
+        "secondTableName": "gbs_receptions",
+        "secondSchemaName": "public",
+        "secondRelation": "0..*",
+        "checkPoints": []
+      },
+      {
+        "firstFieldNames": [
+          "nummatr"
+        ],
+        "firstTableName": "personnel_p",
+        "firstSchemaName": "public",
+        "firstRelation": "0..1",
+        "secondFieldNames": [
+          "nummatr_confirmation"
+        ],
+        "secondTableName": "gbs_receptions",
         "secondSchemaName": "public",
         "secondRelation": "0..*",
         "checkPoints": []
@@ -315,13 +399,13 @@
         "firstFieldNames": [
           "id"
         ],
-        "firstTableName": "receptions",
+        "firstTableName": "gbs_receptions",
         "firstSchemaName": "public",
         "firstRelation": "1",
         "secondFieldNames": [
           "reception_id"
         ],
-        "secondTableName": "reception_lignes",
+        "secondTableName": "gbs_reception_lignes",
         "secondSchemaName": "public",
         "secondRelation": "0..*",
         "checkPoints": []
@@ -330,13 +414,28 @@
         "firstFieldNames": [
           "id"
         ],
-        "firstTableName": "bs_lignes",
+        "firstTableName": "gbs_bs_lignes",
+        "firstSchemaName": "public",
+        "firstRelation": "0..1",
+        "secondFieldNames": [
+          "bs_ligne_id"
+        ],
+        "secondTableName": "gbs_reception_lignes",
+        "secondSchemaName": "public",
+        "secondRelation": "0..*",
+        "checkPoints": []
+      },
+      {
+        "firstFieldNames": [
+          "id"
+        ],
+        "firstTableName": "gbs_bs_lignes",
         "firstSchemaName": "public",
         "firstRelation": "1",
         "secondFieldNames": [
           "bs_ligne_id"
         ],
-        "secondTableName": "reception_lignes",
+        "secondTableName": "gbs_mouvements_retour",
         "secondSchemaName": "public",
         "secondRelation": "0..*",
         "checkPoints": []
@@ -345,28 +444,43 @@
         "firstFieldNames": [
           "id"
         ],
-        "firstTableName": "bs_lignes",
-        "firstSchemaName": "public",
-        "firstRelation": "1",
-        "secondFieldNames": [
-          "bs_ligne_id"
-        ],
-        "secondTableName": "mouvements_retour",
-        "secondSchemaName": "public",
-        "secondRelation": "0..*",
-        "checkPoints": []
-      },
-      {
-        "firstFieldNames": [
-          "id"
-        ],
-        "firstTableName": "etat_article",
+        "firstTableName": "gbs_etat_article",
         "firstSchemaName": "public",
         "firstRelation": "1",
         "secondFieldNames": [
           "etat_id"
         ],
-        "secondTableName": "mouvements_retour",
+        "secondTableName": "gbs_mouvements_retour",
+        "secondSchemaName": "public",
+        "secondRelation": "0..*",
+        "checkPoints": []
+      },
+      {
+        "firstFieldNames": [
+          "nummatr"
+        ],
+        "firstTableName": "personnel_p",
+        "firstSchemaName": "public",
+        "firstRelation": "0..1",
+        "secondFieldNames": [
+          "nummatr_expediteur"
+        ],
+        "secondTableName": "gbs_mouvements_retour",
+        "secondSchemaName": "public",
+        "secondRelation": "0..*",
+        "checkPoints": []
+      },
+      {
+        "firstFieldNames": [
+          "nummatr"
+        ],
+        "firstTableName": "personnel_p",
+        "firstSchemaName": "public",
+        "firstRelation": "0..1",
+        "secondFieldNames": [
+          "nummatr_recepteur"
+        ],
+        "secondTableName": "gbs_mouvements_retour",
         "secondSchemaName": "public",
         "secondRelation": "0..*",
         "checkPoints": []
@@ -375,13 +489,13 @@
         "firstFieldNames": [
           "id"
         ],
-        "firstTableName": "bons_sortie",
+        "firstTableName": "gbs_bons_sortie",
         "firstSchemaName": "public",
         "firstRelation": "1",
         "secondFieldNames": [
           "bs_id"
         ],
-        "secondTableName": "anomalies",
+        "secondTableName": "gbs_anomalies",
         "secondSchemaName": "public",
         "secondRelation": "0..*",
         "checkPoints": []
@@ -390,13 +504,13 @@
         "firstFieldNames": [
           "id"
         ],
-        "firstTableName": "passages_transit",
+        "firstTableName": "gbs_passages_transit",
         "firstSchemaName": "public",
         "firstRelation": "0..1",
         "secondFieldNames": [
           "passage_transit_id"
         ],
-        "secondTableName": "anomalies",
+        "secondTableName": "gbs_anomalies",
         "secondSchemaName": "public",
         "secondRelation": "0..*",
         "checkPoints": []
@@ -405,13 +519,28 @@
         "firstFieldNames": [
           "id"
         ],
-        "firstTableName": "statut_anomalie",
+        "firstTableName": "gbs_statut_anomalie",
         "firstSchemaName": "public",
         "firstRelation": "1",
         "secondFieldNames": [
           "statut_id"
         ],
-        "secondTableName": "anomalies",
+        "secondTableName": "gbs_anomalies",
+        "secondSchemaName": "public",
+        "secondRelation": "0..*",
+        "checkPoints": []
+      },
+      {
+        "firstFieldNames": [
+          "nummatr"
+        ],
+        "firstTableName": "personnel_p",
+        "firstSchemaName": "public",
+        "firstRelation": "0..1",
+        "secondFieldNames": [
+          "nummatr_createur"
+        ],
+        "secondTableName": "gbs_anomalies",
         "secondSchemaName": "public",
         "secondRelation": "0..*",
         "checkPoints": []
@@ -420,28 +549,28 @@
         "firstFieldNames": [
           "id"
         ],
-        "firstTableName": "anomalies",
+        "firstTableName": "gbs_anomalies",
         "firstSchemaName": "public",
         "firstRelation": "1",
         "secondFieldNames": [
           "anomalie_id"
         ],
-        "secondTableName": "anomalie_messages",
+        "secondTableName": "gbs_anomalie_participants",
         "secondSchemaName": "public",
         "secondRelation": "0..*",
         "checkPoints": []
       },
       {
         "firstFieldNames": [
-          "id"
+          "nummatr"
         ],
-        "firstTableName": "entite_concertation",
+        "firstTableName": "personnel_p",
         "firstSchemaName": "public",
         "firstRelation": "1",
         "secondFieldNames": [
-          "entite_id"
+          "nummatr"
         ],
-        "secondTableName": "anomalie_messages",
+        "secondTableName": "gbs_anomalie_participants",
         "secondSchemaName": "public",
         "secondRelation": "0..*",
         "checkPoints": []
@@ -450,58 +579,133 @@
         "firstFieldNames": [
           "id"
         ],
-        "firstTableName": "anomalies",
-        "firstSchemaName": "public",
-        "firstRelation": "1",
-        "secondFieldNames": [
-          "anomalie_id"
-        ],
-        "secondTableName": "anomalie_votes",
-        "secondSchemaName": "public",
-        "secondRelation": "0..*",
-        "checkPoints": []
-      },
-      {
-        "firstFieldNames": [
-          "id"
-        ],
-        "firstTableName": "entite_concertation",
-        "firstSchemaName": "public",
-        "firstRelation": "1",
-        "secondFieldNames": [
-          "entite_id"
-        ],
-        "secondTableName": "anomalie_votes",
-        "secondSchemaName": "public",
-        "secondRelation": "0..*",
-        "checkPoints": []
-      },
-      {
-        "firstFieldNames": [
-          "id"
-        ],
-        "firstTableName": "vote_anomalie",
-        "firstSchemaName": "public",
-        "firstRelation": "1",
-        "secondFieldNames": [
-          "vote_id"
-        ],
-        "secondTableName": "anomalie_votes",
-        "secondSchemaName": "public",
-        "secondRelation": "0..*",
-        "checkPoints": []
-      },
-      {
-        "firstFieldNames": [
-          "id"
-        ],
-        "firstTableName": "anomalies",
+        "firstTableName": "gbs_anomalies",
         "firstSchemaName": "public",
         "firstRelation": "1",
         "secondFieldNames": [
           "anomalie_id"
         ],
-        "secondTableName": "anomalie_fichiers",
+        "secondTableName": "gbs_anomalie_messages",
+        "secondSchemaName": "public",
+        "secondRelation": "0..*",
+        "checkPoints": []
+      },
+      {
+        "firstFieldNames": [
+          "nummatr"
+        ],
+        "firstTableName": "personnel_p",
+        "firstSchemaName": "public",
+        "firstRelation": "1",
+        "secondFieldNames": [
+          "nummatr_auteur"
+        ],
+        "secondTableName": "gbs_anomalie_messages",
+        "secondSchemaName": "public",
+        "secondRelation": "0..*",
+        "checkPoints": []
+      },
+      {
+        "firstFieldNames": [
+          "id"
+        ],
+        "firstTableName": "gbs_anomalie_messages",
+        "firstSchemaName": "public",
+        "firstRelation": "1",
+        "secondFieldNames": [
+          "message_id"
+        ],
+        "secondTableName": "gbs_anomalie_message_lus",
+        "secondSchemaName": "public",
+        "secondRelation": "0..*",
+        "checkPoints": []
+      },
+      {
+        "firstFieldNames": [
+          "nummatr"
+        ],
+        "firstTableName": "personnel_p",
+        "firstSchemaName": "public",
+        "firstRelation": "1",
+        "secondFieldNames": [
+          "nummatr"
+        ],
+        "secondTableName": "gbs_anomalie_message_lus",
+        "secondSchemaName": "public",
+        "secondRelation": "0..*",
+        "checkPoints": []
+      },
+      {
+        "firstFieldNames": [
+          "id"
+        ],
+        "firstTableName": "gbs_anomalie_messages",
+        "firstSchemaName": "public",
+        "firstRelation": "1",
+        "secondFieldNames": [
+          "message_id"
+        ],
+        "secondTableName": "gbs_anomalie_message_fichiers",
+        "secondSchemaName": "public",
+        "secondRelation": "0..*",
+        "checkPoints": []
+      },
+      {
+        "firstFieldNames": [
+          "nummatr"
+        ],
+        "firstTableName": "personnel_p",
+        "firstSchemaName": "public",
+        "firstRelation": "1",
+        "secondFieldNames": [
+          "nummatr_destinataire"
+        ],
+        "secondTableName": "gbs_notifications",
+        "secondSchemaName": "public",
+        "secondRelation": "0..*",
+        "checkPoints": []
+      },
+      {
+        "firstFieldNames": [
+          "nom_fonction"
+        ],
+        "firstTableName": "fonction_p",
+        "firstSchemaName": "public",
+        "firstRelation": "1",
+        "secondFieldNames": [
+          "nom_fonction"
+        ],
+        "secondTableName": "gbs_notification_rules",
+        "secondSchemaName": "public",
+        "secondRelation": "0..*",
+        "checkPoints": []
+      },
+      {
+        "firstFieldNames": [
+          "nom_fonction"
+        ],
+        "firstTableName": "fonction_p",
+        "firstSchemaName": "public",
+        "firstRelation": "0..1",
+        "secondFieldNames": [
+          "nom_fonction"
+        ],
+        "secondTableName": "gbs_menu_permissions",
+        "secondSchemaName": "public",
+        "secondRelation": "0..*",
+        "checkPoints": []
+      },
+      {
+        "firstFieldNames": [
+          "nummatr"
+        ],
+        "firstTableName": "personnel_p",
+        "firstSchemaName": "public",
+        "firstRelation": "0..1",
+        "secondFieldNames": [
+          "nummatr"
+        ],
+        "secondTableName": "gbs_menu_permissions",
         "secondSchemaName": "public",
         "secondRelation": "0..*",
         "checkPoints": []
